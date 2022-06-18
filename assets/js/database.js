@@ -27,8 +27,8 @@ const DB = {
         ID: "Mains Alert",
         SUBID: "1",
         PART: "0",
-        TITLE: "Mains Alert - Part 1",
-        SUBTITLE: "Detecting 'the grid' vs a generator",
+        TITLE: "Mains Alert",
+        SUBTITLE: "Part 1 - Detecting 'the grid' vs a generator",
         AUTHOR: "Z'Laast Allicock",
         DATE: "2022/06/22",
         IURL: function () {
@@ -44,7 +44,7 @@ const DB = {
             "Mains (120V)",
             "Arduino",
             "ATTiny",
-            "C/C++"
+            "C or C++"
         ]
     },
 };
