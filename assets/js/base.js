@@ -271,5 +271,5 @@ avatarShow();
 document.querySelector('.avatar').addEventListener('click', avatarSpeak);
 document.querySelector('body').addEventListener('scroll', avatarScrollBehaviour);
 setMobileSettings();
-setFooter();
+window.addEventListener('load', setFooter);
 window.addEventListener('resize', setFooter);

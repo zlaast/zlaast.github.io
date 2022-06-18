@@ -38,41 +38,6 @@ function createExternalLinks() {
         });
     }
 }
-function postDate() {
-    let dateTag = document.querySelector('.post-date');
-    let windowURL = window.location.href.replace(`${url}`, '');
-    const entry = Object.values(DB).filter(data => data.IURL().includes(`${windowURL}`));
-    if (entry.length) {
-        let date = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(new Date(entry[0].DATE));
-        dateTag.textContent = `Posted ${date}`;
-    }
-}
-let postListingDate = (function () {
-    const sticky = document.querySelector('.recent-posts-sticky');
-    const postLinks = document.querySelectorAll('.post-link');
-    const body = document.querySelector('body');
-    let postLinksPositions = [];
-    function getPostLinkPositions() {
-        postLinksPositions = [];
-        postLinks.forEach(link => {
-            let linkURL = link.href.replace(url, '');
-            let entry = Object.values(DB).filter(data => data.IURL().includes(`${linkURL}`));
-            let postLinkTop = body.scrollTop + link.getBoundingClientRect().top - link.getBoundingClientRect().height / 2;
-            if (entry.length) {
-                let date = new Intl.DateTimeFormat('en', { dateStyle: 'long' }).format(new Date(entry[0].DATE));
-                postLinksPositions.push([postLinkTop, `${date}`]);
-            }
-        });
-    }
-    ;
-    return function () {
-        getPostLinkPositions();
-        postLinksPositions.forEach(pos => {
-            if (pos[0] - body.scrollTop < 0)
-                sticky.textContent = `Posted ${pos[1]}`;
-        });
-    };
-})();
 function pageSearch() {
     const searchbox = document.querySelector('.page-searchbox');
     const output = document.querySelector('.page-search-results');
@@ -114,8 +79,6 @@ window.addEventListener('load', () => {
     if (document.querySelector('.post-list')) {
         if (!detectMobile()) {
             const body = document.querySelector('body');
-            body.addEventListener('scroll', postListingDate);
-            window.addEventListener('resize', postListingDate);
         }
     }
 });
