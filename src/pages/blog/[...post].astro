@@ -1,0 +1,298 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import { parseDate } from '@utils/utils';
+import Base from '@layouts/Base.astro';
+import TOC from '@components/Astro/TOC.astro';
+
+// Dynamic URL Paths
+export async function getStaticPaths()
+{
+    const posts = await getCollection("posts");
+
+	return posts.map((post) => 
+	({
+		params: { post: post.slug },
+		props: post
+	}));
+}
+
+type Props = CollectionEntry<"posts">;
+const post  = Astro.props;
+const { Content, headings } = await post.render();
+
+// Format Date
+const date = parseDate(post.data.date);
+
+// Get Next and Previous Post in the series
+const posts = await getCollection("posts");
+const thisSeries = post.data.series;
+const nextPost = post.data.part + 1;
+const prevPost = post.data.part - 1;
+
+let adjacentLinks = [`${thisSeries.toLowerCase().replaceAll(' ', '-')}`, `${thisSeries.toLowerCase().replaceAll(' ', '-')}`]
+let adjacentSubtitles = [`${thisSeries}`, `${thisSeries}`]
+function getLinks(post: any)
+{
+    // Prev Post
+    if (post.data.series == thisSeries && post.data.part == prevPost)
+    {
+        adjacentLinks[0] = post.slug;
+        adjacentSubtitles[0] = post.data.subtitle;
+    }
+
+    // Next post
+    if (post.data.series == thisSeries && post.data.part == nextPost)
+    {
+        adjacentLinks[1] = post.slug;
+        adjacentSubtitles[1] = post.data.subtitle;
+    }
+}
+posts.some(getLinks);
+---
+<Base>
+    <div id="main" class="flex mx-auto pl-12 pr-6 lg:text-xl">
+        <span id="top"></span>
+        <main class="mt-10 lg:mt-16 mb-24 max-w-[75ch]">
+            <!-- Breadcrumbs -->
+            <div class="mb-4">
+                <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
+                <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href=`/blog/${ post.data.series.toLowerCase().replaceAll(' ', '-') }`>{ post.data.series }</a> /
+                <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href=`/blog/${ post.slug }`>{ post.data.subtitle }</a>
+            </div>
+
+            <hr class="mb-12 border-neutral-700">
+
+            <!-- Card -->
+            <div class="mb-3">
+                <p class="text-neutral-300 text-lg ml-0.5 my-3">Published: { date }</p>
+                <h1 class="text-title text-4xl font-bold my-1">{ post.data.title }</h1>
+                <h2 class="text-subtitle text-3xl font-semibold">{ post.data.subtitle }</h2>
+            </div>
+
+            <!-- Contents -->
+            <div>
+                <!-- TOC: Small screens -->
+                <!-- <div class="2xl:hidden">
+                    <TOC headings={ headings } />
+                </div> -->
+
+                <!-- Article -->
+                <article id="article">
+                    <Content />
+                </article>
+            </div>
+
+            <!-- Semi-footer -->
+            <div id="semi-footer">
+                <!-- Tags -->
+                <div class="mt-5">
+                    <h4 class="inline text-xl mt-1 mr-2">Tags: </h4>
+                    { post.data.tags.sort().map((tag) => 
+                    <span class="leading-10 group">
+                        <a href=`/tags/${tag.toLowerCase()}` class="mx-1 border-[1px] border-slate-500 rounded-lg p-1 whitespace-nowrap">
+                            <span class="inline-block group-hover:text-[cyan] text-[#508e7f]"><svg xmlns="http://www.w3.org/2000/svg" class="relative top-1 h-4 w-4 s-EEZOxJequKEG" viewBox="0 0 24 24" fill="currentColor"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8 8a2 2 0 0 0 2.828 0l7.172-7.172a2 2 0 0 0 0-2.828l-8-8zM7 9a2 2 0 1 1 .001-4.001A2 2 0 0 1 7 9z" class="s-EEZOxJequKEG"></path></svg></span>
+                            <span class="font-medium text-lg group-hover:text-link text-neutral-300">{ tag }</span>
+                        </a>
+                    </span>
+                    )}
+                </div>
+
+                <!-- Links -->
+                <div class="max-md:text-md mt-6 flex flex-row justify-between text-lg max-md:flex-col max-md:text-center">
+                    <a class="text-link my-3 decoration-dotted decoration-1 underline-offset-8 hover:underline" href=`/blog/${adjacentLinks[0]}`>← { adjacentSubtitles[0] }</a>
+                    <a class="text-link my-3 decoration-dotted decoration-1 underline-offset-8 hover:underline" href=`/blog/${adjacentLinks[1]}`>{ adjacentSubtitles[1] } →</a>
+                </div>
+            </div>
+        </main>
+        
+        <!-- TOC: Large screens -->
+        <div class="max-2xl:hidden">
+            <TOC headings={ headings } />
+        </div>
+
+    </div>
+</Base>
+
+<script type="text/javascript">
+    window.onload = (event) =>{ fixSticky() }
+    window.onresize = (event) =>{ fixSticky() }
+
+    function fixSticky()
+    {
+        const article = document.getElementById("article");
+        const sticky = document.getElementById("sticky");
+    
+        sticky.style.left = `${article.getBoundingClientRect().right + 32}px`;
+    }
+
+    const footer = document.getElementById("footer");
+    const observer = new IntersectionObserver(entries =>
+    {
+        entries.forEach(entry =>
+        {
+            const intersecting = entry.isIntersecting;
+            const sticky = document.getElementById("toc");
+
+            sticky.style.maxHeight = intersecting? "50vh" : "90vh";
+        })
+        
+    })
+    observer.observe(footer);
+</script>
+
+<style is:global>
+/* Note:
+* This CSS is to style the markdown content,
+* since this content is inaccessible to tailwind.
+* Some of the styling is based off the tailwind Typography plugin.
+*/
+
+:root {
+    --link: #cd9eec;
+    --subtitle: #c2410c;
+    --title: #979b8d;
+    --h2: #e01a4f;
+    --h3: #c2410c;
+    --h4: #ca8a04;
+}
+
+article a {
+    color: var(--link);
+}
+
+article a:hover {
+    border-bottom: 1px dotted var(--link);
+}
+
+article blockquote {
+    background-color: #15161a;
+    border-left: 2px solid var(--title);
+    font-style: italic;
+    font-weight: 300;
+    margin: 1rem 0 1rem 0;
+    padding: 1px 2rem;
+}
+
+article code:not(pre code) {
+    background-color: #303238;
+    overflow-wrap: break-word;
+    padding: 3px;
+}
+
+article h2 {
+    color: var(--h2);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.75rem;
+    margin-top: 1.75rem;
+}
+
+article h3 {
+    color: var(--h3);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+article h4 {
+    color: var(--h4);
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+article p {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+article strong {
+    font-weight: 700;
+}
+
+article img {
+    margin: 2rem auto 3rem auto;
+}
+
+table {
+    min-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    background-color: #1f1f1f;
+}
+
+thread tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: center;
+}
+
+th, td {
+    text-align: center;
+    padding: 10px;
+}
+
+tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+tbody tr:nth-child(even)
+{
+    background-color: #15161a;
+}
+
+tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+article ul {
+    list-style-type: disc;
+    margin-left: 1.5em;
+}
+
+article ol {
+    list-style-type: decimal;
+    font-size: 20px;
+    margin-left: 1em;
+    line-height: 2.5rem;
+}
+
+article ol li ul li {
+    list-style-type: disc;
+    margin-left: 1em;
+}
+
+.caption {
+    font-size: 1rem;
+}
+
+#main {
+    color: rgba(255,255,255,0.85);
+    font-weight: 200;
+    letter-spacing: 0.75px;
+    line-height: 3rem;
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow: auto;
+}
+
+pre {
+    display: flex;
+    line-height: 1.5rem;
+    font-size: 1rem;
+    padding: 1.25rem;
+    overflow: auto;
+}
+
+@media only screen and (max-width: 960px)
+{
+    pre {
+        width: 80vw;
+    }
+}
+</style>

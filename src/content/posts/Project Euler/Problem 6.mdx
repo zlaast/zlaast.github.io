@@ -1,0 +1,93 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 6 - Sum Square Difference
+part: 6
+date: 2023-10-01
+tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
+image: "/images/posts/braces.svg"
+---
+import Math from "@components/Astro/Math.astro";
+import Tab from "@components/Astro/Tab.astro";
+
+## Problem
+
+This problem comes from [Project Euler 6](https://projecteuler.net/problem=6)
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> The sum of the squares of the first ten natural numbers is,
+>
+> <Math inline="false" equation="1^2 + 2^2 + \ldots + 10^2 = 385" />
+>
+> The square of the sum of the first ten natural numbers is,
+>
+> <Math inline="false" equation="(1 + 2 + \ldots + 10)^2 = 55^2 = 3025" />
+>
+> Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is <Math equation="3025-385 = 2640" />
+>
+> Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
+{/* EXCERPT END */}
+
+## Solution
+
+We _could_ take the following approach, which is implied by the problem
+
+```python
+sum_square = 0
+square_sum = 0
+
+for num in range(1, 101):
+    sum_square += num**2
+
+for num in range(1, 101):
+    square_sum += num
+
+square_sum = square_sum**2
+
+print(square_sum-sum_square)
+```
+
+The problem with this approach is that if we change the range, say from [1 - 100] to [1 - 1 000 000], it would take a much longer time to calculate. What if we could skip all this and have a much faster approach? Well we have two formulas for the "sum of squares" and "square of sums"!
+
+### Sum of Squares
+
+For the "sum of squares", it is known that
+<Math inline="false" equation="\sum\limits_{x=1}^{n}x^2 = \frac{ n(n+1)(2n+1) }{ 6 }" />
+
+
+And that's it. Since <Math equation="n = 100" />, then
+<Math inline="false" equation="\sum\limits_{x=1}^{100}x^2 = \frac{ 100 \times 101 \times 201 }{ 6 }" />
+
+### Square of Sums
+
+The sum of all natural numbers from 1 to <Math equation="n" /> is
+<Math inline="false" equation="\sum\limits_{1}^{n}n = \frac{ n(n+1) }{ 2 }" />
+
+We just have to use this formula, then square the sum at the end!
+
+Since <Math equation="n = 100" />, we'll get
+<Math inline="false" equation="\left[\frac{ 100 \times 101 }{ 2 } \right]^2 = \frac{ 100 \times 101 \times 100 \times 101 }{ 4 }" />
+
+## Code
+
+I decided to leave the formulas in the code in case I wished to change <Math equation="n" /> later. And instead of calculating <Math equation="n(n+1)" /> twice, I calculated it once and placed it in the variable "<Math equation="a" />".
+
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem06.py" checked="checked" name="problem06.py">
+
+```python
+# Project Euler: Problem 6
+# Sum square difference
+
+n = 100
+
+a = n*(n+1)
+sum_square = (a*(2*n + 1))/6
+square_sum = (a/2)**2
+
+print(square_sum-sum_square)
+```
+
+</Tab>

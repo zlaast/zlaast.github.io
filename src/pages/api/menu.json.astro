@@ -1,0 +1,59 @@
+---
+export const partial = true;
+
+const allPosts = await Astro.glob('../../content/**/*.mdx');
+
+// FORMAT
+// category: category,
+// categoryCount: new Set(series).size,
+// series: {
+// 	name?: String,
+// 	count?: Number
+// }
+
+// Menu
+let menu : Object[] = [];
+
+// Get List of Categories
+let categoriesRawData = new Set();
+allPosts.forEach((post) => { categoriesRawData.add(post.frontmatter.category) });
+let categoriesList = [...categoriesRawData].sort();
+
+// Get Series per Category
+categoriesList.forEach((category) => 
+{
+	let seriesList: String[] = [];
+	allPosts.forEach((post) => 
+	{
+		if (post.frontmatter.category == category)
+		{
+			seriesList.push(post.frontmatter.series)
+		}
+	});
+
+	let seriesSet = new Set(seriesList);
+
+	interface series
+	{
+		name?: String,
+		count?: Number
+	}
+
+	let series: series [] = [];
+	seriesSet.forEach((serie) => 
+	{
+		series.push({
+			name: serie,
+			count: seriesList.filter(elements => elements == serie).length
+		});
+	});
+
+	menu.push ({
+		category: category,
+		categoryCount: new Set(series).size,
+		series: series
+	})
+});
+---
+
+<Fragment set:html={ JSON.stringify(menu) }></Fragment>

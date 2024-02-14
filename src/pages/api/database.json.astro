@@ -1,0 +1,22 @@
+---
+export const partial = true;
+
+import { getCollection } from "astro:content";
+const posts = await getCollection("posts");
+
+const json = JSON.stringify(
+    posts.map((post) => {
+        return {
+            category: post.data.category,
+            series: post.data.series,
+            part: post.data.part,
+            title: post.data.title,
+            subtitle: post.data.subtitle,
+            date: post.data.date,
+            url: post.slug,
+            tags: post.data.tags
+        }
+    })
+)
+---
+<Fragment set:html={ json }></Fragment>

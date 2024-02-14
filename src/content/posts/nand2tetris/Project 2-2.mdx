@@ -1,0 +1,411 @@
+---
+category: Coding
+series: nand2tetris
+title: nand2tetris
+subtitle: Project 2 - The ALU
+part: 3
+date: 2023-01-23
+tags: ["Coding", "Computers", "Digital"]
+image: "/images/posts/braces.svg"
+---
+import Tab from "@components/Astro/Tab.astro";
+import Math from "@components/Astro/Math.astro";    
+
+## Introduction
+
+{/* EXCERPT START */}
+This is the continuation of the previous post, Project 2 - Boolean Arithmetic. In this post, only the Arithmetic Logic Unit (ALU) is created, but it is deserving of its own writeup as there is a lot packed into this section that needs examining.
+{/* EXCERPT END */}
+
+## The ALU Functions
+
+| zx  | nx  | zy  | ny  |  f  | no  |  out   |
+| :-: | :-: | :-: | :-: | :-: | :-: | :----: |
+|  1  |  0  |  1  |  0  |  1  |  0  |   0    |
+|  1  |  1  |  1  |  1  |  1  |  1  |   1    |
+|  1  |  1  |  1  |  0  |  1  |  0  |   -1   |
+|  0  |  0  |  1  |  1  |  0  |  0  |   x    |
+|  1  |  1  |  0  |  0  |  0  |  0  |   y    |
+|  0  |  0  |  1  |  1  |  0  |  1  |   !x   |
+|  1  |  1  |  0  |  0  |  0  |  1  |   !y   |
+|  0  |  0  |  1  |  1  |  1  |  1  |   -x   |
+|  1  |  1  |  0  |  0  |  1  |  1  |   -y   |
+|  0  |  1  |  1  |  1  |  1  |  1  |  x+1   |
+|  1  |  1  |  0  |  1  |  1  |  1  |  y+1   |
+|  0  |  0  |  1  |  1  |  1  |  0  |  x-1   |
+|  1  |  1  |  0  |  0  |  1  |  0  |  y-1   |
+|  0  |  0  |  0  |  0  |  1  |  0  |  x+y   |
+|  0  |  1  |  0  |  0  |  1  |  1  |  x-y   |
+|  0  |  0  |  0  |  1  |  1  |  1  |  y-x   |
+|  0  |  0  |  0  |  0  |  0  |  0  |  x&y   |
+|  0  |  1  |  0  |  1  |  0  |  1  | x \| y |
+
+The above table shows six control bits, and how setting each of them can produce a particular output. The ALU takes in two 16-bit numbers, `x` and `y` and performs a _series_ of operations on these inputs to produce an output.
+
+- `zx` means "zero x". If `zx=1` then `x=0`. Otherwise `x` is left untouched
+
+- `nx` means "not x". If `nx=1` then all of the bit for `x` are inverted
+- `zy` means "zero y". It is similar to `zx`
+- `ny` means "not y". It is similar to `nx`
+- `f` means "function". When `f=0` then `x AND y` is performed. When `f=1` then `x + y` is performed
+- `no` means "not output" and it can invert the output bits.
+
+There is also two extra output bits, `ng` and `zr`.
+
+- `ng=1` when our output is a negative number
+
+- `zr=1` when our output is zero
+
+## How the ALU Works
+
+### 0
+
+We have `zx=1`, `zy=1`, and `f=1`. This is **0 + 0 = 0**. It should be noted that `f=0` is also possible so that **0 & 0 = 0**.
+
+### 1
+
+All the controls bits are `1` in this case. This means `x` and `y` are first zeroed out, then bitwise inverted, producing **x = 0xFFFF** and **y = 0xFFFF**. We then perform **x + y = 0xFFFE**. The reason for this result is because **x[0] + y[0]** will produce `sum=0` and `carry=1`, but the subsequent additions will not. Subsequent additions, for example, will be **x[1] + y[1] + carry**, which will produce `sum=1` and `carry=1`. Finally, the result is bitwise inverted to produce `out=0x0001`.
+
+### -1
+
+In this instruction, we zero and invert `x`, and we just zero `y`. Therefore, we have **x = 0xFFFF** and **y = 0x0000**. If we add `x` and `y` together, we have `out=0xFFFF`, which is the 2s Complement representation of -1.
+
+### x
+
+To obtain `out=x` we leave `x` alone, but we zero and invert `y` giving us all ones for `y`.
+We then perform **x AND y**. If you `AND` _any_ number with `1`, you just get back the original number.
+
+### y
+
+This is the same thing as the [`x` instruction](#x), but for `y`.
+
+### !x
+
+This is the same as the [`x` instruction](#x) instruction, but we just invert the output.
+
+### !y
+
+This is the same as the [`x` instruction](#x), but for `y` and we just invert the output.
+
+### -x
+
+To see how this works, let's look at 4-bit, 2s Complement numbers
+
+```
+ 0: 0b0000
+ 1: 0b0001
+ 2: 0b0010
+ 3: 0b0011
+ 4: 0b0100
+ 5: 0b0101
+ 6: 0b0110
+ 7: 0b0111
+-8: 0b1000
+-7: 0b1001
+-6: 0b1010
+-5: 0b1011
+-4: 0b1100
+-3: 0b1101
+-2: 0b1110
+-1: 0b1111
+```
+
+The instruction leaves `x` alone, but sets `y` to all `1`s. It then adds `x` and `y` and inverts the result. Let's look at an example:
+
+```
+1. Let x=-6 (0b1010) and y=-1 (0b1111)
+2. x+y=-7   (0b1001)
+3. !(x+y)=6 (0b0110)
+```
+
+From the example above, we get `-x`
+
+It's easy to see why this is done by looking at the above number chart. For example, the inversion of **4 (0b0100)** is **5 (0b1011)**, which is off by 1. We want **-4 (0b1100)** but its inversion is **3 (0b0011)**. So to get **-4**, we do **4 - 1 = 3** and take the inversion of 3.
+
+**The Weird Number**
+
+Out of interest, what about -8? Wouldn't **x + y = -9** which doesn't exist in our 4-bit example? And we don't even have +8 in the first place?
+
+```
+1. Let x=-8 (0b1000) and y=-1 (0b1111)
+2. x+y=0b10111, but since there's an extra bit, it's dropped. Therefore...
+2. x+y=7 (0b0111)
+3. !(x+y)=-8 (0b1000)
+```
+
+It just returns our original number, which is interesting. This is called "the weird number" for 2s Complement. Regardless, taking `-x` of a number should be avoided for our most negative number.
+
+### -y
+
+This is just the same thing as the [`-x` instruction](#-x), but for `y`.
+
+### x + 1
+
+This one requires some math to show how it works. We let **y = -1** and then perform the following
+
+<Math inline="false" equation="x + 1 = \overline{(\overline x + y)}" />
+
+Just to be explicit, let's substitute `y` with `-1` and get
+
+<Math inline="false" equation="x + 1 = \overline{ ( \overline x - 1 ) }" />
+
+<div class="caption text-center italic">( x + 1 ) -- (Eq. 1)</div>
+
+Now it should be noted that, to get a negative number in 2s Complement, we do the following
+
+<Math inline="false" equation="-x = \overline x + 1" />
+
+If we rearrange that to solve for <span class="overline">`x`</span>, we get
+
+<Math inline="false" equation="\overline x = -x - 1" />
+
+<div class="caption text-center italic">( x + 1 ) -- (Eq. 2)</div>
+
+Substituting (Eq.2) into (Eq.1) and simplifying, we obtain
+
+<Math inline="false" equation="x + 1 = \overline{ (-x - 2) }" />
+
+At this point, let's make **x = 6** and solve as an example
+
+```
+1. Let x=6
+2. -6-2=-8 (0b1000)
+3. !(0b1000)=7 (0b0111)
+```
+
+Thus, we performed `x + 1`
+
+### y + 1
+
+This is just the same thing as the [`x + 1` instruction](#x--1), but for `y`.
+
+### x - 1
+
+This one is simple. This instruction sets `y=-1` (by zeroing `y` then inverting it) and then adds it to `x`. Therefore, `out=x+(-1)`.
+
+### y - 1
+
+Same as [`x - 1` instruction](#x---1), but for `y`.
+
+### x + y
+
+This instruction is one of the simplest. We just set `f=1` to perform `x+y`.
+
+### x - y
+
+This is implementation of 2s Complement subtraction, is not only interesting, but _elegant and fast_ as well. In 2s Complement, in order to obtain a negative number, we must first invert all the bits of a number, then add one. That is,
+
+<Math inline="false" equation="-z = \overline z + 1" />
+
+<div class="caption text-center italic">( x - y ) -- (Eq. 1)</div>
+
+One would think that if we wished to subtract two numbers, say `x-y`, then we would perform the following operation:
+
+<Math inline="false" equation="x - y = x + (\overline y + 1)" />
+
+But what we actually did in the course was,
+
+<Math inline="false" equation="x - y = \overline{ \overline x + y }" />
+
+<div class="caption text-center italic">( x - y ) -- (Eq. 2)</div>
+
+This is bizarre. Not only do we not add one, but we invert the `x` instead of the `y`! We also invert the entire output as well! What's going on here? The solution is elegant and the 2s complement representation of `-y` is performed in the "background". Let's see how.
+
+If we rearrange (Eq.1) to solve for <span class="overline">`z`</span>, we get,
+
+<Math inline="false" equation="\overline z = -z - 1" />
+
+<div class="caption text-center italic">( x - y ) -- (Eq. 3)</div>
+
+And factoring out the negative sign leaves us with,
+
+<Math inline="false" equation="\overline z = -(z + 1)" />
+
+<div class="caption text-center italic">( x - y ) -- (Eq. 4)</div>
+
+Now, if we substitute (Eq.3) into (Eq.2), of course using `x` instead of `z`, we get the following
+
+<Math inline="false" equation="x - y = \overline { (-x -1) + y }" />
+
+Now, let's use a temporary variable to help us understand the next process. Let,
+
+<Math inline="false" equation="q = (-x -1 ) + y" />
+
+<div class="caption text-center italic">( x - y ) -- (Eq. 5)</div>
+
+Then the equation becomes,
+
+<Math inline="false" equation="x - y = \overline q" />
+
+Let's substitute (Eq.4) into this (Using Eq.3 won't work, which should be evident shortly)
+
+<Math inline="false" equation="x - y = -(q + 1)" />
+
+If we substitute (Eq.5) back in, we get this monstrosity
+
+<Math inline="false" equation="x - y = -[(-x - 1) + y + 1]" />
+
+All that's left is to simplify the equation. Get rid of the internal brackets
+
+<Math inline="false" equation="x - y = -[x - 1 + y + 1]" />
+
+The `-1` and `+1` cancel each other out
+
+<Math inline="false" equation="x - y = -[-x + y]" />
+
+And finally distribute the negative into the brackets
+
+<Math inline="false" equation="x - y = x - y" />
+
+The fact that 2s Complement occurs twice _mathematically_, but is never seen in the implementation is elegant. And the fact that only inversion is used with a single addition makes this _fast_. This took a while to explain, but is something that worth understanding and appreciating.
+
+### y - x
+
+`y-x` isn't much different from `x-y` seen in the previous section, and the implementation is as such
+
+<Math inline="false" equation="y - x = \overline { x + \overline y }" />
+
+### x & y
+
+No in-depth explanation is needed here. If we leave all controls bits as 0, then the ALU performs `x&y`. This is the default operation of the ALU.
+
+### x | y
+
+From the ALU Table
+
+<Math inline="false" equation="\overline { \overline x \land \overline y } = x \lor y" />
+
+This was explored in [the first post of the series](/blog/nand2tetris/project-1#or-gate), but this is just _De Morgan's Theorem_.
+
+## The Pipeline
+
+This is called a "pipeline" because our operands go through a series of steps. Each step decides whether to leave the operand alone, or to modify it.
+
+Let's look at `x` for example
+
+Steps:
+
+1. Should we zero `x` (pass all zeroes)? Or leave it alone (pass `x`)? We'll call the output of the operation `x0`
+2. Should we invert `x0`? Or leave it alone? We'll call the output of the operation `x1`
+3. Should we perform `x1 & y1`? Or perform `x1 + y1`? We'll call the output of the operation `f0`
+4. Should we invert `f0`? Or leave it alone? We'll call the output of the operation `output`
+
+As can be seen, our operands may have gone through several transformations before reaching the output.
+
+### zx
+
+We can choose either to pass `x` or to pass all zeroes.
+
+```
+Mux16 (a=x, b=false, sel=zx, out=x0);
+```
+
+### zy
+
+We can choose either to pass `y` or to pass all zeroes.
+
+```
+Mux16 (a=y, b=false, sel=zy, out=y0);
+```
+
+### nx
+
+As a separate operation, we invert `x`. Then we decide to either pass the original `x` or the inverted `x` to the next step.
+
+```
+Not16 (in=x0, out=nx0);
+Mux16 (a=x0, b=nx0, sel=nx, out=x1);
+```
+
+### ny
+
+As a separate operation, we invert `y`. Then we decide to either pass the original `y` or the inverted `y` to the next step.
+
+```
+Not16 (in=y0, out=ny0);
+Mux16 (a=y0, b=ny0, sel=ny, out=y1);
+```
+
+### f
+
+As a separate operation we perform `x AND y`. As a separate operation we perform `x + y`. Then we choose which one to pass to the next step.
+
+```
+And16 (a=x1, b=y1, out=andxy);
+Add16 (a=x1, b=y1, out=addxy);
+Mux16 (a=andxy, b=addxy, sel=f, out=xy);
+```
+
+### no and ng
+
+Finally, as a separate operation, we invert the operation of `f`. Then we decide whether the output will be `f` or `NOT f`.
+
+`ng` checks if the number is negative. We look at the most-significant bit (MSB), in this case, `out[15]`. If `out[15]=1` then the number is negative.
+
+```
+Not16 (in=xy, out=nxy);
+Mux16 (a=xy, b=nxy, sel=no, out[15]=ng, out[0..7]=zr1, out[8..15]=zr2, out=out);
+```
+
+### zr
+
+We check to see if our output is zero. To do this, we must `OR` every bit of the output with each other, leaving a single bit. Note that `zr1=out[0..7]` and `zr2=out[8..15]` in the code below. Once we finishing `OR`ing all the bits together, if the ALU output was zero, then the output of this operation will also be zero (that is, when `out=0` then `zr=0`), which incorrect. The specification requires that if `out=0` then `zr=1`, so we `NOT` it at the end.
+
+```
+Or8Way (in=zr1, out=or1);
+Or8Way (in=zr2, out=or2);
+Or (a=or1, b=or2, out=or3);
+Not(in=or3, out=zr);
+```
+
+## Code
+
+<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/02/ALU.hdl" name="ALU.hdl" checked="checked">
+```
+CHIP ALU {
+    IN
+        x[16], y[16],  // 16-bit inputs
+        zx, // zero the x input?
+        nx, // negate the x input?
+        zy, // zero the y input?
+        ny, // negate the y input?
+        f,  // compute out = x + y (if 1) or x & y (if 0)
+        no; // negate the out output?
+
+    OUT
+        out[16], // 16-bit output
+        zr, // 1 if (out == 0), 0 otherwise
+        ng; // 1 if (out < 0),  0 otherwise
+
+    PARTS:
+    // zx
+    Mux16 (a=x, b=false, sel=zx, out=x0);
+
+    // zy
+    Mux16 (a=y, b=false, sel=zy, out=y0);
+
+    // nx
+    Not16 (in=x0, out=nx0);
+    Mux16 (a=x0, b=nx0, sel=nx, out=x1);
+
+    // ny
+    Not16 (in=y0, out=ny0);
+    Mux16 (a=y0, b=ny0, sel=ny, out=y1);
+
+    // f
+    And16 (a=x1, b=y1, out=andxy);
+    Add16 (a=x1, b=y1, out=addxy);
+    Mux16 (a=andxy, b=addxy, sel=f, out=xy);
+
+    // no and ng
+    Not16 (in=xy, out=nxy);
+    Mux16 (a=xy, b=nxy, sel=no, out[15]=ng, out[0..7]=zr1, out[8..15]=zr2, out=out);
+
+    // zr
+    Or8Way (in=zr1, out=or1);
+    Or8Way (in=zr2, out=or2);
+    Or (a=or1, b=or2, out=or3);
+    Not(in=or3, out=zr);
+}
+```
+</Tab>

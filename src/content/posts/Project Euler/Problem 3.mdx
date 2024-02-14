@@ -1,0 +1,113 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 3 - Largest prime factor
+part: 3
+date: 2023-04-22
+tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
+image: "/images/posts/braces.svg"
+---
+import Tab from "@components/Astro/Tab.astro";
+import Math from "@components/Astro/Math.astro";
+
+## Problem
+
+This problem comes from [Project Euler 3](https://projecteuler.net/problem=3)
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> The prime factors of 13195 are 5, 7, 13 and 29.
+>
+> What is the largest prime factor of the number 600851475143 ?
+>
+{/* EXCERPT END */}
+
+## Solution
+
+Every natural number, ℕ, can be created using prime factors. For example, the number 2595 can be created with the prime numbers 3, 5, and 173. That is
+
+<Math inline="false" equation="3 \times 5 \times 173 = 2595" />
+
+To obtain a list of prime factors for a number <Math equation="\sqrt{x}" />, we must
+
+1. Create a list of prime numbers
+2. Repeatedly divide <Math equation="x" /> by primes up to <Math equation="\sqrt{x}" />. No factors exist beyond that number
+
+### Prime Number Generator
+
+To create a list of prime numbers, I chose to create the [Sieve of Eratosethenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes). We first create a range of numbers starting from 2 and ending at a number we choose (e.g 2 to 10 000). We start by eliminating all multiples of 2 in our range, then move on to the next number that hasn't been eliminated. We then eliminate all multiples of that number, and so on and so forth.
+
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/PEF.py" name="PEF.py" checked="checked">
+```python
+# Project Euler Functions (PEF.py)
+
+import math
+
+def soe(n):
+'''Sieve of Eratosethenes. Finds prime numbers'''
+
+    primes = []
+    potential_primes = [True]*(n+1)
+
+    for i in range(2, n+1):
+        if potential_primes[i]:
+            primes.append(i)
+
+            # Eliminate multiples. They aren't prime
+            for not_prime in range(i**2, n+1, i):
+                potential_primes[not_prime] = False
+
+````
+</Tab>
+
+#### How It Works
+
+```python
+potential_primes = [True]*(n+1)
+````
+
+The code doesn't directly create a list of numbers in the range <Math equation="n" /> but instead creates a list of booleans in the range <Math equation="n" />. The indices instead act as our numbers. For example, once our algorithm runs for some range, `potential_primes[2062] = False` because 2062 isn't prime, but `potential_primes[523] = True` because 523 is prime. We create booleans because having something like `potential_primes[5123] = 5123` is redundant, but also when we are looking for the next number that hasn't been eliminated, checking a boolean value is fast.
+
+```python
+for i in range(2, n+1):
+    if potential_primes[i]:
+        primes.append(i)
+```
+
+The above code does what we were talking about. It iterates over the booleans, starting at 2, and if the boolean is `True` then it is prime. We can then start the elimination process.
+
+```python
+# Eliminate multiples. They aren't prime
+for not_prime in range(i**2, n+1, i):
+    potential_primes[not_prime] = False
+```
+
+We start at <Math equation="2i" /> (as <Math equation="i" /> is our prime number and we can't eliminate that) and eliminate all multiples of <Math equation="i" />.
+
+### Largest Prime Factor
+
+We generate our list of primes up to <Math equation="\sqrt{600851475143}" />. We continuously divide 600851475143 by successive prime numbers (thus performing prime factorization) while printing out the results. The last number is our largest prime factor.
+
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem03.py" group="two" name="problem03.py" checked="checked">
+```python
+# Project Euler: Problem 3
+# Largest Prime Factor
+
+from math import sqrt
+from PEF import soe # This was written by me
+
+number = 600851475143
+primes = soe(round(sqrt(number)))
+
+for prime in primes:
+if (number == 1):
+break
+
+    while (number % prime == 0):
+        number = number / prime
+        print(prime)
+
+```
+</Tab>

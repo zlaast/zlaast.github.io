@@ -1,0 +1,45 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 1 - Multiples of 3 and 5
+part: 1
+date: 2023-03-28
+tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
+image: "/images/posts/braces.svg"
+---
+import Tab from "@components/Astro/Tab.astro";
+
+## Problem
+
+This problem comes from [Project Euler 1](https://projecteuler.net/problem=1)
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23. Find the sum of all the multiples of 3 or 5 below 1000.
+> 
+{/* EXCERPT END */}
+
+## Solution
+
+We have to find all the multiples of 3 or 5 below 1000 and get the sum. One thing to look out for is multiples of 15, as they are multiples of _both_ 3 **AND** 5 and we want multiples of 3 **OR** 5.
+
+In the code below, we avoid the above problem by only checking if a number is divisible by one or the other.
+
+## Code
+
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem01.py" name="problem01.py" checked="checked">
+```python
+# Project Euler: Problem 1
+# Multiples of 3 or 5
+
+sum = 0
+for number in range (3, 1000): # if number is divisible by 3 or 5
+if (number % 3 == 0 or number % 5 == 0):
+sum += number
+
+print(sum)
+
+```
+</Tab>
