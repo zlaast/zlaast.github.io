@@ -52,7 +52,7 @@ posts.some(getLinks);
 <Base>
     <div id="main" class="flex mx-auto pl-12 pr-6 lg:text-xl">
         <span id="top"></span>
-        <main class="mt-10 lg:mt-16 mb-24 max-w-[75ch]">
+        <main class="mt-10 lg:mt-16 mb-12 max-w-[75ch]">
             <!-- Breadcrumbs -->
             <div class="mb-4">
                 <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
@@ -63,7 +63,7 @@ posts.some(getLinks);
             <hr class="mb-12 border-neutral-700">
 
             <!-- Card -->
-            <div class="mb-3">
+            <div>
                 <p class="text-neutral-300 text-lg ml-0.5 my-3">Published: { date }</p>
                 <h1 class="text-title text-4xl font-bold my-1">{ post.data.title }</h1>
                 <h2 class="text-subtitle text-3xl font-semibold">{ post.data.subtitle }</h2>
@@ -81,6 +81,8 @@ posts.some(getLinks);
                     <Content />
                 </article>
             </div>
+
+            <div class="border-b-[1px] m-0 border-neutral-700 w-full">&nbsp;</div>
 
             <!-- Semi-footer -->
             <div id="semi-footer">
