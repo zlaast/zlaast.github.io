@@ -6,7 +6,7 @@ subtitle: Project 2 - Boolean Arithmetic
 part: 2
 date: 2023-01-22
 tags: ["Coding", "Computers", "Digital"]
-image: "/public_images/braces.svg"
+image: "/images/braces.svg"
 ---
 import Tab from "@components/Astro/Tab.astro";
 import Math from "@components/Astro/Math.astro";
@@ -40,7 +40,7 @@ If we examine where the outputs are `1` in the table, we can produce the followi
 
 The `Sum` should look familiar: It's the boolean equation for an `XOR` gate (see [Project 1](/blog/nand2tetris/project-1) if you don't remember). The `Carry` should be even easier, as it's just an `AND` gate.
 
-![Half Adder](/src/images/posts/nand2tetris/Project%202/Half-Adder.png)
+![Half Adder](/images/posts/nand2tetris/project-2/Half-Adder.png)
 
 <Tab tab="HalfAdder.hdl" url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/02/HalfAdder.hdl">
 ```
@@ -75,7 +75,7 @@ The purpose of a "Full Adder" is to add 3 bits: Two bits from the current operat
 
 While we _could_ make boolean equations, like in the Half Adder implementation, another approach is used instead: Two Half Adders and an `OR` gate.
 
-![Half Adder](/src/images/posts/nand2tetris/Project%202/Full-Adder.png)
+![Half Adder](/images/posts/nand2tetris/project-2/Full-Adder.png)
 
 How does this work? Let's look at two scenarios: When `A=0`, `B=1` and when `A=B=1`. We'll let `Cin=1`.
 

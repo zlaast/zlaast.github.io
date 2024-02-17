@@ -7,6 +7,7 @@ import Card from '@components/Astro/Card.astro';
 import circuit from '@images/index/circuit_board.webp';
 import computer from '@images/index/computer_screen.webp';
 import portrait from '@images/index/portrait_index.webp';
+import video from '@images/index/index_background.webm';
 
 const posts = await getCollection("posts");
 posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
@@ -14,7 +15,7 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
 <Base>
 	<div id="main" class="bg-[#020102]">
 		<!-- Background Video -->
-		<video autoplay loop muted plays-inline disablepictureinpicture src="src/images/index/index_background.webm" class="fixed left-[-10px] top-0 z-10 min-h-full max-w-[unset] object-cover"></video>
+		<video autoplay loop muted plays-inline disablepictureinpicture src={ video } class="fixed left-[-10px] top-0 z-10 min-h-full max-w-[unset] object-cover"></video>
 		
 		<!-- Hero Section  -->
 		<div class="relative z-20 mx-auto flex max-w-6xl flex-col px-10 pt-20 text-neutral-200">
