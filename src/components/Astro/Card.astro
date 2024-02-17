@@ -2,6 +2,7 @@
 import MarkdownIt from 'markdown-it';
 import Math from "@components/Astro/Math.astro";
 import { parseDate } from '@utils/utils';
+import { Image } from "astro:assets"
 
 const { post } = Astro.props;
 const date = parseDate( post.data.date )
@@ -52,7 +53,7 @@ if (math_start != -1)
             <p class="text-neutral-300 font-light text-lg ml-[1px]">{ date }</p>
             <h1 class="text-title text-3xl font-bold">{ post.data.title }</h1>
             <h2 class="text-subtitle text-2xl font-semibold">{ post.data.subtitle }</h2>
-            <div class="flex flex-wrap text-sm mb-4">
+            <div class="flex flex-wrap text-sm">
             { post.data.tags.sort().map((tag: any) => 
                 <span class="leading-10 text-md">
                     <span class="mr-1 whitespace-nowrap rounded-md border-[1px] border-slate-500 p-1">
@@ -60,6 +61,7 @@ if (math_start != -1)
                     </span>
                 </span>
             )}
+            </div>
             <div class="text-[20px] font-light line-clamp-5">
                 <Fragment set:html={ before_component } />
                 <Math equation={ component_string }>

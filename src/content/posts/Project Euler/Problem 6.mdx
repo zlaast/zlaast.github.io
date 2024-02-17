@@ -6,10 +6,10 @@ subtitle: Problem 6 - Sum Square Difference
 part: 6
 date: 2023-10-01
 tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
-image: "/images/posts/braces.svg"
+image: "/public_images/braces.svg"
 ---
 import Math from "@components/Astro/Math.astro";
-import Tab from "@components/Astro/Tab.astro";
+import Tabs from "@components/Astro/Tabs.astro";
 
 ## Problem
 
@@ -75,8 +75,15 @@ Since <Math equation="n = 100" />, we'll get
 
 I decided to leave the formulas in the code in case I wished to change <Math equation="n" /> later. And instead of calculating <Math equation="n(n+1)" /> twice, I calculated it once and placed it in the variable "<Math equation="a" />".
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem06.py" checked="checked" name="problem06.py">
-
+<Tabs list={
+    [
+        {
+            "tab": "problem05.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem05.py"
+        },
+    ]
+}>
+<div class="tab-content" id="problem05.py">
 ```python
 # Project Euler: Problem 6
 # Sum square difference
@@ -89,5 +96,5 @@ square_sum = (a/2)**2
 
 print(square_sum-sum_square)
 ```
-
-</Tab>
+</div>
+</Tabs>

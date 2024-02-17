@@ -6,9 +6,9 @@ subtitle: Problem 4 - Largest palindrome product
 part: 4
 date: 2023-04-23
 tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
-image: "/images/posts/braces.svg"
+image: "/public_images/braces.svg"
 ---
-import Tab from "@components/Astro/Tab.astro";
+import Tabs from "@components/Astro/Tabs.astro";
 import Math from "@components/Astro/Math.astro";
 
 ## Problem
@@ -29,7 +29,15 @@ The solution here may not be the most efficient, but it works.
 
 The program loops through all 3-digit number products and checks to see if the result is palindromic.
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem04.py" checked="checked" name="problem04.py">
+<Tabs list={
+    [
+        {
+            "tab": "problem04.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem04.py"
+        },
+    ]
+}>
+<div class="tab-content" id="problem04.py">
 ```python
 # Project Euler: Problem 4
 # Largest Palindrome Product
@@ -46,7 +54,8 @@ for num1 in range(100, 1000):
 
 print(max)
 ```
-</Tab>
+</div>
+</Tabs>
 
 `num2`'s range is between `num1` and 1000 to avoid repeated calculations. For example, <Math equation='105 \times 22' /> is the same as <Math equation='22 \times 105' /> and would be an unnecessary calculation. This avoids that problem by setting `num2`'s bottom range to `num1`.
 

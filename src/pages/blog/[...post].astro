@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets"
 import { parseDate } from '@utils/utils';
 import Base from '@layouts/Base.astro';
 import TOC from '@components/Astro/TOC.astro';
@@ -193,8 +194,6 @@ article h3 {
     color: var(--h3);
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1.25rem;
-    margin-top: 1.25rem;
 }
 
 article h4 {

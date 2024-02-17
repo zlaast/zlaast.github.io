@@ -6,10 +6,10 @@ subtitle: Problem 5 - Smallest multiple
 part: 5
 date: 2023-04-28
 tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
-image: "/images/posts/braces.svg"
+image: "/public_images/braces.svg"
 ---
 import Math from "@components/Astro/Math.astro";
-import Tab from "@components/Astro/Tab.astro";
+import Tabs from "@components/Astro/Tabs.astro";
 
 ## Problem
 
@@ -95,7 +95,15 @@ If we rearrange and multiply these numbers, we get <Math equation="2520 = 2 \tim
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem05.py" checked="checked" name="problem05.py">
+<Tabs list={
+    [
+        {
+            "tab": "problem05.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem05.py"
+        },
+    ]
+}>
+<div class="tab-content" id="problem05.py">
 ```python
 # Project Euler: Problem 5
 # Smallest Multiple
@@ -124,4 +132,5 @@ for num in range(2, 21):
 # Step 4: Multiply all factors
 print(math.prod(factors))
 ```
-</Tab>
+</div>
+</Tabs>

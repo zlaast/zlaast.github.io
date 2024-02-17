@@ -6,9 +6,9 @@ subtitle: Problem 1 - Multiples of 3 and 5
 part: 1
 date: 2023-03-28
 tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
-image: "/images/posts/braces.svg"
+image: "/public_images/braces.svg"
 ---
-import Tab from "@components/Astro/Tab.astro";
+import Tabs from "@components/Astro/Tabs.astro";
 
 ## Problem
 
@@ -29,7 +29,16 @@ In the code below, we avoid the above problem by only checking if a number is di
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem01.py" name="problem01.py" checked="checked">
+
+<Tabs list={
+    [
+        {
+            "tab": "problem01.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem01.py"
+        },
+    ]
+}>
+<div class="tab-content" id="problem01.py">
 ```python
 # Project Euler: Problem 1
 # Multiples of 3 or 5
@@ -40,6 +49,6 @@ if (number % 3 == 0 or number % 5 == 0):
 sum += number
 
 print(sum)
-
 ```
-</Tab>
+</div>
+</Tabs>

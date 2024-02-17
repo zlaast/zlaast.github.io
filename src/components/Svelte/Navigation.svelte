@@ -117,7 +117,7 @@
 		<ul>
 			<!-- Portrait of Me -->
 			<li class="mt-14">
-				<a href="/"><img src="/images/navigation/portrait.webp" alt="Small portrait of me" class="mx-auto h-full w-[96px] rounded-full" /></a>
+				<a href="/"><img src="../../src/images/nav/portrait.webp" alt="Small portrait of me" class="mx-auto h-full w-[96px] rounded-full" /></a>
 			</li>
 
 			<!-- Buttons -->

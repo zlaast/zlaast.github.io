@@ -1,3 +1,9 @@
+---
+import { Image } from 'astro:assets';
+import hands from '@images/nav/avatar_hands.svg';
+import head from '@images/nav/avatar_head.svg';
+---
+
 <script>
     const avatarTrigger = document.getElementById('avatar-trigger')!;
     const head = document.getElementsByClassName('head')!;
@@ -44,7 +50,7 @@
 
     .hands
     {
-        top: -48px;
+        top: -47px;
         transition-property: top;
         transition-duration: 0.5s;
         transition-timing-function: ease-in-out;
@@ -71,8 +77,8 @@
 <footer id="footer" class="footer border-[#212326] relative bottom-0 left-0 z-20 w-full border-t-[48px] bg-[#08070c] text-neutral-300">
     <div class="bg-[#212326] drop-shadow-up h-12 border-b-8 border-[cyan]" id="avatar-trigger"></div>
     <div class="avatar relative flex justify-center">
-      <img src="/images/navigation/avatar_head.svg" alt="little avatar head" class="head absolute z-[0] drop-shadow-md" />
-      <img src="/images/navigation/avatar_hands.svg" alt="little avatar hands" class="hands absolute z-[0] h-12 drop-shadow-md" />
+      <Image src={ head } alt="little avatar head" class="head absolute z-[0] drop-shadow-md" />
+      <Image src={ hands } alt="little avatar hands" class="hands absolute z-[0] h-12 w-20 drop-shadow-md" />
     </div>
     <div class="relative z-[2] flex items-center bg-[#08070c] pt-6 max-md:flex-col">
       <div class="name-hue font-nabla flex w-[20%] justify-center border-r-[1px] border-slate-400 p-10 text-4xl max-md:hidden">Z'Laast</div>
