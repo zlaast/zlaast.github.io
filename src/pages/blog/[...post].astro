@@ -51,9 +51,9 @@ function getLinks(post: any)
 posts.some(getLinks);
 ---
 <Base>
-    <div id="main" class="flex mx-auto pl-12 pr-6 lg:text-xl">
+    <div id="main" class="flex lg:text-xl">
         <span id="top"></span>
-        <main class="mt-10 lg:mt-16 mb-12 max-w-[75ch]">
+        <main class="mt-10 lg:mt-16 mb-24 mx-auto max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[30ch]">
             <!-- Breadcrumbs -->
             <div class="mb-4">
                 <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
@@ -259,6 +259,7 @@ article ol {
     font-size: 20px;
     margin-left: 1em;
     line-height: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
 article ol li ul li {
@@ -290,10 +291,23 @@ pre {
     overflow: auto;
 }
 
-@media only screen and (max-width: 960px)
+@media only screen and (max-width: 600px)
 {
     pre {
-        width: 80vw;
+        width: 83vw;
+        font-size: 12px !important;
+    }
+
+    article code:not(pre code) {
+        font-size: 14px;
+    }
+
+    .katex {
+        font-size: 16px;
+    }
+
+    article h2, h3, h4 {
+        text-align: center;
     }
 }
 </style>

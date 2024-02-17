@@ -1,0 +1,76 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 10 - Summation of Primes
+part: 10
+date: 2023-10-06
+tags: ['Coding', 'Algorithms', 'Computing', 'Math', 'Python']
+image: "/images/braces.svg"
+---
+import Tabs from "@components/Astro/Tabs.astro";
+
+## Problem
+
+This problem comes from [Project Euler 10](https://projecteuler.net/problem=10)
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
+>
+> Find the sum of all primes below two million.
+{/* EXCERPT END */}
+
+## Solution
+We can once again use the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) as seen in [Problem 3](/posts/Project%20Euler/Problem%203).
+Since the sieve returns a list (array), we can just sum the returned list.
+
+## Code
+
+<Tabs list={
+    [
+        {
+            "tab": "problem10.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem10.py"
+        },
+        {
+            "tab": "PEF.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/PEF.py"
+        },
+    ]
+}>
+<div class="tab-content" id="problem10.py">
+```python
+# Project Euler: Problem 10
+# Summation of primes
+
+from PEF import soe   # I wrote this
+
+primes = soe(2000000)
+print(sum(primes))
+```
+</div>
+
+<div class="tab-content" id="PEF.py">
+```python
+# Project Euler Functions (PEF)
+
+import math
+
+def soe(n):
+    '''Sieve of Eratosethenes. Finds prime numbers'''
+
+    primes = []
+    potential_primes = [True]*(n+1)
+
+    for i in range(2, n+1):
+        if potential_primes[i]:
+            primes.append(i)
+
+            # Eliminate multiples. They aren't prime
+            for not_prime in range(i**2, n+1, i):
+                potential_primes[not_prime] = False
+```
+</div>
+</Tabs>

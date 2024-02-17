@@ -25,7 +25,7 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
 
 <Base>
     <div id="main" class="flex">
-        <main class="mt-16 mb-24 mx-auto max-w-[75ch]">
+        <main class="mt-10 lg:mt-16 mb-24 mx-auto max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[23ch]">
             <!-- Breadcrumbs -->
             <div class="mb-4 text-neutral-300 text-[20px]">
                 <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
@@ -42,8 +42,6 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
                         return ( <Card post = { allPosts } /> );
                 })
             }
-
-
     </div>
 </Base>
 

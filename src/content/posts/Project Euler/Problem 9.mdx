@@ -1,0 +1,91 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 9 - Special Pythagorean Triplet
+part: 9
+date: 2023-10-05
+tags: ['Coding', 'Algorithms', 'Computing', 'Math', 'Python']
+image: "/images/braces.svg"
+---
+import Math from "@components/Astro/Math.astro";
+import Tab from "@components/Astro/Tab.astro";
+
+## Problem
+
+This problem comes from [Project Euler 9](https://projecteuler.net/problem=9)
+
+{/* EXCERPT START */}
+>**Problem**
+>
+>A Pythagorean triplet is a set of three natural numbers, <Math equation="a < b < c" />, for which, 
+>
+> <Math inline="false" equation="a^2 + b^2 = c^2" />
+>
+>For example, <Math equation="3^2 + 4^2 = 9 + 16 = 25 = 5^2" />
+>
+>There exists exactly one Pythagorean triplet for which <Math equation="a + b + c = 1000" />.
+>
+>Find the product <Math equation="a \times b \times c" />
+{/* EXCERPT END */}
+
+## Solution
+
+In order to generate Pythagorean Triples we can use [**Euclid's Formula**](https://en.wikipedia.org/wiki/Pythagorean_triple#Generating_a_triple), where <Math equation="a, b, c" /> in the Pythagorean Theorem are
+
+<Math inline="false" equation="a = m^2 - n^2" />
+<Math inline="false" equation="b = mn" />
+<Math inline="false" equation="c = m^2 + n^2" />
+
+And <Math equation=" m " /> and <Math equation=" n " /> are arbitrary integers where <Math equation=" m > n > 0 " />.
+
+Now, we *could* use this as is and make the following code
+
+```python
+for n in range (1, 1000):
+    for m in range(n+1, 1000):
+        a = m**2 - n**2
+        b = 2*m*n
+        c = m**2 + n**2
+
+        if (a+b+c == 1000):
+            print(a*b*c)
+            break
+
+```
+
+And it would work fine! But we can make an optimization. We know that we are aiming for
+
+<Math inline="false" equation="a + b + c = 1000" />
+
+So why not perform some simplications? Substituting in Euclid's Formula we get
+
+<Math inline="false" equation="m^2 - n^2 + 2mn + m^2 + n^2 = 1000" />
+
+And simplifying the above equation
+
+<Math inline="false" equation="m(m+n) = 500" />
+
+Finding when <Math equation="m(m+n) = 500" /> and *then* calculating <Math equation="a" />, <Math equation="b" />, and <Math equation="c" /> is less computationally expensive and faster than the code shown above.
+
+## Code
+
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem09.py" tab="problem09.py">
+```python
+# Project Euler: Problem 9
+# Special Pythagorean Triplet
+
+# Euclid's Formula is used here. 
+# Check out https://en.wikipedia.org/wiki/Pythagorean_triple
+
+for n in range (1, 500):
+    for m in range(n+1, 500):
+        if (m*(m+n) == 500):
+            a = m**2 - n**2
+            b = 2*m*n
+            c = m**2 + n**2
+
+            print(a*b*c)
+            break
+```
+</Tab>

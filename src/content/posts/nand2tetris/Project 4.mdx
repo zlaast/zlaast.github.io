@@ -1,0 +1,227 @@
+---
+category: Coding
+series: nand2tetris
+title: nand2tetris
+subtitle: Project 4 - Machine Language
+part: 5
+date: 2023-04-02
+tags: ['Coding', 'Computers', 'Digital']
+image: "/images/braces.svg"
+---
+import Math from "@components/Astro/Math.astro";
+import Tab from "@components/Astro/Tab.astro";
+
+## Introduction
+
+{/* EXCERPT START */}
+Here, we write some simple programs in the course's HACK assembly language.
+{/* EXCERPT END */}
+
+## Multiplication Program
+
+### Introduction
+
+This program has to perform the following: <Math equation=" R_2 = R_1 \times R_0 " /> where <Math equation=" R_n " /> is a register at memory location <Math equation=" n " />.
+
+To perform multiplication, let's remember how it works:
+
+- <Math equation=" R_2 " /> is called the product. It's the result of our multiplication
+- <Math equation=" R_1 " /> is called the multiplicand. It's what we're multiplying
+- <Math equation=" R_0 " /> is called the multiplier. It's how many times we're multiplying the multiplicand
+
+Multiplication is then
+
+<Math inline="false" equation=" R_2 = R_1 \times R_0 "/>
+<Math inline="false" equation=" R_2 = R_{1,1} + R_{1,2} + R_{1,3} + \cdots + R_{1, R_0} "/>
+
+For example,
+
+<Math inline="false" equation=" 7 \times 4 = 7_1 + 7_2 + 7_3 + 7_4 "/>
+
+Or just simply (because no one writes it like the above),
+
+<Math inline="false" equation=" 7 \times 4 = 7 + 7 + 7 + 7 "/>
+
+This is just repeated addition, which can be implemented with a loop. Ideally, if we wish to be efficient, we would check to see which of <Math equation=" R_1 " /> or <Math equation=" R_2 " /> is lower, then make the lower number the multiplier, which would be our number of repititions for a loop. For example,
+
+<Math inline="false" equation=" 3 \times 4000 = 3 + 3 + 3 + 3 + \ldots "/>
+
+is obviously less efficient than
+
+<Math inline="false" equation=" 4000 \times 3 = 4000 + 4000 + 4000 "/>
+
+I decided against implementing this, as this made the code much longer, and harder to read and follow. Also, there wasn't a need for efficiency here, as the project was just an exercise in understanding machine code. Therefore, I opted to keep it simple.
+
+Here's the convention I used:
+
+- `R2` is where the product is stored
+
+- `R1` is the multiplicand
+- `R0` is the multiplier
+- `i` is a variable that holds the amount of iterations for our loop. It is initially set to the value of `R0`
+
+### Pseudocode
+```
+R2 = 0
+i = R0
+
+LOOP:
+    if (i == 0) goto END
+
+    R2 = R2 + R1
+    i = i - 1
+
+    goto LOOP
+
+END:
+    goto END
+```
+
+#### Pseudocode Example
+
+Let R0 = 3 and R1 = 4
+
+```
+1.  R2 = 0
+2.  i = 3
+3.  LOOP
+4.  R2 = 0 + 4 = 4
+5.  i = 3 - 1 = 2
+6.  LOOP
+7.  R2 = 4 + 4 = 8
+8.  i = 2 - 1 = 1
+9.  LOOP
+10. R2 = 8 + 4 = 12
+11. i = 1 - 1 = 0
+12. i == 0, goto END
+```
+
+### Program
+
+The actual program is listed below. The comments should explain fairly well what is occurring.
+
+<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/04/Mult.asm" tab="Mult.asm">
+```
+// R2 = 0
+@R2
+M=0
+
+// i = R0
+@R0                             // Go to R0...
+D=M                             // ...and copy its contents into D
+@i                              // Go to i...
+M=D                             // ...and copy the contents of D into i
+
+// Enter main loop
+(LOOP)
+    // if (i == 0) goto END
+    @i                          // Go to i...
+    D=M                         // ...and copy its contents into D
+    @END                        // Get the address of (END)...
+    D;JEQ                       // ...and if D is zero, jump to (END)
+
+    // R2 = R2 + R1
+    @R1                         // Go to R1...
+    D=M                         // ...and copy its contents into D
+    @R2                         // Go to R2...
+    M=M+D                       // ...and perform R2=R2+D
+
+    // i = i - 1
+    @i                          // Go to i...
+    M=M-1                       // ...and subtract 1
+
+    // goto LOOP
+    @LOOP                       // Get the address of (LOOP)...
+    0;JMP                       // ...and jump to (LOOP)
+
+// End of program
+(END)
+    @END
+    0;JMP
+```
+</Tab>
+
+## Fill Screen Program
+### Introduction
+The point of this program is to fill the entire screen with pixels as long as any key is being held down. If no key is being pressed, then the screen is cleared.
+
+### Pseudocode
+
+This likely isn't the best way to perform the task, but it works. When a key is pressed the screen fills entirely. *Only* when it's finished filling the screen, does it again check to see if a key is being pressed. This means that even if you stop pressing a key part way through, the screen will *still* finish filling. This would be a problem on a slow computer, but on a fast enough computer the screen would seemingly react quickly to a key being pressed or released.
+
+In the pseudocode below, the program checks if any key is being pressed (when `kbd > 0`). If a key is being pressed it goes to `FILL`, and if not, it goes to `CLEAR`. There are 8192 16-bit chunks of screen memory. The program loops through each chunk and either it fills it with pixels or clears it.
+
+```
+CHECK:
+    if ( kbd > 0 ) goto FILL            // If any key is pressed go to FILL...
+    else goto CLEAR                     // ...else go to CLEAR
+
+FILL:
+    for (i = 0; i < 8191; i++)          // Fill the entire screen with black
+        screen[i] = -1
+
+CLEAR:
+    for (i = 0; i < 8191; i++)          // Fill the entire screen with white
+        screen[i] = 0
+```
+
+
+
+## Program
+
+<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/04/Fill.asm" tab="Fill.asm">
+
+```
+(INIT)          // i = 8191
+    @8191
+    D=A
+    @i
+    M=D         
+
+(CHECK)         // Check if key is pressed
+    @KBD
+    D=M
+
+​	@FILL
+​	D;JGT       // Go to FILL if any key is being pressed (KBD>0)...
+
+​	@CLEAR      // ...else go to CLEAR
+​	0;JMP
+
+(FILL)          // Fill screen
+    @SCREEN
+    D=A
+    @i
+    A=D+M       // Go to address SCREEN+i
+
+	M=-1        // Fill the 16-bit chunk with pixels
+
+​	@i
+​	M=M-1
+​	D=M         // i=i-1 (we're filling the screen from bottom up)
+
+​	@INIT
+​	D;JLT       // If i<0, then screen is filled. Go back to INIT to reset i...
+
+​	@FILL       // ...else keep filling
+​	0;JMP
+
+(CLEAR)         // Clear screen
+    @SCREEN
+    D=A
+    @i
+    A=D+M
+
+	M=0
+
+​	@i
+​	M=M-1
+​	D=M
+
+​	@INIT
+​	D;JLT
+
+​	@CLEAR
+​	0;JMP
+```
+</Tab>

@@ -1,0 +1,83 @@
+---
+category: Misc
+series: 3D Printing
+title: Audio-Technica ATH-M40X
+subtitle: Replacement Parts
+part: 1
+date: 2023-01-07
+tags: ['3D Printing']
+image: "/images/printer.svg"
+---
+import Important from "@components/Astro/Important.astro";
+
+## Introduction
+
+{/* EXCERPT START */}
+The Audio-Technica ATH-M40x's are pretty good headphones. I've had mine for years, and it has survived many drops and cord yanks. The one downside is that the armature (the part that attaches the earcups to the headband), is prone to breaking.
+{/* EXCERPT END */}
+
+I designed replacement parts for the headphones, while trying to maintain the original look. Here is a fully assembled model of the replacement parts.
+
+<Important>
+    <ul>
+        <li>The models are for the right ear. Mirror the models to get the left ear</li>
+        <li>The complete and assembled model is for demonstration purposes and <u>should not</u> be 3D printed. Instead, 3D print the individual parts, which are available below. Alternatively, you can <a class="text-purple-800" href="https://github.com/zlaast/ATH-M40X">visit the repo here</a></li>
+        <li>Please see the warning below on printing the Pivot</li>
+    </ul>
+</Important>
+
+<div class="flex justify-center my-8">
+    <script src="https://embed.github.com/view/3d/zlaast/ATH-M40X/master/Headphones%20Assembly.STL"></script>
+</div>
+
+## Models and Purposes
+
+### Part 1A - Band Assembly
+
+The Band Assembly attaches to the headband and pivot. It routes the wire from the headband to the pivot. [View Band Assembly on Github](https://github.com/zlaast/ATH-M40X/blob/main/Headphones%20Assembly%20-%20Band%20Assembly%20(Right%20Ear).STL)
+
+![Band Assembly](/images/posts/Misc/ATH-M40X/Band%20Assembly.png)
+
+### Part 1B - Band Assembly Cover
+
+The Pivot allows the headphones to twist and bend. [View Pivot on Github](https://github.com/zlaast/ATH-M40X/blob/main/Headphones%20Assembly%20-%20Band%20Assembly%20Cover%20(Right%20Ear).STL)
+
+### Part 2 - Pivot
+
+The Pivot allows the headphones to twist and bend. [View Pivot on Github](https://github.com/zlaast/ATH-M40X/blob/main/Headphones%20Assembly%20-%20Pivot%20(Right%20Ear).STL)
+
+![Pivot](/images/posts/Misc/ATH-M40X/Pivot.png)
+
+<Important>
+    The orientation in which the pivot is 3D printed is critical! An incorrect orientation can weaken the part, causing it to snap prematurely.
+</Important>
+
+![Pivot with bad orientation](/images/posts/Misc/ATH-M40X/Pivot%20-%20Bad%20Orientation.png)
+
+The red lines represent how the plastic would be layered in a vertical print.
+
+The arrow shows a shearing force at the point where the part is the weakest. The force is caused by taking off, putting on, or just simply wearing the headphones.
+
+Due to the print orientation, only a thin layer of plastic separates the top part and the bottom part. Essentially, the force is applied in the same direction as the "grain", causing it to snap easily.
+
+![Pivot with good orientation](/images/posts/Misc/ATH-M40X/Pivot%20-%20Good%20Orientation.png)
+
+The green lines represent how the plastic would be layered in a horizontal print.
+
+We solve the previous problem by printing the pivot horizontally. Instead of a thin layer of plastic holding the top and bottom part together, we have multiple layers of plastic. The force is now applied perpendicular to the "grain", making it resist the force better.
+
+### Part 3A - Arm Assembly
+
+The Arm Assembly attaches directly to the earcups, and routes the headphone wire directly to the headphone driver. It also attaches to the pivot. [View Arm Assembly on Github](https://github.com/zlaast/ATH-M40X/blob/main/Headphones%20Assembly%20-%20Arm%20Assembly%20(Right%20Ear).STL)
+
+![Arm Assembly](/images/posts/Misc/ATH-M40X/Arm%20Assembly%20-%20Back.png)
+
+### Part 3B - Arm Assembly Cover
+
+The Arm Assembly Cover is just a cover that can be screwed onto the Arm Assembly. It holds the wire and pivot in place. [View Arm Assembly Cover on Github](https://github.com/zlaast/ATH-M40X/blob/main/Headphones%20Assembly%20-%20Arm%20Assembly%20Cover%20(Right%20Ear).STL)
+
+## The Final Product
+
+Here's the headphone assembly, fully printed and on my headphones!
+
+![Fully assembled headphones](/images/posts/Misc/ATH-M40X/Headphones.jpg)
