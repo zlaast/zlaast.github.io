@@ -9,7 +9,7 @@ export default {
         bg: "#19191B",
         title: "#979B8D",
         subtitle: "#C2410C",
-        link: "#CD9EEC",
+        link: "#54b9ff"
       },
       fontFamily: {
         readex: "Readex Pro",

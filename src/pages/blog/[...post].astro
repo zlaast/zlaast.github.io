@@ -1,6 +1,5 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
-import { Image } from "astro:assets"
 import { parseDate } from '@utils/utils';
 import Base from '@layouts/Base.astro';
 import TOC from '@components/Astro/TOC.astro';
@@ -51,9 +50,9 @@ function getLinks(post: any)
 posts.some(getLinks);
 ---
 <Base>
-    <div id="main" class="flex lg:text-xl">
+    <div id="main" class="flex mx-auto lg:text-xl">
         <span id="top"></span>
-        <main class="mt-10 lg:mt-16 mb-24 mx-auto max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[30ch]">
+        <main class="mt-10 lg:mt-16 mb-24 max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[30ch]">
             <!-- Breadcrumbs -->
             <div class="mb-4">
                 <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
@@ -66,7 +65,7 @@ posts.some(getLinks);
             <!-- Card -->
             <div>
                 <p class="text-neutral-300 text-lg ml-0.5 my-3">Published: { date }</p>
-                <h1 class="text-title text-4xl font-bold my-1">{ post.data.title }</h1>
+                <h1 class="white text-4xl font-bold my-1">{ post.data.title }</h1>
                 <h2 class="text-subtitle text-3xl font-semibold">{ post.data.subtitle }</h2>
             </div>
 
@@ -83,7 +82,9 @@ posts.some(getLinks);
                 </article>
             </div>
 
-            <div class="border-b-[1px] m-0 border-neutral-700 w-full">&nbsp;</div>
+            <hr class="border-b-[1px] border-t-0 mt-10 border-neutral-700 w-full">
+
+            <!-- <div class="border-b-[1px] m-0 border-neutral-700 w-full">&nbsp;</div> -->
 
             <!-- Semi-footer -->
             <div id="semi-footer">
@@ -101,7 +102,7 @@ posts.some(getLinks);
                 </div>
 
                 <!-- Links -->
-                <div class="max-md:text-md mt-6 flex flex-row justify-between text-lg max-md:flex-col max-md:text-center">
+                <div class="max-md:text-md mt-6 font-semibold flex flex-row justify-between text-lg max-md:flex-col max-md:text-center">
                     <a class="text-link my-3 decoration-dotted decoration-1 underline-offset-8 hover:underline" href=`/blog/${adjacentLinks[0]}`>← { adjacentSubtitles[0] }</a>
                     <a class="text-link my-3 decoration-dotted decoration-1 underline-offset-8 hover:underline" href=`/blog/${adjacentLinks[1]}`>{ adjacentSubtitles[1] } →</a>
                 </div>
@@ -151,16 +152,17 @@ posts.some(getLinks);
 */
 
 :root {
-    --link: #cd9eec;
+    --link: #54b9ff;
     --subtitle: #c2410c;
-    --title: #979b8d;
-    --h2: #e01a4f;
-    --h3: #c2410c;
-    --h4: #ca8a04;
+    --title: white;
+    --h2: #54b9ff;
+    --h3: white;
+    --h4: #979b8d;
 }
 
 article a {
     color: var(--link);
+    font-weight: bold;
 }
 
 article a:hover {
@@ -169,7 +171,7 @@ article a:hover {
 
 article blockquote {
     background-color: #15161a;
-    border-left: 2px solid var(--title);
+    border-left: 4px solid var(--h2);
     font-style: italic;
     font-weight: 300;
     margin: 1rem 0 1rem 0;
@@ -202,6 +204,9 @@ article h4 {
     font-weight: 500;
     margin-bottom: 1.5rem;
     margin-top: 1.5rem;
+    /* text-decoration: underline; */
+    border-left: 5px solid var(--h2);
+    padding-left: 1rem;
 }
 
 article p {
@@ -226,7 +231,7 @@ table {
 }
 
 thread tr {
-    background-color: #009879;
+    background-color: #54b9ff;
     color: #ffffff;
     text-align: center;
 }
@@ -246,7 +251,7 @@ tbody tr:nth-child(even)
 }
 
 tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
+    border-bottom: 2px solid #54b9ff;
 }
 
 article ul {
@@ -255,11 +260,14 @@ article ul {
 }
 
 article ol {
+    background-color: #15161a;
     list-style-type: decimal;
     font-size: 20px;
-    margin-left: 1em;
     line-height: 2.5rem;
     margin-bottom: 1.5rem;
+    list-style-position: inside;
+    padding: 1rem;
+    border-left: 4px solid var(--subtitle);
 }
 
 article ol li ul li {

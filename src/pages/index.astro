@@ -43,13 +43,15 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
 		<div class="recent-posts relative z-20 mt-5 pt-2">
 			<div class="bg-bg pb-12">
 				<div class="mx-auto flex max-w-5xl flex-col px-10">
-					<h1 class="font-readex bg-title text-bg my-16 max-w-fit p-3 text-6xl font-bold max-sm:text-center">Recent</h1>
-					{ 
-						posts.slice(posts.length-3, posts.length).reverse().map((post) => 
+					<h1 class="font-readex bg-title text-bg my-16 max-w-fit p-3 text-6xl font-bold max-lg:mx-auto">Recent</h1>
+					<div class="flex justify-between flex-wrap flex-row max-lg:flex-col max-lg:mx-auto">
+					{
+						posts.slice(posts.length-4, posts.length).reverse().map((post) => 
 						{
 							return ( <Card post = { post } /> );
 						})
 					}
+					</div>
 				</div>
 			</div>
 		</div>

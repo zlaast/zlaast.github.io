@@ -6,7 +6,7 @@ subtitle: Project 2 - Boolean Arithmetic
 part: 2
 date: 2023-01-22
 tags: ["Coding", "Computers", "Digital"]
-image: "/images/braces.svg"
+image: "/images/posts/nand2tetris/tetris.svg"
 ---
 import Tab from "@components/Astro/Tab.astro";
 import Math from "@components/Astro/Math.astro";
@@ -79,7 +79,7 @@ While we _could_ make boolean equations, like in the Half Adder implementation, 
 
 How does this work? Let's look at two scenarios: When `A=0`, `B=1` and when `A=B=1`. We'll let `Cin=1`.
 
-Scenario 1
+#### Scenario 1
 
 1.  Let `A=0`, `B=1`
 2.  `sum=1`, `carry=0` for the first Half Adder
@@ -87,7 +87,7 @@ Scenario 1
 4.  `sum=0`, `carry=1` for the second Half Adder
 5.  `out=0`, `carry=1` for the Full Adder
 
-Scenario 2
+#### Scenario 2
 
 1.  Let `A=B=1`
 2.  `sum=0`, `carry=1` for the first Half Adder
@@ -121,10 +121,10 @@ CHIP FullAdder {
 
 This is straightforward: add two 16-bit numbers together.
 
-Note
+**Note**
 
-1.  The first Full Adder could have been replaced with a Half Adder
-2.  `A` and `B` are added bitwise, but the `carry`s are fed into the next Full Adder
+- The first Full Adder could have been replaced with a Half Adder
+- `A` and `B` are added bitwise, but the `carry`s are fed into the next Full Adder
 
 It should be noted that the method used to add the numbers is called a "Ripple Adder" and it isn't the most efficient. A better adder is called a "Carry Look-Ahead" adder.
 

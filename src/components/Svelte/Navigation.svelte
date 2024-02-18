@@ -83,7 +83,8 @@
 	</div>
 </nav>
 
-<script>
+<script type="text/javascript">
+	import { afterUpdate } from 'svelte';
     import SearchModal from "./SearchModal.svelte";
 
 	const host = '/api';
@@ -142,10 +143,13 @@
 			closeMenu();
 	}
 
-	const main = document.getElementById("main");
-	const footer = document.getElementsByTagName("footer");
-	main.addEventListener("click", closeMenu);
-	footer[0].addEventListener("click", closeMenu);
+	afterUpdate(() => 
+    {
+		const main = document.getElementById("main");
+		const footer = document.getElementById("footer")
+		main.addEventListener("click", closeMenu, {passive: true});
+		footer.addEventListener("click", closeMenu, {passive: true});
+    });
 
 	/* SCROLL TO TOP BUTTON */
 	function scrollToTop()

@@ -24,8 +24,8 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
 ---
 
 <Base>
-    <div id="main" class="flex">
-        <main class="mt-10 lg:mt-16 mb-24 mx-auto max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[23ch]">
+    <div id="main" class="flex mx-auto lg:text-xl">
+        <main class="mt-10 lg:mt-16 mb-24 max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[30ch]">
             <!-- Breadcrumbs -->
             <div class="mb-4 text-neutral-300 text-[20px]">
                 <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
@@ -35,13 +35,16 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
             <hr class="mb-12 border-neutral-700">
 
             <h1 class="font-readex bg-title text-bg my-16 max-w-fit p-3 text-6xl font-bold max-sm:text-center">{ post.data.series }</h1>
-            {
-                posts.reverse().map((allPosts) => 
+            <div class="flex justify-between flex-wrap max-lg:flex-col max-lg:mx-auto">
                 {
-                    if (allPosts.data.series == post.data.series)
-                        return ( <Card post = { allPosts } /> );
-                })
-            }
+                    posts.reverse().map((allPosts) => 
+                    {
+                        if (allPosts.data.series == post.data.series)
+                            return ( <Card post = { allPosts } /> );
+                    })
+                }
+            </div>
+        </main>
     </div>
 </Base>
 
@@ -58,88 +61,7 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
         --title: #979b8d;
     }
     
-    article a {
-        color: var(--link);
-    }
-    
-    article a:hover {
-        border-bottom: 1px dotted var(--link);
-    }
-    
-    article blockquote {
-        background-color: #15161a;
-        border-left: 2px solid var(--title);
-        font-style: italic;
-        font-weight: 300;
-        margin: 1rem 0 1rem 0;
-        padding: 1px 2rem;
-    }
-    
-    article code:not(pre code) {
-        background-color: #303238;
-        overflow-wrap: break-word;
-        padding: 3px;
-    }
-    
-    article h1 {
-        color: white;
-        font-size: 2.25rem;
-        font-weight: 800;
-        margin-bottom: 2.25rem;
-        margin-top: 2.25rem;
-    }
-    
-    article h2 {
-        color: white;
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin-bottom: 1.75rem;
-        margin-top: 1.75rem;
-    }
-    
-    article h3 {
-        color: #e01a4f;
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 1.25rem;
-        margin-top: 1.25rem;
-    }
-    
-    article h4 {
-        color: rgb(241 245 249);
-        font-size: 1rem;
-        font-weight: 500;
-        margin-bottom: 1.5rem;
-        margin-top: 1.5rem;
-    }
-    
-    article p {
-        margin-bottom: 1rem;
-        margin-top: 1rem;
-    }
-    
-    article strong {
-        font-weight: 700;
-    }
-    
-    #main {
-        color: rgba(255,255,255,0.85);
-        font-size: 20px;
-        font-weight: 200;
-        letter-spacing: 0.75px;
-        line-height: 3rem;
-    }
-    
     html {
         scroll-behavior: smooth;
-    }
-    
-    
-    pre {
-        font-size: 1rem;
-        line-height: 1.5rem;
-        overflow: auto;
-        padding: 1.25rem;
-        white-space: pre-line;
     }
 </style>

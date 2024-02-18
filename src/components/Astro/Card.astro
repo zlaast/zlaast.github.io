@@ -1,89 +1,24 @@
 ---
-import MarkdownIt from 'markdown-it';
-import Math from "@components/Astro/Math.astro";
 import { parseDate } from '@utils/utils';
-import { Image } from "astro:assets"
 
 const { post } = Astro.props;
 const date = parseDate( post.data.date )
-
-/* Post Excerpt */
-
-// 1. Create mdx-to-html parser and get body of post
-const parser = new MarkdownIt();
-const postBody = post.body;
-
-// 2. Get excerpt from body of post
-const excerpt_start = postBody.indexOf("{/* EXCERPT START */}") + 21; 
-const excerpt_end = postBody.indexOf("{/* EXCERPT END */}");
-const raw_excerpt = postBody.substring(excerpt_start, excerpt_end);
-let excerpt = parser.render(raw_excerpt);
-
-// 3. If <Math> astro component is in the excerpt, correct the component "tag"
-excerpt = excerpt.replaceAll('&lt;', '<');
-excerpt = excerpt.replaceAll('/&gt;', ">")
-excerpt = excerpt.replaceAll('&quot;', `"`);
-
-// 4. Get excerpt before and after the contents of the <Math> component. Extract math string that's passed to <Math> component.
-// We're essentially "concatenating" three strings: Regular string before <Math>, rendering the Latex <Math>, Regular string after <Math>
-// If no math is in excerpt, then before_component has the entire excerpt by default and we'll that and two empty strings
-let before_component = excerpt;
-let component_string = '';
-let after_component = '';
-
-// Extract string passed to <Math> component
-const math_start = excerpt.indexOf("equation=");
-const math_end = excerpt.indexOf(">", math_start);
-
-// If there is math in the excerpt...
-if (math_start != -1)
-{
-    before_component = excerpt.substring(0, math_start);
-    component_string = excerpt.substring(math_start + 10, math_end - 2);
-    after_component = excerpt.substring(math_end + 1);
-}
 ---
-<a href=`/blog/${post.slug}`>
-    <div class="mb-10 flex origin-center transform cursor-pointer select-none flex-row rounded-md border-2 border-[#2b2d31] p-4 text-xl text-neutral-300 transition duration-200 hover:scale-105 max-md:flex-col">
-        <div class="order-1 my-auto max-w-[128px]">
-            <img src={ post.data.image } class="m-auto min-w-32 max-w-48 pr-4 max-md:hidden" alt="" />
-        </div>
-        <span class="mr-5 order-2 border-l-2 border-dashed border-[#33353a]"></span>
-        <div class="order-3">
-            <p class="text-neutral-300 font-light text-lg ml-[1px]">{ date }</p>
-            <h1 class="text-title text-3xl font-bold">{ post.data.title }</h1>
-            <h2 class="text-subtitle text-2xl font-semibold">{ post.data.subtitle }</h2>
-            <div class="flex flex-wrap text-sm">
-            { post.data.tags.sort().map((tag: any) => 
-                <span class="leading-10 text-md">
-                    <span class="mr-1 whitespace-nowrap rounded-md border-[1px] border-slate-500 p-1">
-                        <span class="font-medium text-neutral-300">{ tag }</span>
-                    </span>
+<a class="text-neutral-50 my-10 max-w-[350px] max-md:border-[1px] max-md:p-2 max-md:rounded-md max-md:border-neutral-600" href=`/blog/${ post.slug }`>
+    <div class="overflow-hidden max-md:hidden rounded-xl mb-4">
+        <img class="w-[320px] h-[200px] object-cover scale-125 hover:scale-150 hover:rotate-3 transition-all duration-400" src={ post.data.image } />
+    </div>
+    <h2 class="text-xl text-subtitle">{ post.data.subtitle }</h2>
+    <h3 class="inline-block">{ post.data.title }</h3>
+    <span class="inline-block">/</span>
+    <span class="inline-block text-title">{ date }</span>
+    <div>
+        { post.data.tags.sort().map((tag: any) => 
+            <span class="leading-10 text-sm">
+                <span class="mr-1 whitespace-nowrap rounded-md border-[1px] border-slate-500 p-1">
+                    <span class="relative left-0.5 text-sm text-neutral-300">{ tag }</span>
                 </span>
-            )}
-            </div>
-            <div class="text-[20px] font-light line-clamp-5">
-                <Fragment set:html={ before_component } />
-                <Math equation={ component_string }>
-                <Fragment set:html={ after_component } />
-            </div>
-        </div>
+            </span>
+        )}
     </div>
 </a>
-
-<style is:global>
-    blockquote p
-    {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        line-height: 2rem;
-        font-weight: 300;
-    }
-
-    p
-    {
-        margin-top: 1rem;
-        line-height: 2rem;
-        font-weight: 300;
-    }
-</style>

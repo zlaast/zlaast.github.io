@@ -6,7 +6,7 @@ subtitle: Project 1 - Basic Gates and Chips
 part: 1
 date: 2023-01-21
 tags: ["Coding", "Computers", "Digital"]
-image: "/images/braces.svg"
+image: "/images/posts/nand2tetris/tetris.svg"
 ---
 import Tab from "@components/Astro/Tab.astro";
 import Math from "@components/Astro/Math.astro";
@@ -237,12 +237,12 @@ Since we already know about **AND**, **OR**, and **NOT**, then the logic should 
     * The top **AND** gate sees <span class="overline">`sel`</span> (which equals `1`), and `A=0`, therefore...
     * ...the top **AND** gate outputs `0`
     * The bottom **AND** gate sees `sel=0` so it outputs `0`
-    * The **OR** gate sees two zero inputs and therefore outputs `0`, which is the value of A
+    * The **OR** gate sees two zero inputs and therefore outputs `0`, which is the value of `A`
 4.  When `A=1`
     * The top **AND** gate sees <span class="overline">`sel`</span> (which equals `1`), and `A=1`, therefore...
     * ...the top **AND** gate outputs `1`
     * The bottom **AND** gate sees `sel=0` so it outputs `0`
-    * The **OR** gate sees `1` and `0` on its inputs and therefore outputs `1`, which is the value of A
+    * The **OR** gate sees `1` and `0` on its inputs and therefore outputs `1`, which is the value of `A`
 
 If we want to output B, just set `sel=1`.
 
