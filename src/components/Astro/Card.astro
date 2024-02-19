@@ -4,11 +4,11 @@ import { parseDate } from '@utils/utils';
 const { post } = Astro.props;
 const date = parseDate( post.data.date )
 ---
-<a class="text-neutral-50 my-10 max-w-[350px] max-md:border-[1px] max-md:p-2 max-md:rounded-md max-md:border-neutral-600" href=`/blog/${ post.slug }`>
+<a class="text-neutral-50 my-5 max-w-[350px] max-md:border-[1px] max-md:p-2 max-md:rounded-md max-md:border-neutral-600" href=`/blog/${ post.slug }`>
     <div class="overflow-hidden max-md:hidden rounded-xl mb-4">
         <img class="w-[320px] h-[200px] object-cover scale-125 hover:scale-150 hover:rotate-3 transition-all duration-400" src={ post.data.image } />
     </div>
-    <h2 class="text-xl text-subtitle">{ post.data.subtitle }</h2>
+    <h2 class="text-xl font-bold text-subtitle">{ post.data.subtitle }</h2>
     <h3 class="inline-block">{ post.data.title }</h3>
     <span class="inline-block">/</span>
     <span class="inline-block text-title">{ date }</span>

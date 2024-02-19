@@ -21,7 +21,9 @@ import Footer from '@components/Astro/Footer.astro';
 	</head>
 	<body class="font-nunito flex min-h-screen flex-col bg-[#19191B]">
         <Navigation client:only="svelte" />
-        <slot />
+		<div id="main" class="mx-auto">
+			<slot />
+		</div>
     </body>
     <Footer />
 </html>

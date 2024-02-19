@@ -13,12 +13,12 @@ const posts = await getCollection("posts");
 posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
 ---
 <Base>
-	<div id="main" class="bg-[#020102]">
+	<div class="bg-[#020102]">
 		<!-- Background Video -->
 		<video autoplay loop muted plays-inline disablepictureinpicture src={ video } class="fixed left-[-10px] top-0 z-10 min-h-full max-w-[unset] object-cover"></video>
 		
 		<!-- Hero Section  -->
-		<div class="relative z-20 mx-auto flex max-w-6xl flex-col px-10 pt-20 text-neutral-200">
+		<div class="relative z-20 mx-auto flex max-w-5xl flex-col px-10 pt-20 text-neutral-200">
 			<div class="flex flex-row max-lg:flex-wrap">
 				<Image class="mx-auto scale-75" width="400" height="400" src={ portrait } alt="A pixelated portrait of me" />
 				<div class="pt-14">
@@ -41,8 +41,8 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
 
 		<!-- Recent Posts -->
 		<div class="recent-posts relative z-20 mt-5 pt-2">
-			<div class="bg-bg pb-12">
-				<div class="mx-auto flex max-w-5xl flex-col px-10">
+			<div class="bg-bg pb-12 w-[99vw]">
+				<div class="mx-auto flex max-w-4xl flex-col px-10">
 					<h1 class="font-readex bg-title text-bg my-16 max-w-fit p-3 text-6xl font-bold max-lg:mx-auto">Recent</h1>
 					<div class="flex justify-between flex-wrap flex-row max-lg:flex-col max-lg:mx-auto">
 					{

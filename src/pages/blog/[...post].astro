@@ -50,9 +50,10 @@ function getLinks(post: any)
 posts.some(getLinks);
 ---
 <Base>
-    <div id="main" class="flex mx-auto lg:text-xl">
+    <div class="flex mx-auto lg:text-xl">
         <span id="top"></span>
-        <main class="mt-10 lg:mt-16 mb-24 max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[30ch]">
+        <!-- <main class="mt-10 lg:mt-16 mb-24 max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[30ch]"> -->
+        <main class="mt-10 lg:mt-16 mb-24 max-w-3xl pl-10 pr-3">
             <!-- Breadcrumbs -->
             <div class="mb-4">
                 <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
@@ -84,8 +85,6 @@ posts.some(getLinks);
 
             <hr class="border-b-[1px] border-t-0 mt-10 border-neutral-700 w-full">
 
-            <!-- <div class="border-b-[1px] m-0 border-neutral-700 w-full">&nbsp;</div> -->
-
             <!-- Semi-footer -->
             <div id="semi-footer">
                 <!-- Tags -->
@@ -93,7 +92,7 @@ posts.some(getLinks);
                     <h4 class="inline text-xl mt-1 mr-2">Tags: </h4>
                     { post.data.tags.sort().map((tag) => 
                     <span class="leading-10 group">
-                        <a href=`/tags/${tag.toLowerCase()}` class="mx-1 border-[1px] border-slate-500 rounded-lg p-1 whitespace-nowrap">
+                        <a href=`/tags/${tag.toLowerCase().replaceAll(" ", "-")}` class="mx-1 border-[1px] border-slate-500 rounded-lg p-1 whitespace-nowrap">
                             <span class="inline-block group-hover:text-[cyan] text-[#508e7f]"><svg xmlns="http://www.w3.org/2000/svg" class="relative top-1 h-4 w-4 s-EEZOxJequKEG" viewBox="0 0 24 24" fill="currentColor"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8 8a2 2 0 0 0 2.828 0l7.172-7.172a2 2 0 0 0 0-2.828l-8-8zM7 9a2 2 0 1 1 .001-4.001A2 2 0 0 1 7 9z" class="s-EEZOxJequKEG"></path></svg></span>
                             <span class="font-medium text-lg group-hover:text-link text-neutral-300">{ tag }</span>
                         </a>
@@ -103,8 +102,8 @@ posts.some(getLinks);
 
                 <!-- Links -->
                 <div class="max-md:text-md mt-6 font-semibold flex flex-row justify-between text-lg max-md:flex-col max-md:text-center">
-                    <a class="text-link my-3 decoration-dotted decoration-1 underline-offset-8 hover:underline" href=`/blog/${adjacentLinks[0]}`>← { adjacentSubtitles[0] }</a>
-                    <a class="text-link my-3 decoration-dotted decoration-1 underline-offset-8 hover:underline" href=`/blog/${adjacentLinks[1]}`>{ adjacentSubtitles[1] } →</a>
+                    <a class="text-link m-3 decoration-dotted decoration-1 underline-offset-8 hover:underline" href=`/blog/${adjacentLinks[0]}`>← { adjacentSubtitles[0] }</a>
+                    <a class="text-link m-3 decoration-dotted decoration-1 underline-offset-8 hover:underline" href=`/blog/${adjacentLinks[1]}`>{ adjacentSubtitles[1] } →</a>
                 </div>
             </div>
         </main>
@@ -279,7 +278,7 @@ article ol li ul li {
     font-size: 1rem;
 }
 
-#main {
+main {
     color: rgba(255,255,255,0.85);
     font-weight: 200;
     letter-spacing: 0.75px;
@@ -289,14 +288,15 @@ article ol li ul li {
 html {
     scroll-behavior: smooth;
     overflow: auto;
+    line-height: 1.5rem;
 }
 
 pre {
     display: flex;
-    line-height: 1.5rem;
     font-size: 1rem;
     padding: 1.25rem;
     overflow: auto;
+    line-height: 1.5rem;
 }
 
 @media only screen and (max-width: 600px)

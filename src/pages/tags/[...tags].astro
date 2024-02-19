@@ -3,7 +3,6 @@ import { getCollection, type CollectionEntry } from "astro:content";
 
 import Base from '@layouts/Base.astro';
 import Card from '@components/Astro/Card.astro';
-import { parseDate } from '@utils/utils';
 
 function titleCase(word)
 {
@@ -20,7 +19,7 @@ export async function getStaticPaths()
 
     posts.forEach((post) => 
     {
-        post.data.tags.forEach(tag => tags.add(tag.toLowerCase()));
+        post.data.tags.forEach(tag => tags.add(tag.toLowerCase().replaceAll(" ", "-")));
     })
 
     tags.forEach(tag =>
@@ -37,11 +36,10 @@ const tag = Astro.params;
 const posts = await getCollection("posts");
 posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
 ---
-
 <Base>
-    <div id="main" class="flex mx-auto lg:text-xl">
+    <div class="flex mx-auto">
         <span id="top"></span>
-        <main class="mt-10 lg:mt-16 mb-24 max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[30ch]">
+        <main class="mt-10 lg:mt-16 mb-24 max-w-6xl pl-10 pr-3">
             <!-- Breadcrumbs -->
             <div class="mb-10 text-neutral-300 text-[20px]">
                 <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
@@ -52,10 +50,17 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
             {
                 posts.reverse().map((allPosts) => 
                 {
-                    if(allPosts.data.tags.includes(titleCase(Object.values(tag)[0])))
+                    let flag = false;
+                    allPosts.data.tags.map((tags) =>
                     {
+                        if(tags.toLowerCase().replaceAll(" ", "-") == Object.values(tag)[0].toLowerCase().replaceAll(" ", "-"))
+                        {
+                            flag = true;
+                        }
+                    })
+
+                    if (flag)
                         return ( <Card post = { allPosts } /> );
-                    }
                 })
             }
             </div>

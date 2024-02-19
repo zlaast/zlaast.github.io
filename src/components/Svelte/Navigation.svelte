@@ -72,7 +72,7 @@
 						{#each tags.sort() as tag}
 						<li class="group py-1 pt-6">
 							<span class="ml-0.5 inline-block text-[#508e7f] group-hover:text-[cyan]">∘</span>
-							<a href="/tags/{ tag.toLowerCase() }" class="select-none break-all pl-4 text-neutral-300 group-hover:text-[#cba0e7]">{ tag }</a>
+							<a href="/tags/{ tag.toLowerCase().replaceAll(" ", "-") }" class="select-none break-all pl-4 text-neutral-300 group-hover:text-[#cba0e7]">{ tag }</a>
 						</li>
 						{/each}
 					</ul>
