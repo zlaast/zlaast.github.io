@@ -35,7 +35,7 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
 
             <hr class="mb-12 border-neutral-700">
 
-            <h1 class="font-readex bg-title text-bg my-16 max-w-fit p-3 text-6xl font-bold max-sm:text-center">{ post.data.series }</h1>
+            <h1 class="font-readex text-subtitle my-16 max-w-fit text-6xl font-bold max-sm:text-center">{ post.data.series }</h1>
             <div class="flex justify-between flex-wrap max-lg:flex-col max-lg:mx-auto">
                 {
                     posts.reverse().map((allPosts) => 

@@ -1,0 +1,223 @@
+---
+import Base from '@layouts/Base.astro';
+---
+
+<Base>
+    <div class="lg:text-xl text-neutral-300">
+        <main class="mt-10 lg:mt-16 mb-24 max-w-3xl pl-10 pr-3">
+            <article>
+                <h1 class="white text-4xl font-bold my-1">Hi, I'm Z'Laast</h1>
+
+                <h2 class="mt-5 text-2xl text-subtitle">About Me</h2>
+                <p class="mt-5">
+                    I have a degree in ⚡ Electrical Engineering ⚡ from the University of Ottawa. With that out of the way, what can I say?
+                </p>
+
+                <ul class="mt-5">
+                    <li>I like programming. I do it a lot just cause it's fun. Not even joking. It's cheap too!</li>
+                    <li>I like electronics. It's harder to do than programming due to how low level it can be (compared to programming). It's also pretty expensive, and messing it up is even more expensive, so I have to limit making circuits otherwise I'd have no money 💸</li>
+                    <li>I like baking, cause I get to eat what I bake 🍰</li>
+                    <li>I work out, usually by running (because no gyms are near me).</li>
+                    <li>I spend a lot of time learning and I actually have a daily learning goal list. It has electronics, cybersecurity, and the guitar on it.</li>
+                </ul>
+
+                <h2 class="mt-5 text-2xl text-subtitle">This website</h2>
+
+                <h3 class="mt-5"><i>Why</i> I made it</h3>
+                I wanted to document the various projects that I do, both software and hardware. I figured if I did that, whenever I stumble into a problem I've already solved, I can always come back here and reference it. Also if I need to troubleshoot projects I've already done, I can use this site as documentation!
+
+                <h3 class="mt-5"><i>How</i> I made it</h3>
+
+                This website was built with 😡 by me. I'm just kidding, it's built with ❤️ and as a learning project for front-end web development. It took a while (months)
+                and underwent <i>a lot</i> of changes, and will definitely undergo more, but here I am. 
+                
+                <h4 class="mt-5 font-semibold">Tools</h4>
+
+                <ul class="mt-5">
+                    <li>Astro JS 🚀 - Static site generation</li>
+                    <li>CSS3 and Tailwind CSS - Website styling</li>
+                    <li>JavaScript and Typescript - Interactivity</li>
+                    <li>Svelte - Used to make the menu on the left and the search "engine"</li>
+                    <li>MDX - A type of Markdown that can include components. Used to write the posts</li>
+                </ul>
+            </article>
+        </main>
+    </div>
+</Base>
+
+<style is:global>
+    /* Note:
+    * This CSS is to style the markdown content,
+    * since this content is inaccessible to tailwind.
+    * Some of the styling is based off the tailwind Typography plugin.
+    */
+    
+    :root {
+        --link: #54b9ff;
+        --subtitle: #c2410c;
+        --title: white;
+        --h2: #54b9ff;
+        --h3: white;
+        --h4: #979b8d;
+    }
+    
+    article a {
+        color: var(--link);
+        font-weight: bold;
+    }
+    
+    article a:hover {
+        border-bottom: 1px dotted var(--link);
+    }
+    
+    article blockquote {
+        background-color: #15161a;
+        border-left: 4px solid var(--h2);
+        font-style: italic;
+        font-weight: 300;
+        margin: 1rem 0 1rem 0;
+        padding: 1px 2rem;
+    }
+    
+    article code:not(pre code) {
+        background-color: #303238;
+        overflow-wrap: break-word;
+        padding: 3px;
+    }
+    
+    article h2 {
+        color: var(--h2);
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 1.75rem;
+        margin-top: 1.75rem;
+    }
+    
+    article h3 {
+        color: var(--h3);
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    
+    article h4 {
+        color: var(--h4);
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+        /* text-decoration: underline; */
+        border-left: 5px solid var(--h2);
+        padding-left: 1rem;
+    }
+    
+    article p {
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+    }
+    
+    article strong {
+        font-weight: 700;
+    }
+    
+    article img {
+        margin: 2rem auto 3rem auto;
+    }
+    
+    table {
+        min-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        background-color: #1f1f1f;
+    }
+    
+    thread tr {
+        background-color: #54b9ff;
+        color: #ffffff;
+        text-align: center;
+    }
+    
+    th, td {
+        text-align: center;
+        padding: 10px;
+    }
+    
+    tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+    
+    tbody tr:nth-child(even)
+    {
+        background-color: #15161a;
+    }
+    
+    tbody tr:last-of-type {
+        border-bottom: 2px solid #54b9ff;
+    }
+    
+    article ul {
+        list-style-type: disc;
+        margin-left: 1.5em;
+    }
+    
+    article ol {
+        background-color: #15161a;
+        list-style-type: decimal;
+        font-size: 20px;
+        line-height: 2.5rem;
+        margin-bottom: 1.5rem;
+        list-style-position: inside;
+        padding: 1rem;
+        border-left: 4px solid var(--subtitle);
+    }
+    
+    article ol li ul li {
+        list-style-type: disc;
+        margin-left: 1em;
+    }
+    
+    .caption {
+        font-size: 1rem;
+    }
+    
+    main {
+        color: rgba(255,255,255,0.85);
+        font-weight: 200;
+        letter-spacing: 0.75px;
+        line-height: 3rem;
+    }
+    
+    html {
+        scroll-behavior: smooth;
+        overflow: auto;
+        line-height: 1.5rem;
+    }
+    
+    pre {
+        display: flex;
+        font-size: 1rem;
+        padding: 1.25rem;
+        overflow: auto;
+        line-height: 1.5rem;
+    }
+    
+    @media only screen and (max-width: 600px)
+    {
+        pre {
+            width: 83vw;
+            font-size: 12px !important;
+        }
+    
+        article code:not(pre code) {
+            font-size: 14px;
+        }
+    
+        .katex {
+            font-size: 16px;
+        }
+    
+        article h2, h3, h4 {
+            text-align: center;
+        }
+    }
+    </style>

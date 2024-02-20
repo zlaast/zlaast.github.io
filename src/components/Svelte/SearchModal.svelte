@@ -1,12 +1,10 @@
 <script>
     import { afterUpdate } from 'svelte';
 
-    const host = '/api';
-
     /* RETRIEVE JSON FILES TO POPULATE MENU */
 	async function fetchDatabase()
 	{
-		const response = await fetch(`${host}/database.json`);
+		const response = await fetch("/api/database.json");
 		const database = await response.json();
 
 		return database;
@@ -64,7 +62,7 @@
             let moreResults = {
                 title: "Search",
                 subtitle: `${moreResultsLength} more results...`,
-                url: `/search?query=${searchInput.replaceAll(" ", "+")}`
+                url: `search?query=${searchInput.replaceAll(" ", "+")}`
             }
             output.push(moreResults);
         }
