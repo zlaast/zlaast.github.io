@@ -5,11 +5,13 @@ title: Project Euler
 subtitle: Problem 5 - Smallest multiple
 part: 5
 date: 2023-04-28
-tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
-image: "/images/posts/project-euler/euler.jpg"
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
 ---
-import Math from "@components/Astro/Math.astro";
-import Tab from "@components/Astro/Tab.astro";
+
+import Math from '@components/Astro/Math.astro'
+import Tabs from '@components/Astro/Tabs.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
 
 ## Problem
 
@@ -24,78 +26,59 @@ This problem comes from [Project Euler 5](https://projecteuler.net/problem=5)
 {/* EXCERPT END */}
 
 ## Solution
-
 The solution involves what we have seen in previous problems, **prime factorization**. Let's look at the example given in the problem.
 
 ### Prime Factorization
+Let's start by performing prime factorization on the numbers 1 to 10
 
-If we performed prime factorization on the number 2520, we would obtain
+- <Math equation="1 = 1" />
+- <Math equation="2 = 2" />
+- <Math equation="3 = 3" />
+- <Math equation="4 = 2 \times 2" />
+- <Math equation="5 = 5" />
+- <Math equation="6 = 2 \times 3" />
+- <Math equation="7 = 7" />
+- <Math equation="8 = 2 \times 2 \times 2" />
+- <Math equation="9 = 3 \times 3" />
+- <Math equation="10 = 2 \times 5" />
 
-<Math inline="false" equation="2520 = 2 \times 2 \times 2 \times 3 \times 3 \times 5 \times 7" />
+Let's do two things
 
-But where do we get such a sequence of numbers? Let's perform prime factorization on each number from 1 to 10.
+1. Ignore any number that have different factors (6 and 10)
+2. Take the **first** factor from each number, except the numbers we ignored, and multiply them
 
-```
-1 = 1
-2 = 2
-3 = 3
-4 = 2 x 2
-5 = 5
-6 = 2 x 3
-7 = 7
-8 = 2 x 2 x 2
-9 = 3 x 3
-10 = 2 x 5
-```
+This is the result of the above operation
 
-Examining the about, we can see that <Math equation="8 = 2 \times 2 \times 2" />, that <Math equation="9 = 3 \times 3" /> and <Math equation="5" /> and <Math equation="7" /> are counted individually. If we were to multiply these numbers together, we would get 2520.
+<Math inline="false" equation="1 \times 2 \times 3 \times 2 \times 5 \times 7 \times 2 \times 3 = 2520" />
 
-This makes sense. Any number divisible by 8 is also divisible 4 and 2. Any number divisible by 9 is also divisible by 3. But what about 6 and 10? Well, their factors are already accounted for! Any number divisible by 10 is divisible by 5 or 2, and we got the 2 factor from 8, and 5 comes from our standalone prime. The same applies for 6.
+Hey! The number from the problem popped out! 
 
-A critical thing to realize is that this pattern shows that we can ignore any number that has a prime factorization composed of different numbers. Our number 8 has the same prime factors, so we keep it, but 10 and 6 have different prime factors, so we can ignore them as they're composed of already accounted for numbers.
+I won't lie. I'm not entirely sure I understand why this works, it's just something I noticed.
 
 ### Algorithm
+This is the solution I programmed
 
-The solution implemented is slightly non-obvious.
-
-1. We perform prime factorization on the numbers 1 to 20.
-2. We then, for each number, create a set, which discards non-unique members.
-3. Any set that has more than one member is discarded
+1. Perform prime factorization on the numbers 1 to 20
+2. For each number, create a **set** which will discard repeated factors. This is the same as taking the first factor from each number.
+3. Any set that has more than one member is discarded. This is the same as ignoring numbers that have different factors.
 4. Multiply all the sets
-
-Let's again look at the number 2520. If we start at Step 2, discarding non-unique members, we get
-
-```
-1 = 1
-2 = 2
-3 = 3
-4 = 2
-5 = 5
-6 = 2 x 3
-7 = 7
-8 = 2
-9 = 3
-10 = 2 x 5
-```
-
-In Step 3, we discard 6 and 10 leaving us with
-
-```
-1 = 1
-2 = 2
-3 = 3
-4 = 2
-5 = 5
-7 = 7
-8 = 2
-9 = 3
-```
-
-If we rearrange and multiply these numbers, we get <Math equation="2520 = 2 \times 2 \times 2 \times 3 \times 3 \times 5 \times 7" />. This implements what we talked about in the Prime Factorization section, but more is programmatically easy to implement.
 
 ## Code
 
-<Tab tab="problem05.py" url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem05.py">
+<Tabs list={
+    [
+        {
+            "tab": "problem05.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem05.py"
+        },
+        {
+            "tab": "main.rs",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20-%20Rust/problem_5/src/main.rs"
+        },
+    ]
+}>
+
+<div class="tab-content mb-5" id="problem05.py">
 ```python
 # Project Euler: Problem 5
 # Smallest Multiple
@@ -106,22 +89,63 @@ primes = [2, 3, 5, 7, 11, 13, 17, 19]
 factors = []
 
 for num in range(2, 21):
-    list = []
+    list = set()
 
-    # Step 1: Perform prime factorization on each number
+    # Steps 1 and 2: Perform prime factorization on each number
+    # and discard duplicate factors
     for prime in primes:
         while (num % prime == 0):
             num = num / prime
-            list.append(prime)
-
-    # Step 2: Create a set, discarding duplicate numbers
-    uniq_set = set(list)
+            list.add(prime)
 
     # Step 3: Discard factorizations with different numbers
-    if len(uniq_set) == 1:
-        factors.append(uniq_set.pop())
+    if len(list) == 1:
+        factors.append(list.pop())
 
 # Step 4: Multiply all factors
 print(math.prod(factors))
 ```
-</Tab>
+</div>
+
+<div class="tab-content mb-5" id="main.rs">
+```rust
+// Project Euler: Problem 5
+// Smallest Multiple
+// Alternate Rust version
+
+use std::collections::HashSet;
+
+fn main() {
+    let mut product: i32 = 1;
+    let primes = vec![2, 3, 5, 7, 11, 13, 17, 19];
+
+    for i in 2..=20 {
+        let mut num = i;
+        let mut list = HashSet::new();
+
+        // Steps 1 and 2: Perform prime factorization
+        // on each number and discard duplicate factors
+        for prime in primes.iter() {
+            while num % prime == 0 {
+                num = num / prime;
+                list.insert(prime);
+            }
+        }
+
+        // Steps 3 and 4: Discard factorizations with 
+        // different numbers and multiply all factors
+        if list.len() == 1 {
+            let factor: i32 = *Vec::from_iter(list)[0];
+            product = product * factor;
+        }
+    }
+
+    println!("{}", product);
+}
+```
+</div>
+</Tabs>
+
+<Spoiler>
+232792560
+</Spoiler>

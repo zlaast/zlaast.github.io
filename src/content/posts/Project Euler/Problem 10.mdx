@@ -5,24 +5,27 @@ title: Project Euler
 subtitle: Problem 10 - Summation of Primes
 part: 10
 date: 2023-10-06
-tags: ['Coding', 'Algorithms', 'Computing', 'Math', 'Python']
-image: "/images/posts/project-euler/euler.jpg"
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
 ---
-import Tabs from "@components/Astro/Tabs.astro";
+
+import Tabs from '@components/Astro/Tabs.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 10](https://projecteuler.net/problem=10)
 
 {/* EXCERPT START */}
+
 > **Problem**
 >
 > The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
 >
 > Find the sum of all primes below two million.
-{/* EXCERPT END */}
+> {/* EXCERPT END */}
 
 ## Solution
+
 We can once again use the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) as seen in [Problem 3](/posts/Project%20Euler/Problem%203).
 Since the sieve returns a list (array), we can just sum the returned list.
 
@@ -45,11 +48,12 @@ Since the sieve returns a list (array), we can just sum the returned list.
 # Project Euler: Problem 10
 # Summation of primes
 
-from PEF import soe   # I wrote this
+from PEF import soe # I wrote this
 
 primes = soe(2000000)
 print(sum(primes))
-```
+
+````
 </div>
 
 <div class="tab-content" id="PEF.py">
@@ -71,6 +75,7 @@ def soe(n):
             # Eliminate multiples. They aren't prime
             for not_prime in range(i**2, n+1, i):
                 potential_primes[not_prime] = False
-```
+````
+
 </div>
 </Tabs>

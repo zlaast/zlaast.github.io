@@ -5,45 +5,47 @@ title: Project Euler
 subtitle: Problem 15 - Lattice Paths
 part: 15
 date: 2024-02-01
-tags: ['Coding', 'Algorithms', 'Computing', 'Math', 'Python']
-image: "/images/posts/project-euler/euler.jpg"
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
 ---
-import Math from "@components/Astro/Math.astro";
-import Tab from "@components/Astro/Tab.astro";
+
+import Math from '@components/Astro/Math.astro'
+import Tab from '@components/Astro/Tab.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 15](https://projecteuler.net/problem=15)
 
 {/* EXCERPT START */}
+
 > **Problem**
 >
-> Starting in the top left corner of a 2 × 2 grid, and only being able to move to the right and down, there are exactly 6  routes to the bottom right corner.
+> Starting in the top left corner of a 2 × 2 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner.
 >
 > <img class="mx-auto invert" src="/images/posts/project-euler/problem15.png" />
 >
 > How many such routes are there through a 20 × 20 grid?
-{/* EXCERPT END */}
+> {/* EXCERPT END */}
 
 ## Solution
 
-We can use combinatorics to solve this question! If we look at the grid, we'll have to make four moves to reach the end point. These four moves *always* consists of some "combination" (permutation) of moving to the right twice, and moving down twice.
+We can use combinatorics to solve this question! If we look at the grid, we'll have to make four moves to reach the end point. These four moves _always_ consists of some "combination" (permutation) of moving to the right twice, and moving down twice.
 
 The general form for how we move is as follows
 
-<Math inline="false" equation=" M_1 M_2 M_3 M_4 "/>
+<Math inline="false" equation=" M_1 M_2 M_3 M_4 " />
 
 Where, <Math equation="M_n" /> stands for our "move". Of the four moves we can make, we need to choose two of these moves to be in a particular direction: either down or right (it doesn't matter which in this case). If we chose right for example, a possible out outcome could be
 
-<Math inline="false" equation=" M_1 R M_2 R "/>
+<Math inline="false" equation=" M_1 R M_2 R " />
 
 Where <Math equation=" R" /> stands for "rightward-move" and <Math equation=" M_1 " /> and <Math equation="M_2" /> will be down by default, . This gives us down-right-down-right as a route. So, for the 2 × 2 grid we have "4 choose 2"
 
-<Math inline="false" equation=" \binom{4}{2}= 6 "/>
+<Math inline="false" equation=" \binom{4}{2}= 6 " />
 
 How about for a 20 × 20 grid? The same thing! We have a total of fourty moves to make, of which we need to choose twenty of them to be in a particular direction, so...
 
-<Math inline="false" equation=" \binom{40}{20} = 137 846 528 820 "/>
+<Math inline="false" equation=" \binom{40}{20} = 137 846 528 820 " />
 
 ## Code
 
@@ -56,7 +58,8 @@ How about for a 20 × 20 grid? The same thing! We have a total of fourty moves t
 from math import comb
 
 print(comb(40, 20))
-```
+
+````
 </Tab>
 
 If you're using a version of Python that is older than 3.8 then the following code will work just fine
@@ -65,4 +68,4 @@ If you're using a version of Python that is older than 3.8 then the following co
 from math import factorial as f
 
 print(f(40) // f(20) // f(20))
-```
+````

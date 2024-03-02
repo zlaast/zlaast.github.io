@@ -1,0 +1,30 @@
+<button
+	id="spoiler"
+	class="spoiler-hide mt-10 w-full bg-[#15161a] font-bold text-red-600"
+	onclick="showSpoiler()"
+>
+	<slot />
+</button>
+
+<style>
+	.spoiler-hide {
+		background: repeating-linear-gradient(45deg, #15161a, #15161a 10px, #24292e 10px, #24292e 20px);
+	}
+
+	.spoiler-show {
+		background-color: #15161a;
+	}
+</style>
+
+<script type="text/javascript">
+	let spoiler = document.getElementById('spoiler')
+	let content = spoiler.textContent
+
+	spoiler.textContent = 'SPOILER'
+
+	function showSpoiler() {
+		spoiler.classList.remove('spoiler-hide')
+		spoiler.classList.add('spoiler-show')
+		spoiler.textContent = content
+	}
+</script>

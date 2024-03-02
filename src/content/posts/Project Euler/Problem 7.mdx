@@ -5,11 +5,12 @@ title: Project Euler
 subtitle: Problem 7 - 10001st Prime
 part: 7
 date: 2023-10-01
-tags: ['Coding', 'Algorithms', 'Computing', 'Math', 'Python']
-image: "/images/posts/project-euler/euler.jpg"
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
 ---
-import Math from "@components/Astro/Math.astro";
-import Tabs from "@components/Astro/Tabs.astro";
+
+import Math from '@components/Astro/Math.astro'
+import Tabs from '@components/Astro/Tabs.astro'
 
 ## Problem
 
@@ -25,24 +26,27 @@ This problem comes from [Project Euler 7](https://projecteuler.net/problem=7)
 
 ## Solution
 
-Since we're generating primes, I'll be using the [Sieve of Eratosethenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) which was seen and created in [Problem 3](/blog/project-euler/problem-3). 
+Since we're generating primes, I'll be using the [Sieve of Eratosethenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) which was seen and created in [Problem 3](/blog/project-euler/problem-3).
 
 ### How far do we look to get 10 001 primes?
+
 There are 25 primes inbetween 1 and 100. There are 1229 primes inbetween 1 and 10 000. So, we should be asking ourselves: There are 10 001 primes inbetween 1 and <Math equation="N"/>. What is <Math equation="N"/>? Finding <Math equation="N"/> allows us to perform the least amount of computations as we know our upper limit when using the Sieve of Eratosethenes.
 
 According to the [Prime Number Theorem](https://en.wikipedia.org/wiki/Prime_number_theorem), the **density** of primes between 1 and <Math equation="N"/> is **approximately**
-<Math inline="false" equation="\frac{1}{ln(N)} " />
+
+<Math inline="false" equation="\dfrac{1}{ln(N)} " />
 
 Where <Math equation=" ln(N) "/> is the natural logarithm of <Math equation="N"/>. So, the **density** of primes between 1 and 100 is **approximately**
-<Math inline="false" equation="\frac{1}{ln(100)} \approx 0.217 = 21.7 \%" />
+
+<Math inline="false" equation="\dfrac{1}{ln(100)} \approx 0.217 = 21.7 \%" />
 
 The actual number is known to be 25%, but with a larger <Math equation="N"/>, this becomes far more accurate. Now, the formula just gives us the density of prime numbers, and we want to know if there's 10 001 prime numbers in <Math equation="N"/>. No problem, just multiply by <Math equation="N"/> and we get
 
-<Math inline="false" equation="\frac{N}{ln(N)} " />
+<Math inline="false" equation="\dfrac{N}{ln(N)} " />
 
 This time, with <Math equation=" N = 10 000 "/>
 
-<Math inline="false" equation="\frac{10 000}{ln(10 000)} \approx 1086 " />
+<Math inline="false" equation="\dfrac{10 000}{ln(10 000)} \approx 1086 " />
 
 As mentioned, there are actually 1229 primes inbetween 1 and 10 000, but this isn't too bad! Again, a larger <Math equation="N"/> nets us more accurate approximations.
 
@@ -74,10 +78,11 @@ from PEF import soe
 primes = soe(120000)
 
 if (len(primes) > 10001):
-    print(primes[10000])
+print(primes[10000])
 else:
-    print("Use higher number")
-```
+print("Use higher number")
+
+````
 </div>
 
 <div class="tab-content" id="PEF.py">
@@ -99,7 +104,8 @@ def soe(n):
             # Eliminate multiples. They aren't prime
             for not_prime in range(i**2, n+1, i):
                 potential_primes[not_prime] = False
-```
+````
+
 </div>
 </Tabs>
 

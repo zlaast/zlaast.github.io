@@ -5,11 +5,12 @@ title: Project Euler
 subtitle: Problem 6 - Sum Square Difference
 part: 6
 date: 2023-10-01
-tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
+tags: ['Coding', 'Math', 'Python']
 image: "/images/posts/project-euler/euler.jpg"
 ---
 import Math from "@components/Astro/Math.astro";
-import Tab from "@components/Astro/Tab.astro";
+import Tabs from "@components/Astro/Tabs.astro";
+import Spoiler from '@components/Astro/Spoiler.astro'
 
 ## Problem
 
@@ -55,27 +56,41 @@ The problem with this approach is that if we change the range, say from [1 - 100
 ### Sum of Squares
 
 For the "sum of squares", it is known that
-<Math inline="false" equation="\sum\limits_{x=1}^{n}x^2 = \frac{ n(n+1)(2n+1) }{ 6 }" />
+<Math inline="false" equation="\sum\limits_{x=1}^{n}x^2 = \dfrac{ n(n+1)(2n+1) }{ 6 }" />
 
 
 And that's it. Since <Math equation="n = 100" />, then
-<Math inline="false" equation="\sum\limits_{x=1}^{100}x^2 = \frac{ 100 \times 101 \times 201 }{ 6 }" />
+<Math inline="false" equation="\sum\limits_{x=1}^{100}x^2 = \dfrac{ 100 \times 101 \times 201 }{ 6 }" />
 
+<br/>
 ### Square of Sums
 
 The sum of all natural numbers from 1 to <Math equation="n" /> is
-<Math inline="false" equation="\sum\limits_{1}^{n}n = \frac{ n(n+1) }{ 2 }" />
+<Math inline="false" equation="\sum\limits_{1}^{n}n = \dfrac{ n(n+1) }{ 2 }" />
 
 We just have to use this formula, then square the sum at the end!
 
 Since <Math equation="n = 100" />, we'll get
-<Math inline="false" equation="\left[\frac{ 100 \times 101 }{ 2 } \right]^2 = \frac{ 100 \times 101 \times 100 \times 101 }{ 4 }" />
+<Math inline="false" equation="\left[\dfrac{ 100 \times 101 }{ 2 } \right]^2 = \dfrac{ 100 \times 101 \times 100 \times 101 }{ 4 }" />
 
 ## Code
 
 I decided to leave the formulas in the code in case I wished to change <Math equation="n" /> later. And instead of calculating <Math equation="n(n+1)" /> twice, I calculated it once and placed it in the variable "<Math equation="a" />".
 
-<Tab tab="problem05.py" url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem05.py">
+<Tabs list={
+    [
+        {
+            "tab": "problem06.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem06.py"
+        },
+        {
+            "tab": "main.rs",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20-%20Rust/problem_6/src/main.rs"
+        },
+    ]
+}>
+
+<div class="tab-content" id="problem06.py">
 ```python
 # Project Euler: Problem 6
 # Sum square difference
@@ -88,4 +103,27 @@ square_sum = (a/2)**2
 
 print(square_sum-sum_square)
 ```
-</Tab>
+</div>
+
+<div class="tab-content" id="main.rs">
+```rust
+// Project Euler: Problem 6
+// Sum square difference
+// Alternate Rust version
+
+fn main() {
+    let n = 100;
+
+    let a: i32 = n*(n+1);
+    let sum_square: i32 = (a*(2*n + 1))/6;
+    let square_sum: i32 = (a/2).pow(2);
+
+    println!("{}", square_sum - sum_square);
+}
+```
+</div>
+</Tabs>
+
+<Spoiler>
+25164150
+</Spoiler>

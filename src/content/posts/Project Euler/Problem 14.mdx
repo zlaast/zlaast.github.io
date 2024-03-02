@@ -5,34 +5,39 @@ title: Project Euler
 subtitle: Problem 14 - Longest Collatz Sequence
 part: 14
 date: 2024-01-31
-tags: ['Coding', 'Algorithms', 'Computing', 'Math', 'Python']
-image: "/images/posts/project-euler/euler.jpg"
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
 ---
-import Math from "@components/Astro/Math.astro";
-import Tab from "@components/Astro/Tab.astro";
+
+import Math from '@components/Astro/Math.astro'
+import Tab from '@components/Astro/Tab.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 14](https://projecteuler.net/problem=14)
 
 {/* EXCERPT START */}
+
 > **Problem**
 > The following iterative sequence is defined for the set of positive integers:
 >
-> <Math inline="false" equation="n \rarr \frac{n}{2} \text{  (n is even)}"/>
+> <Math inline="false" equation="n \rarr \frac{n}{2} \text{  (n is even)}" />
 >
-> <Math inline="false" equation="n \rarr 3n+1 \text{  (n is odd)} "/>
-> 
+> <Math inline="false" equation="n \rarr 3n+1 \text{  (n is odd)} " />
+>
 > Using the rule above and starting with 13, we generate the following sequence:
-> 
-> <Math inline="false" equation="13 \rarr 40 \rarr 20 \rarr 10 \rarr 5 \rarr 16 \rarr 8 \rarr 4 \rarr 2 \rarr 1 "/>
-> 
-> It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms.  terms. Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.
+>
+> <Math
+> 	inline="false"
+> 	equation="13 \rarr 40 \rarr 20 \rarr 10 \rarr 5 \rarr 16 \rarr 8 \rarr 4 \rarr 2 \rarr 1 "
+> />
+>
+> It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms. terms. Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.
 >
 > Which starting number, under one million, produces the longest chain?
 >
 > **NOTE**: Once the chain starts the terms are allowed to go above one million.
-{/* EXCERPT END */}
+> {/* EXCERPT END */}
 
 ## Solution
 
@@ -45,7 +50,7 @@ The solution is pretty straight-forward based on the problem description, **but*
 max_starting_number = 0
 max_chain_length = 0
 
-for starting_number in range(1, 1000000):    
+for starting_number in range(1, 1000000):
     chain_length = 0
     n = starting_number
 
@@ -65,9 +70,9 @@ print(max_starting_number, max_chain_length)
 ```
 
 The above code works, but it's slow. This is because we recalculate past chains in the process. The program works sequentially, starting at 1 and going to 1 000 000.
-Let's say we're currently at 40, so the program divides 40 by 2 which results in 20. But since we're working sequentially the chain length for 20 has *already* been calculated, so why do it again?
+Let's say we're currently at 40, so the program divides 40 by 2 which results in 20. But since we're working sequentially the chain length for 20 has _already_ been calculated, so why do it again?
 
-The optimization is to store past chain lengths. During the process, if <Math equation="n" /> drops below the starting number, that means we have already calculated <Math equation="n" />, so we can just grab the previous calculation and add it to the current chain length. Then we store the chain length for our starting number. 
+The optimization is to store past chain lengths. During the process, if <Math equation="n" /> drops below the starting number, that means we have already calculated <Math equation="n" />, so we can just grab the previous calculation and add it to the current chain length. Then we store the chain length for our starting number.
 
 Using the previous example
 
@@ -91,7 +96,7 @@ max_starting_number = 0
 max_chain_length = 0
 stored_chain_length = [0, 1]
 
-for starting_number in range(1, 1000000):    
+for starting_number in range(1, 1000000):
     chain_length = 0
     n = starting_number
 
@@ -114,4 +119,5 @@ for starting_number in range(1, 1000000):
 
 print(max_starting_number, max_chain_length)
 ```
+
 </Tab>

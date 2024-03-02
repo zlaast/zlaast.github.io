@@ -5,12 +5,14 @@ title: Project Euler
 subtitle: Problem 3 - Largest prime factor
 part: 3
 date: 2023-04-22
-tags: ["Coding", "Algorithms", "Computing", "Math", "Python"]
-image: "/images/posts/project-euler/euler.jpg"
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
 ---
-import Tab from "@components/Astro/Tab.astro";
-import Tabs from "@components/Astro/Tabs.astro";
-import Math from "@components/Astro/Math.astro";
+
+import Tab from '@components/Astro/Tab.astro'
+import Tabs from '@components/Astro/Tabs.astro'
+import Math from '@components/Astro/Math.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
 
 ## Problem
 
@@ -22,71 +24,88 @@ This problem comes from [Project Euler 3](https://projecteuler.net/problem=3)
 > The prime factors of 13195 are 5, 7, 13 and 29.
 >
 > What is the largest prime factor of the number 600851475143 ?
->
 {/* EXCERPT END */}
 
 ## Solution
-
-Every natural number, ℕ, can be created using prime factors. For example, the number 2595 can be created with the prime numbers 3, 5, and 173. That is
+Every natural number, ℕ, is either prime, or can be created using prime numbers. 
+For example, the number is 2595 can be created using the prime numbers (factors) 3, 5, and 173. That is,
 
 <Math inline="false" equation="3 \times 5 \times 173 = 2595" />
 
-To obtain a list of prime factors for a number <Math equation="\sqrt{x}" />, we must
+To obtain a list of prime factors for a number <Math equation="x" />, we must
 
 1. Create a list of prime numbers
-2. Repeatedly divide <Math equation="x" /> by primes up to <Math equation="\sqrt{x}" />. No factors exist beyond that number
+2. Repeatedly and **evenly** divide <Math equation="x" /> by those primes until it is no longer possible
 
 ### Prime Number Generator
-
-To create a list of prime numbers, I chose to create the [Sieve of Eratosethenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes). We first create a range of numbers starting from 2 and ending at a number we choose (e.g 2 to 10 000). We start by eliminating all multiples of 2 in our range, then move on to the next number that hasn't been eliminated. We then eliminate all multiples of that number, and so on and so forth.
+To create a list of prime numbers, I chose to create the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes). 
+We first create a range of numbers starting from 2 and ending at a number we choose, e.g 2 to 10 000. 
+We start by eliminating all multiples of 2 in our range, then move on to the next number that hasn't been eliminated. 
+We then eliminate all multiples of *that* number, and so on and so forth until we only have primes left.
 
 <Tab tab="PEF.py" url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/PEF.py">
 ```python
 import math
 
 def soe(n):
-'''Sieve of Eratosethenes. Finds prime numbers'''
+    '''Sieve of Eratosethenes. Finds prime numbers'''
 
     primes = []
-    potential_primes = [True]*(n+1)
+    number_list = [True]*(n+1)
 
     for i in range(2, n+1):
-        if potential_primes[i]:
+        if number_list[i]:
             primes.append(i)
 
             # Eliminate multiples. They aren't prime
-            for not_prime in range(i**2, n+1, i):
-                potential_primes[not_prime] = False
+            for multiple in range(i**2, n+1, i):
+                number_list[multiple] = False
+    
+    return primes
 ```
 </Tab>
 
 #### How It Works
 
-```python
-potential_primes = [True]*(n+1)
-```
+Let's examine the implementation of the sieve.
 
-The code doesn't directly create a list of numbers in the range <Math equation="n" /> but instead creates a list of booleans in the range <Math equation="n" />. The indices instead act as our numbers. For example, once our algorithm runs for some range, `potential_primes[2062] = False` because 2062 isn't prime, but `potential_primes[523] = True` because 523 is prime. We create booleans because having something like `potential_primes[5123] = 5123` is redundant, but also when we are looking for the next number that hasn't been eliminated, checking a boolean value is fast.
+```python
+number_list = [True]*(n+1)
+```
+This code doesn't directly create a list of numbers, but instead creates a list of booleans. 
+The list is of length <Math equation="n + 1" /> (`n+1` is used to account for the zeroth index).
 
 ```python
 for i in range(2, n+1):
-    if potential_primes[i]:
+    if number_list[i]:
         primes.append(i)
 ```
-
-The above code does what we were talking about. It iterates over the booleans, starting at 2, and if the boolean is `True` then it is prime. We can then start the elimination process.
+The code above iterates over the list, starting at 2, and if the boolean is `True` then that **index** is prime. We can then eliminate the multiples.
 
 ```python
 # Eliminate multiples. They aren't prime
-for not_prime in range(i**2, n+1, i):
-    potential_primes[not_prime] = False
+for multiple in range(i**2, n+1, i):
+    number_list[multiple] = False
 ```
+The above code eliminates all multiples of our prime number.
 
-We start at <Math equation="2i" /> (as <Math equation="i" /> is our prime number and we can't eliminate that) and eliminate all multiples of <Math equation="i" />.
+#### Example
+
+Let's say we're currently at `number_list[5]`
+
+1. `number_list[5] = True`, so it is prime
+2. Eliminate all multiples of 5 by setting them to `False`
+3. Move on to `number_list[6]`. This was already eliminated as multiple of `number_list[2]`, so we find it has already been set to `False`
+4. Move on to `number_list[7]`. This is `True` so it is prime
+5. Eliminate all multiples of 7 by setting them to `False` ...
+
+This continues on until we have finished the list.
 
 ### Largest Prime Factor
+To find the largest prime factor of the number 600851475143, we generate our list of prime numbers, then repeatedly evenly divide
+the number by our prime factors. When we can no longer divide the number (the number equals one), we are done and have our largest prime factor.
 
-We generate our list of primes up to <Math equation="\sqrt{600851475143}" />. We continuously divide 600851475143 by successive prime numbers (thus performing prime factorization) while printing out the results. The last number is our largest prime factor.
+**Note**: I say *repeatedly* divide, as a number can have multiple of the same prime factor. For example, <Math equation="27 = 3 \times 3 \times 3" />.
 
 <Tabs list={
     [
@@ -100,48 +119,56 @@ We generate our list of primes up to <Math equation="\sqrt{600851475143}" />. We
         },
     ]
 }>
+
 <div class="tab-content" id="problem03.py">
 ```python
 # Project Euler: Problem 3
 # Largest Prime Factor
 
 from math import sqrt
-from PEF import soe # This was written by me
+from PEF import soe
 
 number = 600851475143
-primes = soe(round(sqrt(number)))
+primes = soe(10000)
 
 for prime in primes:
-if (number == 1):
-break
+    if (number == 1):
+        break
 
     while (number % prime == 0):
         number = number / prime
         print(prime)
 
+if (number != 1):
+    print("Error: Generate larger prime list")
 ```
 </div>
 
 <div class="tab-content" id="PEF.py">
 ```python
-# Project Euler Functions (PEF.py)
+# PEF: Project Euler Functions
 
 import math
 
 def soe(n):
-'''Sieve of Eratosethenes. Finds prime numbers'''
+    '''Sieve of Eratosethenes. Finds prime numbers'''
 
     primes = []
-    potential_primes = [True]*(n+1)
+    number_list = [True]*(n+1)
 
     for i in range(2, n+1):
-        if potential_primes[i]:
+        if number_list[i]:
             primes.append(i)
 
             # Eliminate multiples. They aren't prime
-            for not_prime in range(i**2, n+1, i):
-                potential_primes[not_prime] = False
-
+            for multiple in range(i**2, n+1, i):
+                number_list[multiple] = False
+    
+    return primes
 ```
 </div>
 </Tabs>
+
+<Spoiler>
+6857
+</Spoiler>

@@ -1,13 +1,13 @@
 ---
-import katex from 'katex';
+import katex from 'katex'
 
-const { equation = '', inline = "true" } = Astro.props;
-const html =  katex.renderToString(equation, {throwOnError: false});
+const { equation = '', inline = 'true' } = Astro.props
+const html = katex.renderToString(equation, { throwOnError: false })
 
-let format = 'inline-block';
-if (inline == "false")
-    format = 'block text-center';
+let format = 'inline-block'
+if (inline == 'false') format = 'block text-center'
 ---
-<span class={ format }>
-    <Fragment set:html={ html }></Fragment>
+
+<span class={format}>
+	<Fragment set:html={html} />
 </span>
