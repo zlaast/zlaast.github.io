@@ -1,87 +1,95 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, type CollectionEntry } from 'astro:content'
 
-import Base from '@layouts/Base.astro';
-import Card from '@components/Astro/Card.astro';
+import Base from '@layouts/Base.astro'
+import SeriesCard from '@components/Astro/SeriesCard.astro'
 
-function titleCase(word)
-{
-    return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
+function titleCase(word) {
+	return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase()
 }
 
 // Dynamic URL Paths
-export async function getStaticPaths()
-{
-    const allPosts = await getCollection("posts");
-    const posts = Array.from(allPosts);
-    const tags = new Set();
-    let paths: Object[] = [];
+export async function getStaticPaths() {
+	const allPosts = await getCollection('posts')
+	const posts = Array.from(allPosts)
+	const tags = new Set()
+	let paths: Object[] = []
 
-    posts.forEach((post) => 
-    {
-        post.data.tags.forEach(tag => tags.add(tag.toLowerCase().replaceAll(" ", "-")));
-    })
+	posts.forEach((post) => {
+		post.data.tags.forEach((tag) => tags.add(tag.toLowerCase().replaceAll(' ', '-')))
+	})
 
-    tags.forEach(tag =>
-    {
-        paths.push({ params: { tags: tag }, props: posts });
-    });
+	tags.forEach((tag) => {
+		paths.push({ params: { tags: tag }, props: posts })
+	})
 
-    return paths;
+	return paths
 }
 
-type Props = CollectionEntry<"posts">;
-const tag = Astro.params;
+type Props = CollectionEntry<'posts'>
+const tag = Astro.params
 
-const posts = await getCollection("posts");
-posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
+const posts = await getCollection('posts')
+posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
 ---
-<Base>
-    <div class="flex mx-auto">
-        <span id="top"></span>
-        <main class="mt-10 lg:mt-16 mb-24 max-w-6xl pl-10 pr-3">
-            <!-- Breadcrumbs -->
-            <div class="mb-10 text-neutral-300 text-[20px]">
-                <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
-                <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href=`/tags/${ Object.values(tag) }`>{ Object.values(tag) }</a>
-            </div>
-            <h1 class="font-readex bg-title text-bg my-16 max-w-fit p-3 text-6xl font-bold max-sm:text-center">Tag: { Object.values(tag) }</h1>
-            <div class="flex justify-between flex-wrap flex-row max-lg:flex-col max-lg:mx-auto">
-            {
-                posts.reverse().map((allPosts) => 
-                {
-                    let flag = false;
-                    allPosts.data.tags.map((tags) =>
-                    {
-                        if(tags.toLowerCase().replaceAll(" ", "-") == Object.values(tag)[0].toLowerCase().replaceAll(" ", "-"))
-                        {
-                            flag = true;
-                        }
-                    })
 
-                    if (flag)
-                        return ( <Card post = { allPosts } /> );
-                })
-            }
-            </div>
-        </main>
-    </div>
+<Base>
+	<div class="mx-auto flex">
+		<main class="mb-24 mt-10 max-w-6xl pl-10 pr-3 lg:mt-16">
+			<!-- Breadcrumbs -->
+			<div class="mb-4 text-[20px] text-neutral-300">
+				<a
+					class="font-medium decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
+					href="/">Home</a
+				> /
+				<a
+					class="font-medium decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
+					href=`/tags/${ Object.values(tag) }`>{Object.values(tag)}</a
+				>
+			</div>
+
+			<hr class="mb-12 border-neutral-700" />
+
+			<h1
+				class="my-16 max-w-fit bg-title p-3 font-readex text-6xl font-bold text-bg max-sm:text-center"
+			>
+				Tag: {Object.values(tag)}
+			</h1>
+			<div>
+				{
+					posts.reverse().map((allPosts) => {
+						let flag = false
+						allPosts.data.tags.map((tags) => {
+							if (
+								tags.toLowerCase().replaceAll(' ', '-') ==
+								Object.values(tag)[0].toLowerCase().replaceAll(' ', '-')
+							) {
+								flag = true
+							}
+						})
+
+						if (flag) return <SeriesCard post={allPosts} />
+					})
+				}
+			</div>
+		</main>
+	</div>
 </Base>
 
 <style is:global>
-    /* Note:
+	/* Note:
     * This CSS is to style the markdown content,
     * since this content is inaccessible to tailwind.
     * Some of the styling is based off the tailwind Typography plugin.
     */
-    
-    :root {
-        --link: #cd9eec;
-        --subtitle: #c2410c;
-        --title: #979b8d;
-    }
-    
-    html {
-        scroll-behavior: smooth;
-    }
+
+	:root {
+		--link: #cd9eec;
+		--subtitle: #c2410c;
+		--title: #979b8d;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
 </style>

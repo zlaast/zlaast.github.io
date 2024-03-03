@@ -10,6 +10,7 @@ image: '/images/posts/project-euler/euler.jpg'
 ---
 
 import Tabs from '@components/Astro/Tabs.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
 
 ## Problem
 
@@ -43,17 +44,17 @@ Since the sieve returns a list (array), we can just sum the returned list.
         },
     ]
 }>
+
 <div class="tab-content" id="problem10.py">
 ```python
 # Project Euler: Problem 10
 # Summation of primes
 
-from PEF import soe # I wrote this
+from PEF import soe
 
 primes = soe(2000000)
 print(sum(primes))
-
-````
+```
 </div>
 
 <div class="tab-content" id="PEF.py">
@@ -75,7 +76,10 @@ def soe(n):
             # Eliminate multiples. They aren't prime
             for not_prime in range(i**2, n+1, i):
                 potential_primes[not_prime] = False
-````
-
+```
 </div>
 </Tabs>
+
+<Spoiler>
+142913828922
+</Spoiler>

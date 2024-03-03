@@ -1,68 +1,73 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, type CollectionEntry } from 'astro:content'
 
-import Base from '@layouts/Base.astro';
-import Card from '@components/Astro/Card.astro';
+import Base from '@layouts/Base.astro'
+import SeriesCard from '@components/Astro/SeriesCard.astro'
 
 // Dynamic URL Paths
-export async function getStaticPaths()
-{
-    const posts = await getCollection("posts");
+export async function getStaticPaths() {
+	const posts = await getCollection('posts')
 
-	return posts.map((post) => 
-	({
-		params: { series: post.data.series.toLowerCase().replaceAll(" ", "-") },
+	return posts.map((post) => ({
+		params: { series: post.data.series.toLowerCase().replaceAll(' ', '-') },
 		props: post
-	}));
+	}))
 }
 
-type Props = CollectionEntry<"posts">;
-const post  = Astro.props;
+type Props = CollectionEntry<'posts'>
+const post = Astro.props
 
-const posts = await getCollection("posts");
-posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date));
+const posts = await getCollection('posts')
+posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
 ---
 
 <Base>
-    <div class="flex mx-auto">
-        <!-- <main class="mt-10 lg:mt-16 mb-24 max-w-[75ch] max-lg:max-w-[50ch] max-md:max-w-[30ch]"> -->
-        <main class="mt-10 lg:mt-16 mb-24 max-w-6xl pl-10 pr-3">
-            <!-- Breadcrumbs -->
-            <div class="mb-4 text-neutral-300 text-[20px]">
-                <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href="/">Home</a> /
-                <a class="hover:text-link decoration-dotted decoration-1 underline-offset-8 hover:underline font-medium" href=`/blog/${ post.data.series.toLowerCase().replaceAll(' ', '-') }`>{ post.data.series }</a>
-            </div>
+	<div class="mx-auto flex">
+		<main class="mb-24 mt-10 max-w-6xl pl-10 pr-3 lg:mt-16">
+			<!-- Breadcrumbs -->
+			<div class="mb-4 text-[20px] text-neutral-300">
+				<a
+					class="font-medium decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
+					href="/">Home</a
+				> /
+				<a
+					class="font-medium decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
+					href=`/blog/${ post.data.series.toLowerCase().replaceAll(' ', '-') }`
+					>{post.data.series}</a
+				>
+			</div>
 
-            <hr class="mb-12 border-neutral-700">
+			<hr class="mb-12 border-neutral-700" />
 
-            <h1 class="font-readex text-subtitle my-16 max-w-fit text-6xl font-bold max-sm:text-center">{ post.data.series }</h1>
-            <div class="flex justify-between flex-wrap max-lg:flex-col max-lg:mx-auto">
-                {
-                    posts.reverse().map((allPosts) => 
-                    {
-                        if (allPosts.data.series == post.data.series)
-                            return ( <Card post = { allPosts } /> );
-                    })
-                }
-            </div>
-        </main>
-    </div>
+			<h1 class="my-16 max-w-fit text-6xl font-bold text-title max-sm:text-center">
+				{post.data.series}
+			</h1>
+
+			<div>
+				{
+					posts.reverse().map((allPosts) => {
+						if (allPosts.data.series == post.data.series) return <SeriesCard post={allPosts} />
+					})
+				}
+			</div>
+		</main>
+	</div>
 </Base>
 
 <style>
-    /* Note:
+	/* Note:
     * This CSS is to style the markdown content,
     * since this content is inaccessible to tailwind.
     * Some of the styling is based off the tailwind Typography plugin.
     */
-    
-    :root {
-        --link: #cd9eec;
-        --subtitle: #c2410c;
-        --title: #979b8d;
-    }
-    
-    html {
-        scroll-behavior: smooth;
-    }
+
+	:root {
+		--link: #cd9eec;
+		--subtitle: #c2410c;
+		--title: #979b8d;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
 </style>

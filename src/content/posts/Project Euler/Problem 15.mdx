@@ -11,13 +11,13 @@ image: '/images/posts/project-euler/euler.jpg'
 
 import Math from '@components/Astro/Math.astro'
 import Tab from '@components/Astro/Tab.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 15](https://projecteuler.net/problem=15)
 
 {/* EXCERPT START */}
-
 > **Problem**
 >
 > Starting in the top left corner of a 2 × 2 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner.
@@ -25,7 +25,7 @@ This problem comes from [Project Euler 15](https://projecteuler.net/problem=15)
 > <img class="mx-auto invert" src="/images/posts/project-euler/problem15.png" />
 >
 > How many such routes are there through a 20 × 20 grid?
-> {/* EXCERPT END */}
+{/* EXCERPT END */}
 
 ## Solution
 
@@ -39,7 +39,7 @@ Where, <Math equation="M_n" /> stands for our "move". Of the four moves we can m
 
 <Math inline="false" equation=" M_1 R M_2 R " />
 
-Where <Math equation=" R" /> stands for "rightward-move" and <Math equation=" M_1 " /> and <Math equation="M_2" /> will be down by default, . This gives us down-right-down-right as a route. So, for the 2 × 2 grid we have "4 choose 2"
+Where <Math equation=" R" /> stands for "rightward-move" and <Math equation=" M_1 " /> and <Math equation="M_2" /> will be down by default. This gives us down-right-down-right as a route. So, for the 2 × 2 grid we have "4 choose 2"
 
 <Math inline="false" equation=" \binom{4}{2}= 6 " />
 

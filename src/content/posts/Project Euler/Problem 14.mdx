@@ -11,13 +11,13 @@ image: '/images/posts/project-euler/euler.jpg'
 
 import Math from '@components/Astro/Math.astro'
 import Tab from '@components/Astro/Tab.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 14](https://projecteuler.net/problem=14)
 
 {/* EXCERPT START */}
-
 > **Problem**
 > The following iterative sequence is defined for the set of positive integers:
 >
@@ -27,17 +27,14 @@ This problem comes from [Project Euler 14](https://projecteuler.net/problem=14)
 >
 > Using the rule above and starting with 13, we generate the following sequence:
 >
-> <Math
-> 	inline="false"
-> 	equation="13 \rarr 40 \rarr 20 \rarr 10 \rarr 5 \rarr 16 \rarr 8 \rarr 4 \rarr 2 \rarr 1 "
-> />
+> <Math inline="false" equation="13 \rarr 40 \rarr 20 \rarr 10 \rarr 5 \rarr 16 \rarr 8 \rarr 4 \rarr 2 \rarr 1 " />
 >
 > It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms. terms. Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.
 >
 > Which starting number, under one million, produces the longest chain?
 >
 > **NOTE**: Once the chain starts the terms are allowed to go above one million.
-> {/* EXCERPT END */}
+{/* EXCERPT END */}
 
 ## Solution
 
@@ -86,7 +83,6 @@ Lastly in the code below, I initialize `stored_chain_length = [0, 1]`. This is b
 ## Code
 
 <Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem14.py" tab="problem14.py">
-
 ```python
 # Project Euler: Problem 14
 # Longest chain chain
@@ -119,5 +115,8 @@ for starting_number in range(1, 1000000):
 
 print(max_starting_number, max_chain_length)
 ```
-
 </Tab>
+
+<Spoiler>
+837799
+</Spoiler>

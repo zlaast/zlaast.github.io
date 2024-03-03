@@ -1,0 +1,35 @@
+---
+import { parseDate } from '@utils/utils'
+
+const { post } = Astro.props
+const date = parseDate(post.data.date)
+---
+
+<a
+	class="duration-400 my-10 flex text-neutral-50 transition-all hover:scale-105 max-md:rounded-md max-md:border-[1px] max-md:border-neutral-600 max-md:p-2"
+	href=`/blog/${ post.slug }`
+>
+	<img class="mr-5 inline-block w-[100px] rounded-lg max-md:hidden" src={post.data.image} />
+
+	<div class="inline-block">
+		<h2 class="text-2xl font-bold text-subtitle">{post.data.subtitle}</h2>
+		<h3 class="inline-block text-lg">{post.data.title}</h3>
+		<span class="inline-block text-title">/</span>
+		<span class="inline-block text-title">{date}</span>
+		<div>
+			{
+				post.data.tags.sort().map((tag: any) => (
+					<span class="text-sm leading-10">
+						<span class="mr-1 whitespace-nowrap rounded-md border-[1px] border-slate-500 p-1">
+							<span class="relative left-0.5 text-sm text-neutral-300">{tag}</span>
+						</span>
+					</span>
+				))
+			}
+		</div>
+	</div>
+</a>
+
+<hr class="border-neutral-700" />
+
+<!-- duration-400 inline-block h-[96px] w-[96px] scale-125 object-cover transition-all hover:rotate-3 hover:scale-150 -->

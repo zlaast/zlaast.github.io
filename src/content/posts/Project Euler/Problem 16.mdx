@@ -11,6 +11,7 @@ image: '/images/posts/project-euler/euler.jpg'
 
 import Math from '@components/Astro/Math.astro'
 import Tab from '@components/Astro/Tab.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
 
 ## Problem
 
@@ -20,7 +21,7 @@ This problem comes from [Project Euler 16](https://projecteuler.net/problem=16)
 
 > **Problem**
 >
-> <Math equation="2^{15} = 32768" /> and the sum of its digits is <Math equation="1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ..." />
+> <Math equation="2^{15} = 32768" /> and the sum of its digits is <Math equation="3+2+7+6+8=26" />
 >
 > What is the sum of the digits of the number <Math equation="2^{1000}"/>?
 > {/* EXCERPT END */}
@@ -36,7 +37,6 @@ The solution I went for was fairly simple.
 ## Code
 
 <Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem16.py" tab="problem16.py">
-
 ```python
 # Project Euler: Problem 16
 # Power digit sum
@@ -45,5 +45,8 @@ num = 2**1000
 num_list = [int(i) for i in str(num)]
 print(sum(num_list))
 ```
-
 </Tab>
+
+<Spoiler>
+1366
+</Spoiler>

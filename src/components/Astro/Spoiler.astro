@@ -1,6 +1,6 @@
 <button
 	id="spoiler"
-	class="spoiler-hide mt-10 w-full bg-[#15161a] font-bold text-red-600"
+	class="spoiler-hide mt-5 w-full bg-[#15161a] font-bold text-red-600"
 	onclick="showSpoiler()"
 >
 	<slot />
@@ -12,7 +12,17 @@
 	}
 
 	.spoiler-show {
-		background-color: #15161a;
+		border: 1px solid red;
+	}
+
+	#spoiler {
+		box-shadow: 0 0 0 0 red;
+		transition: all 0.2s ease-in-out;
+	}
+
+	#spoiler:hover {
+		box-shadow: 0 0 0px 1px red;
+		transition: all 0.2s ease-in-out;
 	}
 </style>
 

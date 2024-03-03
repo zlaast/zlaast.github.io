@@ -10,6 +10,7 @@ image: "/images/posts/project-euler/euler.jpg"
 ---
 import Math from "@components/Astro/Math.astro";
 import Tab from "@components/Astro/Tab.astro";
+import Spoiler from '@components/Astro/Spoiler.astro'
 
 ## Problem
 
@@ -50,7 +51,8 @@ This problem comes from [Project Euler 11](https://projecteuler.net/problem=11)
 
 ## Solution
 
-I start off by taking the number grid and turning it into a 2D array in Python. This way, I can access any number in the grid using <Math equation=" [x][y] " /> notation with **x** accessing the row and **y** accessing the column.
+I start off by taking the number grid and turning it into a 2D array in Python. 
+This way, I can access any number in the grid using <Math equation=" [x][y] " /> notation with **x** accessing the rows and **y** accessing the columns.
 
 After that, it's just calculating four adjacent cells, looping through all of them, and taking the max product for each direction. See the code below for the implementation.
 
@@ -124,3 +126,7 @@ du = max(
 print(max(ud, lr, dd, du))
 ```
 </Tab>
+
+<Spoiler>
+70600674
+</Spoiler>
