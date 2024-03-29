@@ -6,6 +6,7 @@ subtitle: Problem 5 - Smallest multiple
 part: 5
 date: 2023-04-28
 tags: ['Coding', 'Math', 'Python', 'Rust']
+graph_tags: ['primes', 'factorization']
 image: '/images/posts/project-euler/euler.jpg'
 ---
 
@@ -26,21 +27,21 @@ This problem comes from [Project Euler 5](https://projecteuler.net/problem=5)
 {/* EXCERPT END */}
 
 ## Solution
-The solution involves what we have seen in previous problems, **prime factorization**. Let's look at the example given in the problem.
+The solution involves what we have seen in previous problems: **prime factorization**. Let's look at the example given in the problem.
 
 ### Prime Factorization
 Let's start by performing prime factorization on the numbers 1 to 10
 
-- <Math equation="1 = 1" />
-- <Math equation="2 = 2" />
-- <Math equation="3 = 3" />
-- <Math equation="4 = 2 \times 2" />
-- <Math equation="5 = 5" />
-- <Math equation="6 = 2 \times 3" />
-- <Math equation="7 = 7" />
-- <Math equation="8 = 2 \times 2 \times 2" />
-- <Math equation="9 = 3 \times 3" />
-- <Math equation="10 = 2 \times 5" />
+- <Math eqn="1 = 1" />
+- <Math eqn="2 = 2" />
+- <Math eqn="3 = 3" />
+- <Math eqn="4 = 2 \times 2" />
+- <Math eqn="5 = 5" />
+- <Math eqn="6 = 2 \times 3" />
+- <Math eqn="7 = 7" />
+- <Math eqn="8 = 2 \times 2 \times 2" />
+- <Math eqn="9 = 3 \times 3" />
+- <Math eqn="10 = 2 \times 5" />
 
 Let's do two things
 
@@ -49,17 +50,17 @@ Let's do two things
 
 This is the result of the above operation
 
-<Math inline="false" equation="1 \times 2 \times 3 \times 2 \times 5 \times 7 \times 2 \times 3 = 2520" />
+<Math inline="false" eqn="1 \times 2 \times 3 \times 2 \times 5 \times 7 \times 2 \times 3 = 2520" />
 
 Hey! The number from the problem popped out! 
 
-I won't lie. I'm not entirely sure I understand why this works, it's just something I noticed.
+I won't lie. I'm not entirely sure I understand why this works; it's just something I noticed.
 
 ### Algorithm
 This is the solution I programmed
 
 1. Perform prime factorization on the numbers 1 to 20
-2. For each number, create a **set** which will discard repeated factors. This is the same as taking the first factor from each number.
+2. For each number, create a **set**, which will discard repeated factors. This is the same as taking the first factor from each number.
 3. Any set that has more than one member is discarded. This is the same as ignoring numbers that have different factors.
 4. Multiply all the sets
 
@@ -69,11 +70,11 @@ This is the solution I programmed
     [
         {
             "tab": "problem05.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem05.py"
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem05.py"
         },
         {
             "tab": "main.rs",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20-%20Rust/problem_5/src/main.rs"
+            "url": "https://github.com/zlaast/Project-Euler/tree/main/Problems-Rust/problem_5/src/main.rs"
         },
     ]
 }>

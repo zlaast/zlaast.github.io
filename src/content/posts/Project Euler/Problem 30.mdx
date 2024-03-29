@@ -1,0 +1,71 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 30 - Digit Fifth Powers
+part: 30
+date: 2024-03-11
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Tab from '@components/Astro/Tab.astro'
+import Math from '@components/Astro/Math.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+
+{/* EXCERPT START */}
+> **Problem**
+> 
+> Surprisingly there are only three numbers that can be written as the sum of fourth powers of their digits:
+> <Math inline="false" eqn="1634 = 1^4 + 6^4 + 3^4 + 4^4\\ 8208 = 8^4 + 2^4 + 0^4 + 8^4\\ 9474 = 9^4 + 4^4 + 7^4 + 4^4" />
+> As <Math eqn="1 = 1^4" /> is not a sum it is not included.
+>
+> The sum of these numbers is 1634 + 8208 + 9474 = 19 316.
+> Find the sum of all the numbers that can be written as the sum of fifth powers of their digits.
+{/* EXCERPT END */}
+
+## Solution
+
+This problem is interesting because it doesn't mention a scope. How do we know when to stop searching for numbers that can be
+written as the sum of the fourth/fifth power of their digits? I don't know myself, but I made some assumptions.
+
+In the problem there four digits that can be raised to the fourth power. So the range for this problem would be <Math eqn="4 \times 9^4 = 9^4 + 9^4 + 9^4 + 9^4" />.
+So by that, our maximum search would be <Math eqn="5 \times 9^5" />.
+
+With that assumption made, we'll go through each number as the problem states and find the numbers that are sums of their digits raised to the fifth power.
+
+## Code
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem30.py" tab="problem30.py">
+```python
+# Project Euler: Problem 30
+# Digit Fifth Powers
+
+n = 5
+search_range = n*(9**n)
+sum_digits = 0
+
+for number in range(2, search_range):
+    num = [int(i) for i in str(number)]
+    result = sum(map(lambda i: i**n, num))
+
+    if result == number:
+        sum_digits += number
+
+    # This block is optional
+    # For no apparent reason it allows the code
+    # to execute on my computer ~200ms faster
+    if result > search_range:
+        break
+
+print(sum_digits)
+```
+</Tab>
+
+Also note the mysterious, "useless" code. Yep, without it my code takes ~770ms to execute, and with it it takes ~530ms to execute.
+No idea why.
+
+<Spoiler>
+443839
+</Spoiler>

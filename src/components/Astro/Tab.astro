@@ -3,10 +3,10 @@ const { tab, url } = Astro.props
 ---
 
 <button
-	class="mr-1 max-w-max cursor-pointer border-t-2 border-t-red-600 bg-[#24292e] px-5 py-3 text-[16px] font-semibold"
+	class="mr-1.5 max-w-max cursor-pointer border-t-2 border-t-red-600 bg-[#24292e] pl-5 text-[16px] font-semibold max-md:px-2 max-md:py-1"
 >
-	{tab}
-	<a class="ml-4" href={url}>
+	<span class="mr-3 px-3">{tab}</span>
+	<a class="git-link inline-block bg-[#1e2225] p-3 hover:border-0" href={url}>
 		<svg
 			class="inline"
 			xmlns="http://www.w3.org/2000/svg"
@@ -26,3 +26,11 @@ const { tab, url } = Astro.props
 <div class="mb-5">
 	<slot />
 </div>
+
+<style>
+	.git-link::after {
+		font-size: 14px;
+		margin-left: 2px;
+		content: 'Git';
+	}
+</style>

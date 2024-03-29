@@ -1,0 +1,33 @@
+---
+const { nodes, edges } = Astro.props
+---
+
+<div id="graph" class="w-5xl h-[500px] border"></div>
+
+<style>
+	#graph {
+		border: 1px solid #444444;
+		background-color: #222222;
+	}
+</style>
+
+<script type="text/javascript" define:vars={{ nodes, edges }}>
+	// Graph Information
+	let container = document.getElementById('graph')
+
+	console.log(nodes[3])
+
+	let data = {
+		nodes: nodes,
+		edges: edges
+	}
+
+	let options = {
+		layout: {
+			hierarchical: {
+				direction: 'UD'
+			}
+		}
+	}
+	network = new vis.Network(container, data, options)
+</script>

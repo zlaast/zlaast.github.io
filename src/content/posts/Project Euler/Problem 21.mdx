@@ -1,0 +1,215 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 21 - Amicable Numbers
+part: 21
+date: 2024-03-04
+tags: ['Coding', 'Math', 'Python']
+graph_tags: ['primes', 'factorization']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Math from '@components/Astro/Math.astro'
+import Tabs from '@components/Astro/Tabs.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+This problem comes from [Project Euler 21](https://projecteuler.net/problem=21)
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> Let <Math eqn="d(n)" /> be defined as the sum of proper divisors of <Math eqn="n" /> (numbers less than <Math eqn="n" /> 
+> which divide evenly into <Math eqn="n" />).
+> 
+> If <Math eqn="d(a) = b" /> and <Math eqn="d(b) = a" />, where <Math eqn="a \neq b" />, 
+> then <Math eqn="a" /> and <Math eqn="b" /> are an amicable pair and each of <Math eqn="a" /> and <Math eqn="b" /> are called amicable numbers.
+>
+> For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44, 55, and 110; therefore <Math eqn="d(220) = 284" />.
+> The proper divisors of 284 are 1, 2, 4, 71 and 142; so <Math eqn="d(284) = 220" />.
+>
+> Evaluate the sum of all the amicable numbers under 10 000.
+{/* EXCERPT END */}
+
+## Solution
+
+To complete this problem, I needed some new code that would perform factorization. 
+I decided to have two functions: one that returns the **prime factors** of a number 
+and one that returns the **proper divisors** of a number.
+
+**Note**: I use divisors and factors interchangeably in this post.
+
+### Prime Factorization
+
+This function performs prime factor decomposition of a number.
+
+```python
+def p_factor(num):
+    """ Returns the prime factors of a number """
+    
+    if 'primes' not in p_factor.__dict__:
+        p_factor.primes = soe(num//2)
+
+    # Prime Factorization
+    prime_factors = []
+    for prime in p_factor.primes:
+        if (num == 1):
+            break
+
+        while (num % prime == 0):
+            prime_factors.append(prime)
+            num = num // prime
+
+    return prime_factors
+```
+
+For the most part, it's simple:
+
+1. Get a list of prime numbers
+2. If the input (`num`) can be evenly divided by a prime, add it to `prime_factors`
+3. Keep dividing the input (`num`) by primes until it equals one
+4. Return the list of prime factors
+
+But this function has an oddity, although a useful one:
+
+```python
+if 'primes' not in p_factor.__dict__:
+        p_factor.primes = soe(num//2)
+```
+This is an application of Python's **function attributes**. Python doesn't have **static** variables, at least not in the way C and C++ do,
+so this is an informal way of implementing it.
+
+#### Minor Caveat
+While storing the prime numbers from the sieve *drastically* reduces calculations, in this case, it comes with a drawback. Say you want to factor many numbers
+
+```python
+from PEF import p_factor
+
+for i in range(2, 5000):
+    print(p_factor(i))
+```
+
+This would not work. This is *because* of the "static variable": the function receives `soe(2//2)`, sieves the prime factors from that...and stays that way.
+It would not be able to calculate `i=3` etc. because we ran out of prime factors! So instead we must reverse the range for it to work
+
+```python
+from PEF import p_factor
+
+for i in reversed(range(2, 5000)):
+    print(p_factor(i))
+```
+
+That way the function gets `soe(5000//2)` and we have a large list of prime numbers to use.
+
+### Proper Divisors
+
+It turns out that if we have all the prime factors of a number, we can calculate *all* the divisors of a number.
+All we have to do is multiply all combinations of the prime factors together.
+
+```python
+import math
+from itertools import combinations
+
+def factor(num):
+    """ Returns the proper factors of a number """
+    prime_factors = p_factor(num)
+    proper_factors = {1}
+
+    # Proper Factors
+    for length in range(1, len(prime_factors)):
+        comb = combinations(prime_factors, length)
+        
+        for i in comb:
+            proper_factors.add(math.prod(i))
+
+    return sorted(proper_factors)
+```
+
+## Code
+
+I find it funny that, after all that tedious talking and explaining, I don't have anything to say about the solution *itself*.
+It does exactly what the problem describes 🤷.
+
+<Tabs list={
+    [
+        {
+            "tab": "problem21.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem21.py"
+        },
+        {
+            "tab": "PEF.py",
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/PEF.py"
+        },
+    ]
+}>
+
+<div class="tab-content" id="problem21.py">
+```python
+# Project Euler: Problem 21
+# Amicable numbers
+
+from PEF import factor
+
+amicables = []
+
+for number in reversed(range(2, 10000)):
+    if number not in amicables:
+        a = sum(factor(number))
+        b = sum(factor(a))
+
+        if (a != b and b == number):
+            amicables.append(number)
+            amicables.append(a)
+
+print(sum(amicables))
+```
+</div>
+<div class="tab-content" id="PEF.py">
+```python
+# Note: soe() is defined in PEF.py, 
+# but is not included here for brevity.
+# Click the little purple GitHub icon
+# on the tab to go the Git Repo for this file
+
+import math
+from itertools import combinations
+
+def p_factor(num):
+    """ Performs Prime Factorization and Proper Factorization """
+    
+    if 'primes' not in p_factor.__dict__:
+        p_factor.primes = soe(num//2)
+
+    # Prime Factorization
+    prime_factors = []
+    for prime in p_factor.primes:
+        if (num == 1):
+            break
+
+        while (num % prime == 0):
+            prime_factors.append(prime)
+            num = num // prime
+
+    return prime_factors
+
+def factor(num):
+    """ Returns the proper factors of a number """
+    prime_factors = p_factor(num)
+    proper_factors = {1}
+
+    # Proper Factors
+    for length in range(1, len(prime_factors)):
+        comb = combinations(prime_factors, length)
+        
+        for i in comb:
+            proper_factors.add(math.prod(i))
+
+    return sorted(proper_factors)
+```
+</div>
+</Tabs>
+
+<Spoiler>
+31626
+</Spoiler>

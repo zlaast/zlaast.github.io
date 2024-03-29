@@ -6,6 +6,7 @@ subtitle: Problem 7 - 10 001st Prime
 part: 7
 date: 2023-10-01
 tags: ['Coding', 'Math', 'Python']
+graph_tags: ['primes']
 image: '/images/posts/project-euler/euler.jpg'
 ---
 
@@ -26,32 +27,34 @@ This problem comes from [Project Euler 7](https://projecteuler.net/problem=7)
 {/* EXCERPT END */}
 
 ## Solution
-Since we're generating primes, I'll be using the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) which was seen and created in [Problem 3](/blog/project-euler/problem-3).
+Since we're generating primes, I'll be using the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes), which was seen and created in [Problem 3](/blog/project-euler/problem-3).
 
 ### How do we sieve 10 001 primes?
-Inbetween 1 and 100 there are 25 primes. Inbetween 1 and 10 000 there are 1229 primes. We should be asking ourselves, "Inbetween 1 and <Math equation="N"/>, there are 10 001 primes. What is <Math equation="N"/>?"
+Between 1 and 100, there are 25 primes. Between 1 and 10 000, there are 1229 primes. We should be asking ourselves, "Inbetween 1 and <Math eqn="N"/>, there are 10 001 primes. What is <Math eqn="N"/>?"
 We need to ask ourselves this to have an upper limit for the Sieve of Eratosethenes.
 
-According to the [Prime Number Theorem](https://en.wikipedia.org/wiki/Prime_number_theorem), the **density** of primes between 1 and <Math equation="N"/> is **approximately**
+According to the [Prime Number Theorem](https://en.wikipedia.org/wiki/Prime_number_theorem), the **density** of primes between 1 and <Math eqn="N"/> is **approximately**
 
-<Math inline="false" equation="\dfrac{1}{ln(N)} " />
+<Math inline="false" eqn="\dfrac{1}{ln(N)} " />
 
-Where <Math equation=" ln(N) "/> is the natural logarithm of <Math equation="N"/>. So, the **density** of primes between 1 and 100 is **approximately**
+Where <Math eqn=" ln(N) "/> is the natural logarithm of <Math eqn="N"/>. So, the **density** of primes between 1 and 100 is **approximately**
 
-<Math inline="false" equation="\dfrac{1}{ln(100)} \approx 0.217 = 21.7 \%" />
+<Math inline="false" eqn="\dfrac{1}{ln(100)} \approx 0.217 = 21.7 \%" />
 
-The actual number is known to be 25%, but with a larger <Math equation="N"/>, this becomes far more accurate. Now, the formula just gives us the density of prime numbers, and we want to know if there's 10 001 prime numbers in <Math equation="N"/>. No problem, just multiply by <Math equation="N"/> and we get
+The actual number is known to be 25%, but with a larger <Math eqn="N"/>, this becomes far more accurate. 
+Now, the formula just gives us the density of prime numbers, and we want to know if there's 10 001 prime numbers in <Math eqn="N"/>. 
+No problem, just multiply by <Math eqn="N"/> and we get
 
-<Math inline="false" equation="\dfrac{N}{ln(N)} " />
+<Math inline="false" eqn="\dfrac{N}{ln(N)} " />
 
-This time, with <Math equation=" N = 10 000 "/>
+This time, with <Math eqn=" N = 10 000 "/>
 
-<Math inline="false" equation="\dfrac{10 000}{ln(10 000)} \approx 1086 " />
+<Math inline="false" eqn="\dfrac{10 000}{ln(10 000)} \approx 1086 " />
 
-As mentioned, there are actually 1229 primes inbetween 1 and 10 000, but this isn't too bad! Again, a larger <Math equation="N"/> nets us more accurate approximations.
+As mentioned, there are actually 1229 primes in between 1 and 10 000, but this isn't too bad! Again, a larger <Math eqn="N"/> gives us more accurate approximations.
 
 ### And the number is 🥁...
-With a little trial and error, we get <Math equation="N = 120 000"/> which should have approximately 10 260 prime numbers!
+With a little trial and error, we get <Math eqn="N = 120 000"/> which should have approximately 10 260 prime numbers!
 
 ## Code
 
@@ -59,11 +62,11 @@ With a little trial and error, we get <Math equation="N = 120 000"/> which shoul
     [
         {
             "tab": "problem07.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem07.py"
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem07.py"
         },
         {
             "tab": "PEF.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/PEF.py"
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/PEF.py"
         }
     ]
 }>

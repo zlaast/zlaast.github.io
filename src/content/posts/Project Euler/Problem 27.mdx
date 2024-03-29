@@ -1,0 +1,105 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 27 - Quadratic Primes
+part: 27
+date: 2024-03-10
+tags: ['Coding', 'Math', 'Python']
+graph_tags: ['primes']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Tab from '@components/Astro/Tab.astro'
+import Math from '@components/Astro/Math.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+
+{/* EXCERPT START */}
+> **Problem**
+> 
+> Euler discovered the remarkable quadratic formula:
+> <Math inline="false" eqn="n^2 + n + 41" />
+> It turns out that the formula will produce 40 primes for the consecutive integer values <Math eqn="0 \leq n \leq 39"/>.
+> However, when <Math eqn="n=40"/>, <Math eqn="40^2 + 40 + 41 = 40(40+1)+41" /> is divisible by 41, and certainly
+> when <Math eqn="n=41"/>, <Math eqn="41^2 + 41 + 41" /> is clearly divisible by 41.
+>
+> The incredible formula <Math eqn="n^2 - 79n + 1601" /> was discovered, which produces 80 primes for the consecutive values
+> <Math eqn="0 \leq n \leq 79"/>. . The product of the coefficients, -79 and 1601, is -126 479.
+>
+> Considering quadratics of the form:
+> 
+> <span class="ml-10"><Math eqn="n^2 + an + b"/>,</span><br/>
+> <span class="ml-10">where <Math eqn="|a| \lt 1000"/> and <Math eqn="|b| \leq 1000"/></span><br/>
+> <span class="ml-10">where <Math eqn="|n|"/> is the modulus/absolute value of <Math eqn="n"/></span><br/>
+> <span class="ml-10">e.g <Math eqn="|11| = 1"/> and <Math eqn="|-4|=4"/></span>
+>
+> Find the product of the coefficients, <Math eqn="a"/> and <Math eqn="b"/>,
+> for the quadratic expression that produces the maximum number of primes for consecutive values of 
+> <Math eqn="n"/>, starting with <Math eqn="n=0"/>
+{/* EXCERPT END */}
+
+## Solution
+
+The problem gives two example equations:
+<Math inline="false" eqn="n^2 + n + 41" />
+Where <Math eqn="a=1"/> and <Math eqn="b=41"/>, and
+<Math inline="false" eqn="n^2 - 79n + 1601" />
+Where <Math eqn="a=79"/> and <Math eqn="b=1601"/>
+
+We should first notice that <Math eqn="a"/> and <Math eqn="b"/> for both equations are **prime numbers**. We should
+try creating these equations using prime numbers for <Math eqn="a"/> and <Math eqn="b"/>.
+
+To solve the problem, I came up with the following steps:
+
+1. Create a list of positive primes and their negative counterparts
+2. For `a`, loop through the list containing the negative and positive primes
+3. For `b`, loop through the list containing the positive primes
+4. For `n`, try all numbers up to 1000 until `n` doesn't produce a prime
+5. Save the longest prime chain
+
+Why does \#3 use only positive primes? Actually, it doesn't have to, but from observing the output, only the positive prime
+numbers produce chains, so we can do away with trying the negative side.
+
+## Code
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem27.py" tab="problem27.py">
+```python
+# Project Euler: Problem 27
+# Quadratic Primes
+
+from PEF import soe
+
+max_a = 0
+max_b = 0
+max_count = 0
+
+p_primes = soe(1000)
+n_primes = [-p for p in p_primes]
+primes = n_primes + p_primes
+
+for a in primes:
+    for b in p_primes:
+        prime_count = 0
+        for n in range(1001):
+            if n*(n+a)+b in p_primes:
+                prime_count += 1
+                if prime_count > max_count:
+                    max_a = a
+                    max_b = b
+                    max_count = prime_count
+            else:
+                break
+
+print(max_a*max_b)
+```
+<br />
+- `p_primes` means "positive primes"
+- `n_primes` means "negative primes"
+- `soe()` is the Sieve of Eratosthenes, a prime number sieve written in [Problem 3](/blog/project-euler/problem-3)
+
+</Tab>
+
+<Spoiler>
+-59231
+</Spoiler>

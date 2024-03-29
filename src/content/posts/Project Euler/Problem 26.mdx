@@ -1,0 +1,120 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 26 - Reciprocal Cycles
+part: 26
+date: 2024-03-05
+tags: ['Coding', 'Math', 'Python']
+graph_tags: ['primes']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Tab from '@components/Astro/Tab.astro'
+import Math from '@components/Astro/Math.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 20 to 10 are given:
+> <div class="text-center">
+> 1/2 = 0.5<br/>
+> 1/3 = 0.(3)<br/>
+> 1/4 = 0.25<br/>
+> 1/5 = 0.2<br/>
+> 1/6 = 0.1(6)<br/>
+> 1/7 = 0.(142857)<br/>
+> 1/8 = 0.125<br/>
+> 1/9 = 0.(1)<br/>
+> 1/10 = 0.1<br/>
+> </div>
+>
+> Where 0.1(6) means 0.166666..., and has a 1-digit recurring cycle. In can be seen that 1/7 has a 6-digit recurring cycle.
+>
+> Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.
+{/* EXCERPT END */}
+
+## Solution
+
+This solution involved a bit of research, but here are three Wikipedia pages that I found helpful: 
+[Full Reptend Primes](https://en.wikipedia.org/wiki/Full_reptend_prime), [Multiplicative Order](https://en.wikipedia.org/wiki/Multiplicative_order), and [Cyclic Number](https://en.wikipedia.org/wiki/Cyclic_number).
+
+Here are the important bits from those pages:
+
+From [Full Reptend Primes](https://en.wikipedia.org/wiki/Full_reptend_prime)
+> In number theory, a full reptend prime ... in base <Math eqn="b" /> is an odd prime number <Math eqn="p" /> such that the [Fermat Quotient](https://en.wikipedia.org/wiki/Fermat_quotient)
+>
+> <Math inline="false" eqn="q_p(b) = \dfrac{b^{p-1} -1}{p}" />
+>
+> gives a [cyclic number](https://en.wikipedia.org/wiki/Cyclic_number).
+>
+> ...
+>
+> The cyclic number corresponding to prime <Math eqn="p" /> will possess <Math eqn="p -1" /> digits **if and only if** <Math eqn="p" /> is a full reptend prime. 
+> That is, the multiplicative order <Math eqn="\text{ord}_p(b) = p - 1" />
+
+From [Multiplicative Order](https://en.wikipedia.org/wiki/Multiplicative_order)
+> In number theory, given a positive integer <Math eqn="n" /> and an integer <Math eqn="a" /> coprime to <Math eqn="n" />, 
+> the multiplicative order of a modulo <Math eqn="n" /> is the smallest positive integer <Math eqn="k" /> such that <Math eqn="a^k \equiv 1 (\text{mod } n)" />.
+>
+> ...
+>
+> The order of a modulo <Math eqn="n" />  is sometimes written as <Math eqn="\text{ord}_n(a)" />
+
+We can see from the *Full Reptend Primes* quote that we can generate cyclic numbers that will have <Math eqn="p - 1" /> digits 
+**if and only if** <Math eqn="p" /> is a full reptend prime.
+
+For example, if the prime number 17 is a full reptend prime (which it is), then it will create a cyclic number with 16 repeating digits!
+
+We check if a prime number is a *full reptend prime* by checking its *multiplicative order*. 
+Combining some of the equations and information we have, we get
+
+<Math inline="false" eqn="\text{ord}_p(10) = 1 \texttt{\char32\char32} \text{(mod }p)" />
+
+Or more simply
+
+<Math inline="false" eqn="10^k = 1 \texttt{\char32\char32} \text{(mod }p)" />
+
+Note that
+- Our base <Math eqn="b" /> is 10 and, 
+- that <Math eqn="k" /> is some integer, whose range we'll set between 1 and <Math eqn="p" />
+
+From the *Full Reptend Primes* quote, if <Math eqn="k = p-1" />, then the prime is full reptend and therefore cyclic.
+
+## Code
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem26.py" tab="problem26.py">
+```python
+# Project Euler: Problem 26
+# Reciprocal cycles
+
+from PEF import soe
+
+def full_reptend_check(p) -> bool:
+    for k in range(1, p):
+        if (10**k) % p == 1:
+            if k == p-1:
+                return True
+            else:
+                return False
+
+primes = soe(1000)
+for p in reversed(primes):
+    if(full_reptend_check(p)):
+        print(p)
+        break
+```
+</Tab>
+
+The program carries out what was discussed in the [Solution](#solution).
+The function `full_reptend_check()` finds if a prime is a full reptend prime and returns `True` if it is.
+
+One thing of note is that I check for full reptend primes in reverse, starting from the largest prime.
+The reason is pretty simple: If a prime is full reptend, then the cyclic number is <Math eqn="p-1" /> digits long,
+so it's faster to check starting from the largest number.
+
+<Spoiler>
+983
+</Spoiler>

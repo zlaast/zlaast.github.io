@@ -1,0 +1,81 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 25 - 1000-digit Fibonacci Number
+part: 25
+date: 2024-03-05
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Tab from '@components/Astro/Tab.astro'
+import Math from '@components/Astro/Math.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> The Fibonacci sequence is defined by the recurrence relation:
+>
+> <Math eqn="F_n = F_{n-1} + F_{n-2}" />, where <Math eqn="F_1 = 1" /> and <Math eqn="F_2 = 1" />
+>
+> Hence the first 12 terms will be:
+>
+> <div class="text-center">
+> F<sub>1</sub> = 1<br />
+> F<sub>2</sub> = 1<br />
+> F<sub>3</sub> = 2<br />
+> F<sub>4</sub> = 3<br />
+> F<sub>5</sub> = 5<br />
+> F<sub>6</sub> = 8<br />
+> F<sub>7</sub> = 13<br/>
+> F<sub>8</sub> = 21<br/>
+> F<sub>9</sub> = 34<br/>
+> F<sub>10</sub> = 55<br/>
+> F<sub>11</sub> = 89<br/>
+> F<sub>12</sub> = 144<br/>
+> </div>
+>
+> The 12th term, <Math eqn="F_{12}" />, is the first term to contain three digits.
+>
+> What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
+{/* EXCERPT END */}
+
+## Code
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem25.py" tab="problem25.py">
+```python
+# Project Euler: Problem 25
+# 1000-digit Fibonacci number
+
+i = 1
+length = 0
+
+F_n_2 = 0
+F_n_1 = 1
+while length < 1000:
+    F_n = F_n_1 + F_n_2
+
+    F_n_2 = F_n_1
+    F_n_1 = F_n
+
+    length = len(str(F_n))
+    i += 1
+
+print(i)
+```
+</Tab>
+
+## Solution
+Nothing complicated here.
+
+1. Calculate the current Fibonacci number <Math eqn="F_n" />
+2. Convert <Math eqn="F_n" /> to a string and check the string length
+3. If the string length is greater than 1000, we're done
+4. If not, calculate the next Fibonacci number
+
+<Spoiler>
+4782
+</Spoiler>

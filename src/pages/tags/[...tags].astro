@@ -4,10 +4,6 @@ import { getCollection, type CollectionEntry } from 'astro:content'
 import Base from '@layouts/Base.astro'
 import SeriesCard from '@components/Astro/SeriesCard.astro'
 
-function titleCase(word) {
-	return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase()
-}
-
 // Dynamic URL Paths
 export async function getStaticPaths() {
 	const allPosts = await getCollection('posts')

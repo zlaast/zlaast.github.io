@@ -22,7 +22,7 @@ This problem comes from [Project Euler 8](https://projecteuler.net/problem=8)
 >	**Problem** 
 >
 >	The four adjacent digits in the 1000-digit number that have the greatest product
->	are <Math equation="9 \times 9 \times 8 \times 9 = 5832." />
+>	are <Math eqn="9 \times 9 \times 8 \times 9 = 5832." />
 >	<pre class="not-italic">
 >	73167176531330624919225119674426574742355349194934
 >	96983520312774506326239578318016984801869478851843
@@ -51,15 +51,18 @@ This problem comes from [Project Euler 8](https://projecteuler.net/problem=8)
 </div>
 
 ## Solution
-We have to multiply 13 adjacent digits and find the largest. To do this we can use a "sliding window" to multiply an array of numbers.
+We have to multiply 13 adjacent digits and find the largest. To do this, we can use a “sliding window” to multiply an array of numbers.
 
 ![Sliding Window](/images/posts/project-euler/Slide_100.gif)
 
-We multiply the first 13 numbers and check if it is greater than our previous maximum (our previous maximum is set to 0 initially). If it is, we store our new maximum. Then we slide our "window" over by one number, and then multiply _those_ 13 numbers and check if it's greater than our previous maximum, and store the number if it is. We rinse and repeat until we reach the end of the 1000-digit number.
+We multiply the first 13 numbers and check if it is greater than our previous maximum (our previous maximum is set to 0 initially). 
+If it is, we store the new maximum. Then we slide our “window” over by one number, 
+and then multiply *those* 13 numbers, check if it’s greater than our previous maximum, and store the number if it is. 
+We rinse and repeat until we reach the end of the 1000-digit number.
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem08.py" tab="problem08.py">
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem08.py" tab="problem08.py">
 ```python
 # Project Euler: Problem 8
 # Largest product in a series

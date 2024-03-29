@@ -6,6 +6,7 @@ subtitle: Problem 3 - Largest prime factor
 part: 3
 date: 2023-04-22
 tags: ['Coding', 'Math', 'Python']
+graph_tags: ['primes', 'factorization']
 image: '/images/posts/project-euler/euler.jpg'
 ---
 
@@ -27,23 +28,23 @@ This problem comes from [Project Euler 3](https://projecteuler.net/problem=3)
 {/* EXCERPT END */}
 
 ## Solution
-Every natural number, ℕ, is either prime, or can be created using prime numbers. 
-For example, the number is 2595 can be created using the prime numbers (factors) 3, 5, and 173. That is,
+Every natural number, ℕ, is either prime or can be created using prime numbers. 
+For example, the number 2595 can be created using the prime numbers (factors) 3, 5, and 173. That is,
 
-<Math inline="false" equation="3 \times 5 \times 173 = 2595" />
+<Math inline="false" eqn="3 \times 5 \times 173 = 2595" />
 
-To obtain a list of prime factors for a number <Math equation="x" />, we must
+To obtain a list of prime factors for a number <Math eqn="x" />, we must
 
 1. Create a list of prime numbers
-2. Repeatedly and **evenly** divide <Math equation="x" /> by those primes until it is no longer possible
+2. Repeatedly and **evenly** divide <Math eqn="x" /> by those primes until it is no longer possible
 
 ### Prime Number Generator
 To create a list of prime numbers, I chose to create the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes). 
-We first create a range of numbers starting from 2 and ending at a number we choose, e.g 2 to 10 000. 
+We first create a range of numbers starting from 2 and ending at a number we choose, e.g., 2 to 10 000. 
 We start by eliminating all multiples of 2 in our range, then move on to the next number that hasn't been eliminated. 
-We then eliminate all multiples of *that* number, and so on and so forth until we only have primes left.
+We then eliminate all multiples of *that* number, and so on and so forth, until we only have primes left.
 
-<Tab tab="PEF.py" url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/PEF.py">
+<Tab tab="PEF.py" url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/PEF.py">
 ```python
 import math
 
@@ -72,15 +73,15 @@ Let's examine the implementation of the sieve.
 ```python
 number_list = [True]*(n+1)
 ```
-This code doesn't directly create a list of numbers, but instead creates a list of booleans. 
-The list is of length <Math equation="n + 1" /> (`n+1` is used to account for the zeroth index).
+This code doesn't directly create a list of numbers but instead creates a list of booleans. 
+The list is of length <Math eqn="n + 1" /> (`n+1` is used to account for the zeroth index).
 
 ```python
 for i in range(2, n+1):
     if number_list[i]:
         primes.append(i)
 ```
-The code above iterates over the list, starting at 2, and if the boolean is `True` then that **index** is prime. We can then eliminate the multiples.
+The code above iterates over the list, starting at 2, and if the boolean is `True`, then that **index** is prime. We can then eliminate the multiples.
 
 ```python
 # Eliminate multiples. They aren't prime
@@ -105,17 +106,17 @@ This continues on until we have finished the list.
 To find the largest prime factor of the number 600851475143, we generate our list of prime numbers, then repeatedly evenly divide
 the number by our prime factors. When we can no longer divide the number (the number equals one), we are done and have our largest prime factor.
 
-**Note**: I say *repeatedly* divide, as a number can have multiple of the same prime factor. For example, <Math equation="27 = 3 \times 3 \times 3" />.
+**Note**: I say *repeatedly* divide, as a number can have multiple of the same prime factor. For example, <Math eqn="27 = 3 \times 3 \times 3" />.
 
 <Tabs list={
     [
         {
             "tab": "problem03.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem03.py"
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem03.py"
         },
         {
             "tab": "PEF.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/PEF.py"
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/PEF.py"
         },
     ]
 }>

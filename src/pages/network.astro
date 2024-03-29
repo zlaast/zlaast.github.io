@@ -1,0 +1,192 @@
+---
+import Base from '@layouts/Base.astro'
+import '@styles/pages.css'
+
+import { getCollection } from 'astro:content'
+const posts = await getCollection('posts')
+
+let checkForValue = (value) => nodes.some((obj) => Object.values(obj).includes(value))
+
+let json = posts
+	.map((post) => {
+		return {
+			title: post.data.title,
+			subtitle: post.data.subtitle,
+			url: post.slug,
+			graph_tags: post.data.graph_tags
+		}
+	})
+	.filter((key) => key.graph_tags)
+
+// Primary Nodes
+let graph_tags: any = []
+json.forEach((post) => {
+	graph_tags.push(post.graph_tags)
+})
+graph_tags = new Set(graph_tags.flat())
+
+// Create Nodes and Edges
+let nodes = []
+let edges = []
+
+Array.from(graph_tags).forEach((tag) => {
+	nodes.push({
+		id: tag,
+		label: tag,
+		group: 'principle'
+	})
+})
+
+json.forEach((post) => {
+	Array.from(graph_tags)
+		.sort()
+		.forEach((tag) => {
+			// Add Nodes
+			if (!checkForValue(post.url)) {
+				if (post.graph_tags?.includes(tag)) {
+					nodes.push({
+						id: post.url,
+						label: post.title + '\n' + post.subtitle,
+						group: tag
+					})
+				}
+			}
+
+			// Add Edges
+			if (post.graph_tags?.includes(tag)) {
+				edges.push({
+					from: post.url,
+					to: tag
+				})
+			}
+		})
+})
+---
+
+<Base>
+	<div class="mx-auto flex text-neutral-300 lg:text-xl">
+		<main class="mb-24 mt-10 max-w-5xl pl-10 pr-3 lg:mt-16">
+			<article>
+				<!-- Breadcrumbs -->
+				<div class="mb-10 text-[20px] text-neutral-300">
+					<a
+						class="font-medium text-neutral-300 decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
+						href="/">Home</a
+					> /
+					<a
+						class="font-medium text-neutral-300 decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
+						href="/blog/search">Network</a
+					>
+				</div>
+				<h1 class="white my-1 mb-7 text-4xl font-bold">Network Graph</h1>
+				<button
+					id="reset-zoom"
+					class="mb-2 border border-neutral-500 px-2 py-1 font-bold text-[#CBA0E7] transition-all hover:bg-slate-700"
+					>Reset Zoom</button
+				>
+				<div id="concepts" class="w-5xl h-[900px] border"></div>
+				<h2 class="text-3xl text-subtitle">Features</h2>
+				<ul>
+					<li>
+						The triangular nodes are the concepts, the square nodes are posts that contain those
+						concepts
+					</li>
+					<li>
+						Double-clicking a <strong>square</strong> node will redirect you to the relevant post
+					</li>
+					<li>Double-clicking a <strong>triangular</strong> will zoom the graph into that node</li>
+					<li>You may drag around nodes, zoom in and out, and pan the graph</li>
+				</ul>
+				<h2 class="text-3xl text-subtitle">What is this?</h2>
+				<p>
+					While writing code (usually for Project Euler), I often came across the issue of, "<em
+						>Haven't I seen this before?</em
+					>"
+
+					<p>
+						Yep, it isn't unusual for me to have written about some code or issue I solved, but then
+						can't remember
+						<em>which</em> post that was. Wouldn't it be nice if I had a way of connecting related concepts
+						together?
+					</p>
+
+					<p>
+						Well, a <strong>Network Graph</strong> is a nice visualization tool for doing just that!
+						It relates concepts and posts together so I can (hopefully), quickly find those posts that
+						could help me figure out a problem.
+					</p>
+				</p>
+			</article>
+		</main>
+	</div>
+</Base>
+
+<style>
+	#concepts {
+		border: 1px solid #444444;
+		background-color: #222222;
+	}
+</style>
+
+<script type="text/javascript" define:vars={{ nodes, edges }}>
+	// Graph Information
+	let container = document.getElementById('concepts')
+
+	let data = {
+		nodes: nodes,
+		edges: edges
+	}
+
+	let options = {
+		nodes: {
+			shape: 'square',
+			size: 8,
+			font: {
+				size: 10,
+				color: 'white'
+			}
+		},
+		edges: {
+			width: 1
+		},
+		groups: {
+			principle: {
+				shape: 'triangleDown',
+				color: '#6ee2ff',
+				size: 15,
+				font: {
+					color: '#ff410d',
+					size: 12
+				}
+			}
+		}
+	}
+	network = new vis.Network(container, data, options)
+
+	// Graph SQUARE nodes -> post URL
+	// Graph TRIANGULAR nodes -> zoom in
+	network.on('doubleClick', function (params) {
+		let node = params.nodes[0]
+
+		if (node.indexOf('/') > -1) {
+			window.location.href = `/blog/${node}`
+		} else {
+			network.focus(node, {
+				scale: 2.5,
+				animation: {
+					easingFunction: 'easeInQuad'
+				}
+			})
+		}
+	})
+
+	// Reset Zoom
+	let resetBtn = document.getElementById('reset-zoom')
+	resetBtn.addEventListener('click', () => {
+		network.fit({
+			animation: {
+				easingFunction: 'easeOutQuad'
+			}
+		})
+	})
+</script>

@@ -6,10 +6,10 @@ const tabs = Astro.props
 	Object.values(tabs)[0].map((tab) => (
 		<button
 			onclick="switchTab(this)"
-			class="tab mr-1 max-w-max cursor-pointer border-t-2 bg-[#24292e] px-5 py-3 text-[16px] max-md:px-2 max-md:py-1"
+			class="tab mr-1.5 max-w-max cursor-pointer border-t-2 bg-[#24292e] pl-5 text-[16px] max-sm:pl-0"
 		>
-			{tab.tab}
-			<a class="ml-4" href={tab.url}>
+			<span class="mr-3 px-3 max-sm:mr-0">{tab.tab}</span>
+			<a class="git-link inline-block bg-[#1e2225] p-3 hover:border-0 max-sm:hidden" href={tab.url}>
 				<svg
 					class="inline"
 					xmlns="http://www.w3.org/2000/svg"
@@ -42,6 +42,12 @@ const tabs = Astro.props
 	.inactive {
 		border-color: #525252;
 		font-weight: 400;
+	}
+
+	.git-link::after {
+		font-size: 14px;
+		margin-left: 2px;
+		content: 'Git';
 	}
 </style>
 

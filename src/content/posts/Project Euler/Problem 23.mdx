@@ -1,0 +1,171 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 23 - Non-Abundant Sums
+part: 23
+date: 2024-03-05
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Tab from '@components/Astro/Tab.astro'
+import Math from '@components/Astro/Math.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+
+This problem comes from [Project Euler 23](https://projecteuler.net/problem=23)
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> A perfect number is a number for which the sum of its proper divisors is exactly equal to the number. For example, the sum of the proper divisors of 
+> 28 would be 1 + 2 + 4 + 7 + 14 = 28, which means that 28 is a perfect number.
+>
+> A number <Math eqn="n" /> is called deficient if the sum of its proper divisors is less than <Math eqn="n" /> and it is called abundant if this sum exceeds <Math eqn="n" />.
+>
+> As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the smallest number that can be written as the sum of two abundant numbers is 24.
+> By mathematical analysis, it can be shown that all integers greater than 28 123  can be written as the sum of two abundant numbers. However, this upper limit cannot be reduced any further by analysis even though it is known that the greatest number that cannot be expressed as the sum of two abundant numbers is less than this limit.
+>
+> Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
+{/* EXCERPT END */}
+
+## Solution
+
+Phew, this problem is more involved than others, but manageable. Here are the steps I took to solve it.
+
+1. Find all abundant numbers *and* their multiples (multiples of abundant numbers are themselves abundant)
+2. Find the sum of every combination of abundant numbers and put that into a list
+3. Every number **not** in the above list cannot be written as a sum of abundant numbers, so add those numbers up
+
+## Code
+
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem23.py" tab="problem23.py">
+```python
+# Project Euler: Problem 23
+# Non-abundant sums
+
+from itertools import combinations_with_replacement
+from PEF import factor, soe
+
+n = 28124
+
+# Find all abundant numbers and their multiples
+abundants = [False]*n
+for num in reversed(range(2, n)):
+    if abundants[num] == False:
+        if sum(factor(num)) > num:
+            abundants[num] = True
+
+            for multiple in reversed(range(num, n, num)):
+                abundants[multiple] = True
+
+# Get our list of abundant numbers
+abundants = [num for num, i in enumerate(abundants) if i == True]
+
+# Get sums of two abundants
+combs = combinations_with_replacement(abundants, 2)
+sums = set([sum(pair) for pair in combs])
+sums = [x for x in sums if x < n]
+
+# Get numbers that cannot be written as sum of two abundants
+i = 0
+total = 0
+for number in range(1, n):
+    if number == sums[i]:
+        i += 1
+    else:
+        total += number
+
+print(total)
+```
+</Tab>
+
+### What am I looking at 😵‍💫
+
+Yeah, there's a lot going on here, but let's break it down.
+
+#### Step 1
+
+```python
+# Find all abundant numbers and their multiples
+abundants = [False]*n
+for num in reversed(range(2, n)):
+    if abundants[num] == False:
+        if sum(factor(num)) > num:
+            abundants[num] = True
+
+            for multiple in reversed(range(num, n, num)):
+                abundants[multiple] = True
+
+# Get our list of abundant numbers
+abundants = [num for num, i in enumerate(abundants) if i == True]
+```
+Before we can find all numbers that cannot be expressed as the sum of two abundant numbers,
+we must first find all numbers that *can* be expressed as two abundant numbers.
+And in order to find *that*, we must first obtain a list of abundant numbers.
+
+This code uses the same technique as the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes).
+We create a boolean array to keep track of which numbers are abundant or not. For example, 12 is an abundant number,
+so `abundant[12] = True`.
+
+A quick run-down:
+
+- **Line 4** checks if a number has already been marked as abundant and skips it if `True`
+- **Lines 5 and 6** check if a number is abundant
+- **Lines 8 and 9** mark all multiples of an abundant number as *also* abundant
+- **Line 12** creates a new list containing only the abundant numbers themselves, doing away with the boolean array
+
+Now we have a new list that has all the abundant numbers up to 28 123.
+
+**Note:** The `range` has been `reversed` for my `for` loops because of a caveat on how my factorization code works,
+which was explained in a [previous post](/blog/project-euler/problem-21).
+Ultimately, it's not important to how the code works.
+
+#### Step 2
+```python
+# Get sums of two abundants
+combs = combinations_with_replacement(abundants, 2)
+sums = set([sum(pair) for pair in combs])
+sums = [x for x in sums if x < n]
+```
+
+This steps creates sums of two abundant numbers. 
+
+- **Line 2** creates a list of all possible two-pair combinations from our `abundants` list. This creates pairs such as (12, 12) and (12, 18).
+I had an issue where I accidentally only created combination pairs *without* replacement, meaning pairs such as (12, 12) and (20, 20) weren't included. This resulted in the
+incorrect answer of `4179935`, so watch out for that.
+- **Line 3** sums up the pairs that were created in **Line 2**, creating a list of numbers that are the sum of two abundant numbers. 
+Note that I used `set()` here because duplicate sums are possible. For example, pairs (12, 36) and (18, 30) both result in a sum of 48.
+Using `set()` also results in the list being sorted in numerical order, which is useful in [Step 3](#step-3).
+- **Line 4** creates a new list with sums that are below <Math eqn="n" />.
+
+Now we have a list of numbers that are a sum of two abundant numbers **and** are below <Math eqn="n = 28123" />.
+
+#### Step 3
+```python
+i = 0
+total = 0
+for number in range(1, n):
+    if number == sums[i]:
+        i += 1
+    else:
+        total += number
+
+print(total)
+```
+
+Now for the final part.
+
+- **Line 3** loops through every number from 1 to <Math eqn="n = 28123" />
+- **Lines 4 and 5** do two things. First, it skips an abundant sum from being added to the total. Secondly, it stops us from checking previous `sums`.
+Here's what I mean: if `sums = [24, 30, 32, 36, ...]` and we're at `number = 31`, we've already passed `sums[0]` and `sums[1]` and we *only* need to keep an eye on `sums[2] = 32`.
+When `number = 32 = sum[2]`, we skip that number, increment `i`, and then keep an eye on `sums[3] = 36`. It's a small efficiency but worth it for speed. 
+This program on my computer already takes ~5 seconds to run, and Python isn't the fastest, so any boost to speed is appreciated.
+
+After that, we would have found the sum of all numbers that *cannot* be written as a sum of two abundant numbers (that's a mouthful to say), and the problem is finished. Phew!
+
+<Spoiler>
+4179871
+</Spoiler>

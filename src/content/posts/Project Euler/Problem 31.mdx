@@ -1,0 +1,235 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 31 - Coin Sums
+part: 31
+date: 2024-03-12
+tags: ['Coding', 'Math', 'Python']
+graph_tags: ['dynamic programming']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Tab from '@components/Astro/Tab.astro'
+import Math from '@components/Astro/Math.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+import Graph from '@components/Astro/Graph.astro'
+
+## Problem
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> In the United Kingdom the currency is made up of pound (£) and pence (p). There are eight coins in general circulation:
+>
+> <span class="ml-5">1p, 2p, 5p, 10p, 20p, 50p, £1 (100p), and £2 (200p).</span>
+>
+> It is possible to make £2 in the following way:
+>
+> <span class="ml-5">1×£1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p</span>
+>
+> How many different ways can £2 be made using any number of coins?
+{/* EXCERPT END */}
+
+I'll admit something: When I first solved this problem years ago, it almost broke me 😭. I found it exceedingly difficult,
+and my original solution wasn't much better than nearly [brute-forcing](#the--ole-days) the answer.
+
+After graduating from university and wanting to hop back into Project Euler, I decided to revisit this problem. Honestly,
+it wasn't much easier, **BUT**...I knew how to look for answers. I had more experience. So I dived back in, this time
+learning *more* about dynamic programming.
+
+## Solution
+
+Back in [Problem 15](/blog/project-euler/problem-15), I used recursion for the dynamic programming solution. I couldn't
+seem to quite get that to work here (must be my inexperience), but I *could* get **tabulation** to work (after days of learning more about dynamic programming).
+
+## Code
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem31.py" tab="problem31.py">
+```python
+# Problem 31
+# Coin Sums
+
+coins = [200, 100, 50, 20, 10, 5, 2, 1]
+target = coins[0]
+
+coin_sums = [0]*(target + 1)
+coin_sums[0] = 1
+
+for coin in coins:
+    for i in range(target):
+        if coin + i <= target:
+            coin_sums[coin + i] += coin_sums[i]
+
+print(coin_sums[target])
+```
+</Tab>
+
+<Spoiler>
+73682
+</Spoiler>
+
+<br />
+<br />
+
+### Example
+Let's go over how this program works, using a smaller example of trying to create 5p from just the 5p, 2p, and 1p coins.
+
+The indices of `coin_sums` are not *only* indices but also represent a sum of money. The value accessed at an
+index represents how many ways to to make that sum of money.
+
+For example, `coin_sums[53] = 12` says, "There are 12 ways to make the sum of 53 pence."
+We need a starting value, in this case `coin_sum[0] = 1` seen on **Line 8**. This says, "There is 1 way to make the sum of 0p (don't spend any money at all)."
+
+After this, for every coin, we make a pass over the array from **Line 7** and watch how it affects the total number of ways of making a particular sum of money.
+
+#### Pass 1: 1p Coin
+
+From 0p and a 1p coin, can we make 1p? Yes, of course! So we take the value stored at 0p and add it to the value stored at 1p.
+
+| # of ways | 1  | 1  | 0  | 0  | 0  | 0  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 1p and a 1p coin, can we make 2p? Yep! We take the value stored at 1p and add it to the value stored at 2p.
+
+| # of ways | 1  | 1  | 1  | 0  | 0  | 0  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 2p and a 1p coin, can we make 3p? Yes, and I'll be quiet until I think I need to interject.
+
+| # of ways | 1  | 1  | 1  | 1  | 0  | 0  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 3p and a 1p coin, can we make 4p? Yes
+
+| # of ways | 1  | 1  | 1  | 1  | 1  | 0  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 4p and a 1p coin, can we make 5p? Yes
+
+| # of ways | 1  | 1  | 1  | 1  | 1  | 1  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 5p and a 1p coin, can we make 6p? **No, 6p doesn't exist**. We're out of bounds in our array.
+
+| # of ways | 1  | 1  | 1  | 1  | 1  | 1  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+#### Pass 2: 2p Coin
+
+From 0p and a 2p coin, can we make 2p? Yes. So we take the value stored at 0p and add it to the value stored at 2p.
+
+| # of ways | 1  | 1  | 2  | 1  | 1  | 1  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 1p and a 2p coin, can we make 3p? Yes. So we take the value stored at 1p and add it to the value stored at 3p.
+
+| # of ways | 1  | 1  | 2  | 2  | 1  | 1  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 2p and a 2p coin, can we make 4p? Yes. So we take the value stored at 2p and add it to the value stored at 4p.
+
+| # of ways | 1  | 1  | 2  | 2  | 3  | 1  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 3p and a 2p coin, can we make 5p? Yes. So we take the value stored at 3p and add it to the value stored at 5p.
+
+| # of ways | 1  | 1  | 2  | 2  | 3  | 3  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 4p and a 2p coin, can we make 6p? No. Out of bounds
+
+| # of ways | 1  | 1  | 2  | 2  | 3  | 3  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+From 5p and a 2p coin, can we make 7p? No. Out of bounds
+
+| # of ways | 1  | 1  | 2  | 2  | 3  | 3  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+#### Pass 3: 5p Coin
+
+From 0p and a 5p coin, can we make 5p? Yes. So we take the value stored at 0p and add it to the value stored at 5p.
+
+| # of ways | 1  | 1  | 2  | 2  | 3  | 4  |
+|-----------|----|----|----|----|----|----|
+| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+
+The rest of the iterations are out of bounds so we'll stop here.
+
+The table shows that there is
+- 1 way to make 0p
+- 1 way to make 1p
+- 2 ways to make 2p
+- 2 ways to make 3p
+- 3 ways to make 4p
+- 4 ways to make 5p
+
+Every index is meaningful and shows the way to make up each sum of money.
+
+## Tripping Hazard
+
+Note that I have iterated over the coins once, then iterated over the sums/index. This shows how **each** coin affects
+the total ways to make a sum. That is, it provides **unique** solutions.
+
+```python
+for coin in coins:
+    for i in range(target):
+```
+
+By swapping the lines as such
+```python
+for i in range(target):
+    for coin in coins:
+```
+
+This provides **non-unique** solutions. Instead of four ways to make 5p, we'd have nine ways to make 5p.
+For example, we could make 5p from 2p + 2p + 1p, or 1p + 2p + 2p, or 2p + 1p + 2p. That doesn't make much sense though right?
+So this is a pitfall to avoid.
+
+## The 💩 Ole Days
+
+My old solution in case you want to sit and imagine how I almost smacked my head off a desk just trying to solve this problem,
+just to come up with this awful solution. I think it's funny, but it's also a testament that I can learn and get better at things.
+
+```python
+# Project Euler: Problem 31
+# Coin Sums
+
+count = 1                       # The 200p coin
+for p200 in range(0, 2):
+    for p100 in range(0, 3 - p200):
+        if 200*p200 + 100*p200 > 200:
+            break
+        for p50 in range(0, 5 - p100):
+            if 200*p200 + 100*p200 + 50*p50 > 200:
+                break
+            for p20 in range(0, 11 - p50):
+                if 200*p200 + 100*p200 + 50*p50 + 20*p20 > 200:
+                    break
+                for p10 in range(0, 21 - p20):
+                    if 200*p200 + 100*p200 + 50*p50 + 20*p20 + 10*p10 > 200:
+                        break
+                    for p5 in range(0, 41 - p10):
+                        if 200*p200 + 100*p200 + 50*p50 + 20*p20 + 10*p10 + 5*p5 > 200:
+                            break
+                        for p2 in range(0, 101 - p5):
+                            if 200*p200 + 100*p200 + 50*p50 + 20*p20 + 10*p10 + 5*p5 + 2*p2 > 200:
+                                break
+                            for p1 in range(0, 201 - p2):
+                                if p1 + 2*p2 + 5*p5 + 10*p10 + 20*p20 + 50*p50 + 100*p100 + 200*p200 == 200:
+                                    count += 1
+
+print(count)
+```

@@ -118,19 +118,19 @@ The **OR** gate sets its output to `true` when either A or B or _both_ are true.
 
 The implementation of an **OR** gate is more interesting than the previous gates. To implement this gate, we can make use of **De Morgan's Theorem**.
 
-<Math inline="false" equation="\overline{A \land B} = \overline{A} \lor \overline{B}"/>
+<Math inline="false" eqn="\overline{A \land B} = \overline{A} \lor \overline{B}"/>
 <div class="caption italic text-center">Equation - De Morgan's Theorem</div>
 
 Note that
 1.  ∧ means logical **AND**
 2.  ∨ means logical **OR**
-3.  <Math equation=" \overline{x} "/> means logical **NOT** (in this case, **NOT** x)
+3.  <Math eqn=" \overline{x} "/> means logical **NOT** (in this case, **NOT** x)
 
 De Morgan's theorem reads as (**NOT** A) **AND** (**NOT** B) = **NOT** (A **OR** B).
 
 Now, a problem with this is that it gives us an inverted **OR** as the output (called a **NOR** gate). So we must invert the output to get just an **OR** gate.
 
-<Math inline="false" equation="\overline{\overline{A} \land \overline{B}} = \overline{\overline{A \lor B}} = A \lor B"/>
+<Math inline="false" eqn="\overline{\overline{A} \land \overline{B}} = \overline{\overline{A \lor B}} = A \lor B"/>
 
 The above boolean equation is demonstrated by the schematic below
 ![Or Internal](/images/posts/nand2tetris/project-1/Or-internal.png)
@@ -185,7 +185,7 @@ The **XOR** gate is sometimes called a "Difference Gate", as the output is only 
 
 To create an **XOR** gate, we can create a boolean expression by examining when the output is `true`.
 
-<Math inline="false" equation=" (\overline A \land B) \lor (A \land \overline B) "/>
+<Math inline="false" eqn=" (\overline A \land B) \lor (A \land \overline B) "/>
 
 We then can take the expression and implement it using previous logic gates. The colouring is for clarity and has nothing to do with Neo and Morpheus 😄
 ![Xor Internal](/images/posts/nand2tetris/project-1/XOR-internal.png)

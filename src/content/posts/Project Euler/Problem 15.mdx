@@ -6,6 +6,7 @@ subtitle: Problem 15 - Lattice Paths
 part: 15
 date: 2024-02-01
 tags: ['Coding', 'Math', 'Python']
+graph_tags: ['dynamic programming', 'combinatorics']
 image: '/images/posts/project-euler/euler.jpg'
 ---
 
@@ -27,45 +28,181 @@ This problem comes from [Project Euler 15](https://projecteuler.net/problem=15)
 > How many such routes are there through a 20 × 20 grid?
 {/* EXCERPT END */}
 
-## Solution
+## Solution 1: Combinatorics
 
-We can use combinatorics to solve this question! If we look at the grid, we'll have to make four moves to reach the end point. These four moves _always_ consists of some "combination" (permutation) of moving to the right twice, and moving down twice.
+We can use combinatorics to solve this question! If we look at the grid, we always make a total of four moves in some combination of moving right and moving down.
+Of the four possible moves, we should choose two of them to be in a particular direction, say, towards the right. With that, we get "4 choose 2."
 
-The general form for how we move is as follows
+<Math inline="false" eqn=" \binom{4}{2}= 6 " />
 
-<Math inline="false" equation=" M_1 M_2 M_3 M_4 " />
+This means that there are six possible combinations of moving rightward from the four moves we have. That is, RRxx, RxRx, RxxR, xRxR, xRRx, and xxRR. I used 'x' to help emphasize
+the rightward movements, but we know that 'x', by default here, means downwards.
 
-Where, <Math equation="M_n" /> stands for our "move". Of the four moves we can make, we need to choose two of these moves to be in a particular direction: either down or right (it doesn't matter which in this case). If we chose right for example, a possible out outcome could be
+For a 20 × 20 grid, we have forty moves, so we should choose 20 of them to be in a particular direction.
 
-<Math inline="false" equation=" M_1 R M_2 R " />
+<Math inline="false" eqn=" \binom{40}{20} = \text{137 846 528 820}" />
 
-Where <Math equation=" R" /> stands for "rightward-move" and <Math equation=" M_1 " /> and <Math equation="M_2" /> will be down by default. This gives us down-right-down-right as a route. So, for the 2 × 2 grid we have "4 choose 2"
+## Solution 2: Dynamic Programming
 
-<Math inline="false" equation=" \binom{4}{2}= 6 " />
+Seeing that [Project Euler](https://projecteuler.net) produces programming challenges, I figured that this is likely the intended solution compared to the combinatorics one.
 
-How about for a 20 × 20 grid? The same thing! We have a total of fourty moves to make, of which we need to choose twenty of them to be in a particular direction, so...
+Below is the minimum amount of code required (for my solution) to solve the problem. It runs slowly, but we'll optimize it later.
 
-<Math inline="false" equation=" \binom{40}{20} = 137 846 528 820 " />
-
-## Code
-
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem15.py" tab="problem15.py">
 ```python
 # Project Euler: Problem 15
 # Lattice paths
-# Requires Python 3.8+
 
-from math import comb
+def paths(m, n, ran=False):
 
-print(comb(40, 20))
+    # Edge cases
+    if m == 0 and n > 0:
+        return n
+    
+    if m > 0 and n == 0:
+        return m
+    
+    if m <= 0 or n <= 0:
+        return 0
+        
+    # Normal operation
+    if not ran:
+        m += 1
+        n += 1
 
-````
-</Tab>
+    if m == 1 or n == 1:
+        return 1
 
-If you're using a version of Python that is older than 3.8 then the following code will work just fine
+    return paths(m-1, n, True) + paths(m, n-1, True)
+
+print(paths(20, 20))
+```
+
+<br/>
+### Movements
+In the problem, we don't move *in* the squares but *along* the edges.
+
+In the 2 × 2 grid example given, we can make six moves. What about other grids? Such as a
+
+- 1 × 1 grid? We can make two moves: DR, RD.
+- 0 × 1 "grid"? Actually, this is just a single line, but we can make one move.
+- 0 × 2 "grid"? Similar to the 0 × 1 "grid," but we can move twice in one direction.
+- 0 × 0 "grid"? This is just a point, so there are no moves.
+
+This shows that for <Math eqn="m \times n" /> grid, we have <Math eqn="m" /> moves in one direction
+and <Math eqn="n" /> moves in another direction.
+
+### Recursion
+This program uses recursion to solve the problem. Let's see how.
+
+Let’s look at the example 2 × 2 grid and pick a direction to move, say the right. By doing so, we are actually trying to solve a 2 × 1 grid! 
+Now, if we were to move down, we would be trying to solve a 1 × 1 grid. We can see that each move tries to solve a smaller grid, or "subproblem." 
+The act of solving subproblems using the same process is called **dynamic programming**.
+
+The following snippet performs dynamic programming by moving in a direction, either down (`m-1`) or to the right (`n-1`), recursively using the function.
 
 ```python
-from math import factorial as f
+return paths(m-1, n) + paths(m, n-1)
+```
 
-print(f(40) // f(20) // f(20))
-````
+<br />
+### Fixes
+
+#### Missing Solution
+
+The example 2 × 2 grid should return six possible paths, but the code below isn't sufficient to do so.
+
+```python
+if m == 1 or n == 1:
+    return 1
+
+return paths(m-1, n, True) + paths(m, n-1, True)
+```
+
+When `paths(2,2)` is called, the function calls (with numbers substituted in)
+
+```python
+return paths(1, 2, True) + return paths(2, 1, True)
+```
+
+Due to `m == 1 or n == 1`, both functions `return 1`, leading to the incorrect output of `2`.
+
+The reason for this is that we have only calculated the answer for <Math eqn="m-1" /> and <Math eqn="n-1" /> but *not* <Math eqn="m" /> and <Math eqn="n" />!
+So, we correct this by adding one to <Math eqn="m" /> and <Math eqn="n" />, but only for the first time `pass()` is called.
+
+```python
+if not ran:
+    m += 1
+    n += 1
+```
+
+The boolean flag `ran` is `False` in the first call but is passed as `True` in all other subsequent calls.
+
+#### Zero Bugs 🐛
+
+```python
+# Edge cases
+if m == 0 and n > 0:
+    return n
+
+if m > 0 and n == 0:
+    return m
+
+if m <= 0 or n <= 0:
+    return 0
+```
+
+Since we add one to <Math eqn="m" /> and <Math eqn="n" /> and check for `m == 1 or n == 1`, any grid size involving
+zero will automatically `return 1`, which is incorrect. This code fixes that. That's right, this is a fix *for a fix* 😵.
+And yes, the title is a play on words.
+
+
+### Optimization
+
+Finally, we add code to optimize the solution, in this case, **memoization.** 
+The program saves the solutions to the various grids it solves. On further function calls, 
+it checks to see if it has already seen a grid subproblem, and if so, immediately returns the answer.
+
+For example, with a 3 × 3 grid, it’ll solve the subproblem of a 2 × 2 grid. 
+We already know that there are six possible paths for a 2 × 2 grid, so instead of solving that grid again, it just immediately returns the answer of six.
+
+
+## Code
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem15.py" tab="problem15.py">
+```python
+# Project Euler: Problem 15
+# Lattice paths
+
+def paths(m, n, memo={}, ran=False):
+
+    key = str(m) + ',' + str(n)
+    if (key in memo):
+        return memo[key]
+
+    # Edge cases
+    if m == 0 and n > 0:
+        return n
+    
+    if m > 0 and n == 0:
+        return m
+    
+    if m <= 0 or n <= 0:
+        return 0
+        
+    # Normal operation
+    if not ran:
+        m += 1
+        n += 1
+
+    if m == 1 or n == 1:
+        return 1
+
+    memo[key] = paths(m-1, n, memo, True) + paths(m, n-1, memo, True)
+    return memo[key]
+
+print(paths(20, 20))
+```
+</Tab>
+
+<Spoiler>
+137846528820
+</Spoiler>

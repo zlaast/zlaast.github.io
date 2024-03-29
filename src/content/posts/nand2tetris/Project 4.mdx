@@ -21,34 +21,34 @@ Here, we write some simple programs in the course's HACK assembly language.
 
 ### Introduction
 
-This program has to perform the following: <Math equation=" R_2 = R_1 \times R_0 " /> where <Math equation=" R_n " /> is a register at memory location <Math equation=" n " />.
+This program has to perform the following: <Math eqn=" R_2 = R_1 \times R_0 " /> where <Math eqn=" R_n " /> is a register at memory location <Math eqn=" n " />.
 
 To perform multiplication, let's remember how it works:
 
-- <Math equation=" R_2 " /> is called the product. It's the result of our multiplication
-- <Math equation=" R_1 " /> is called the multiplicand. It's what we're multiplying
-- <Math equation=" R_0 " /> is called the multiplier. It's how many times we're multiplying the multiplicand
+- <Math eqn=" R_2 " /> is called the product. It's the result of our multiplication
+- <Math eqn=" R_1 " /> is called the multiplicand. It's what we're multiplying
+- <Math eqn=" R_0 " /> is called the multiplier. It's how many times we're multiplying the multiplicand
 
 Multiplication is then
 
-<Math inline="false" equation=" R_2 = R_1 \times R_0 "/>
-<Math inline="false" equation=" R_2 = R_{1,1} + R_{1,2} + R_{1,3} + \cdots + R_{1, R_0} "/>
+<Math inline="false" eqn=" R_2 = R_1 \times R_0 "/>
+<Math inline="false" eqn=" R_2 = R_{1,1} + R_{1,2} + R_{1,3} + \cdots + R_{1, R_0} "/>
 
 For example,
 
-<Math inline="false" equation=" 7 \times 4 = 7_1 + 7_2 + 7_3 + 7_4 "/>
+<Math inline="false" eqn=" 7 \times 4 = 7_1 + 7_2 + 7_3 + 7_4 "/>
 
 Or just simply (because no one writes it like the above),
 
-<Math inline="false" equation=" 7 \times 4 = 7 + 7 + 7 + 7 "/>
+<Math inline="false" eqn=" 7 \times 4 = 7 + 7 + 7 + 7 "/>
 
-This is just repeated addition, which can be implemented with a loop. Ideally, if we wish to be efficient, we would check to see which of <Math equation=" R_1 " /> or <Math equation=" R_2 " /> is lower, then make the lower number the multiplier, which would be our number of repititions for a loop. For example,
+This is just repeated addition, which can be implemented with a loop. Ideally, if we wish to be efficient, we would check to see which of <Math eqn=" R_1 " /> or <Math eqn=" R_2 " /> is lower, then make the lower number the multiplier, which would be our number of repititions for a loop. For example,
 
-<Math inline="false" equation=" 3 \times 4000 = 3 + 3 + 3 + 3 + \ldots "/>
+<Math inline="false" eqn=" 3 \times 4000 = 3 + 3 + 3 + 3 + \ldots "/>
 
 is obviously less efficient than
 
-<Math inline="false" equation=" 4000 \times 3 = 4000 + 4000 + 4000 "/>
+<Math inline="false" eqn=" 4000 \times 3 = 4000 + 4000 + 4000 "/>
 
 I decided against implementing this, as this made the code much longer, and harder to read and follow. Also, there wasn't a need for efficiency here, as the project was just an exercise in understanding machine code. Therefore, I opted to keep it simple.
 

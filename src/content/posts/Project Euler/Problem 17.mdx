@@ -1,0 +1,86 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 17 - Number Letter Counts
+part: 17
+date: 2024-03-03
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Tab from '@components/Astro/Tab.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+This problem comes from [Project Euler 17](https://projecteuler.net/problem=17)
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> If the numbers 1 to 5 are written out in words: one, two, three, four, five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
+>
+> If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?
+>
+> **NOTE:** Do not count spaces or hyphens. For example, 342 (three hundred and forty-two) contains 23 letters and 115 (one hundred and fifteen) contains
+> 20 letters. The use of "and" when writing out numbers is in compliance with British usage.
+{/* EXCERPT END */}
+
+## Code
+
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem17.py" tab="problem17.py">
+```python
+# Project Euler: Problem 17
+# Number Letter Counts
+
+# Words
+ones = len("onetwothreefourfivesixseveneightnine")
+teens = len("teneleventwelvethirteenfourteenfifteensixteenseventeeneighteennineteen")
+tens = len("twentythirtyfourtyfiftysixtyseventyeightyninety")
+hundred = len("hundred")
+and_ = len("and")
+
+# Below 100
+below_100 = 0
+below_100 += ones                               # 1-9
+below_100 += teens                              # 10-19
+below_100 += tens*10 + ones*8                   # 20-99
+
+# Hundreds
+hundreds = 0
+hundreds += ones + hundred*9                    # 100, 200, 300...
+hundreds += ones*99 + (hundred + and_)*99*9     # "one hundred and ...", "two hundred and ..."
+hundreds += below_100*9                         # below_100 is repeated 9 times
+
+print(below_100 + hundreds + len("onethousand"))
+```
+</Tab>
+
+## Solution
+The solutions is split into three sections
+
+1. `# Words`. I made word "groups" for the numbers that are commonly used
+2. `# Below 100`. Self-explanatory. From 1-99
+3. `# Hundreds`. Self-explanatory. From 100-999
+
+From there, it's combining these groups of words to make all the numbers from 1 to 999 (then appending one thousand to the end).
+
+### Below 100
+Most of this is self-explanatory, *but* `below_100 += tens*10 + ones*8`. 
+We have `tens*10` because we say, for example, "twenty, twenty-one, twenty-two, ... twenty-nine," etc. You may notice that the word
+"twenty" is said ten times.
+
+We have `ones*8` because that group of words is only used eight times: from twenty to ninety. (One to nine are already accounted for earlier with `below_100 += ones`)
+
+### Hundreds
+This one is a bit more complicated.
+
+`hundreds += ones + hundred*9` are for the words 100, 200, 300, ... because those numbers do not have "and" in them.
+
+`hundreds += ones*99 + (hundred + and_)*99*9` counts how many times we say "one hundred and", "two hundred and", "three hundred and", etc.
+
+The rest is self-explanatory.
+
+<Spoiler>
+21124
+</Spoiler>

@@ -143,27 +143,27 @@ This is just the same thing as the [`-x` instruction](#-x), but for `y`.
 
 This one requires some math to show how it works. We let **y = -1** and then perform the following
 
-<Math inline="false" equation="x + 1 = \overline{(\overline x + y)}" />
+<Math inline="false" eqn="x + 1 = \overline{(\overline x + y)}" />
 
 Just to be explicit, let's substitute `y` with `-1` and get
 
-<Math inline="false" equation="x + 1 = \overline{ ( \overline x - 1 ) }" />
+<Math inline="false" eqn="x + 1 = \overline{ ( \overline x - 1 ) }" />
 
 <div class="caption text-center italic">( x + 1 ) -- (Eq. 1)</div>
 
 Now it should be noted that, to get a negative number in 2s Complement, we do the following
 
-<Math inline="false" equation="-x = \overline x + 1" />
+<Math inline="false" eqn="-x = \overline x + 1" />
 
 If we rearrange that to solve for <span class="overline">`x`</span>, we get
 
-<Math inline="false" equation="\overline x = -x - 1" />
+<Math inline="false" eqn="\overline x = -x - 1" />
 
 <div class="caption text-center italic">( x + 1 ) -- (Eq. 2)</div>
 
 Substituting (Eq.2) into (Eq.1) and simplifying, we obtain
 
-<Math inline="false" equation="x + 1 = \overline{ (-x - 2) }" />
+<Math inline="false" eqn="x + 1 = \overline{ (-x - 2) }" />
 
 At this point, let's make **x = 6** and solve as an example
 
@@ -195,17 +195,17 @@ This instruction is one of the simplest. We just set `f=1` to perform `x+y`.
 
 This is implementation of 2s Complement subtraction, is not only interesting, but _elegant and fast_ as well. In 2s Complement, in order to obtain a negative number, we must first invert all the bits of a number, then add one. That is,
 
-<Math inline="false" equation="-z = \overline z + 1" />
+<Math inline="false" eqn="-z = \overline z + 1" />
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 1)</div>
 
 One would think that if we wished to subtract two numbers, say `x-y`, then we would perform the following operation:
 
-<Math inline="false" equation="x - y = x + (\overline y + 1)" />
+<Math inline="false" eqn="x - y = x + (\overline y + 1)" />
 
 But what we actually did in the course was,
 
-<Math inline="false" equation="x - y = \overline{ \overline x + y }" />
+<Math inline="false" eqn="x - y = \overline{ \overline x + y }" />
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 2)</div>
 
@@ -213,49 +213,49 @@ This is bizarre. Not only do we not add one, but we invert the `x` instead of th
 
 If we rearrange (Eq.1) to solve for <span class="overline">`z`</span>, we get,
 
-<Math inline="false" equation="\overline z = -z - 1" />
+<Math inline="false" eqn="\overline z = -z - 1" />
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 3)</div>
 
 And factoring out the negative sign leaves us with,
 
-<Math inline="false" equation="\overline z = -(z + 1)" />
+<Math inline="false" eqn="\overline z = -(z + 1)" />
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 4)</div>
 
 Now, if we substitute (Eq.3) into (Eq.2), of course using `x` instead of `z`, we get the following
 
-<Math inline="false" equation="x - y = \overline { (-x -1) + y }" />
+<Math inline="false" eqn="x - y = \overline { (-x -1) + y }" />
 
 Now, let's use a temporary variable to help us understand the next process. Let,
 
-<Math inline="false" equation="q = (-x -1 ) + y" />
+<Math inline="false" eqn="q = (-x -1 ) + y" />
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 5)</div>
 
 Then the equation becomes,
 
-<Math inline="false" equation="x - y = \overline q" />
+<Math inline="false" eqn="x - y = \overline q" />
 
 Let's substitute (Eq.4) into this (Using Eq.3 won't work, which should be evident shortly)
 
-<Math inline="false" equation="x - y = -(q + 1)" />
+<Math inline="false" eqn="x - y = -(q + 1)" />
 
 If we substitute (Eq.5) back in, we get this monstrosity
 
-<Math inline="false" equation="x - y = -[(-x - 1) + y + 1]" />
+<Math inline="false" eqn="x - y = -[(-x - 1) + y + 1]" />
 
 All that's left is to simplify the equation. Get rid of the internal brackets
 
-<Math inline="false" equation="x - y = -[x - 1 + y + 1]" />
+<Math inline="false" eqn="x - y = -[x - 1 + y + 1]" />
 
 The `-1` and `+1` cancel each other out
 
-<Math inline="false" equation="x - y = -[-x + y]" />
+<Math inline="false" eqn="x - y = -[-x + y]" />
 
 And finally distribute the negative into the brackets
 
-<Math inline="false" equation="x - y = x - y" />
+<Math inline="false" eqn="x - y = x - y" />
 
 The fact that 2s Complement occurs twice _mathematically_, but is never seen in the implementation is elegant. And the fact that only inversion is used with a single addition makes this _fast_. This took a while to explain, but is something that worth understanding and appreciating.
 
@@ -263,7 +263,7 @@ The fact that 2s Complement occurs twice _mathematically_, but is never seen in 
 
 `y-x` isn't much different from `x-y` seen in the previous section, and the implementation is as such
 
-<Math inline="false" equation="y - x = \overline { x + \overline y }" />
+<Math inline="false" eqn="y - x = \overline { x + \overline y }" />
 
 ### x & y
 
@@ -273,7 +273,7 @@ No in-depth explanation is needed here. If we leave all controls bits as 0, then
 
 From the ALU Table
 
-<Math inline="false" equation="\overline { \overline x \land \overline y } = x \lor y" />
+<Math inline="false" eqn="\overline { \overline x \land \overline y } = x \lor y" />
 
 This was explored in [the first post of the series](/blog/nand2tetris/project-1#or-gate), but this is just _De Morgan's Theorem_.
 

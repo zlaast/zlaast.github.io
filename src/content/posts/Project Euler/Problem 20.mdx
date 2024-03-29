@@ -1,0 +1,55 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 20 - Factorial Digit Sum
+part: 20
+date: 2024-03-03
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Math from '@components/Astro/Math.astro'
+import Tab from '@components/Astro/Tab.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+This problem comes from [Project Euler 20](https://projecteuler.net/problem=20)
+
+{/* EXCERPT START */}
+> **Problem**
+>
+> <Math eqn="n!" /> means <Math eqn="n \times (n - 1) \times \cdots \times 3 \times 2 \times 1" />.
+>
+> For example, <Math eqn="10! = 10 \times 9 \times \cdots \times 3 \times 2 \times 1 = 3628800" />,
+> and the sum of the digits in the number <Math eqn="10!" /> is <Math eqn="3+6+2+8+8+0+0=27" />.
+>
+> Find the sum of the digits in the number <Math eqn="100!" />
+{/* EXCERPT END */}
+
+## Solution
+Another simple problem.
+
+1. Calculate <Math eqn="100!" />
+2. Convert the number into a string
+3. Iterate over the string and convert into a number array
+3. Sum the array
+
+## Code
+
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem20.py" tab="problem20.py">
+```python
+# Project Euler: Problem 20
+# Factorial digit sum
+
+from math import factorial as f
+
+number = f(100)
+number_list = [int(i) for i in str(number)]
+print(sum(number_list))
+```
+</Tab>
+
+<Spoiler>
+648
+</Spoiler>

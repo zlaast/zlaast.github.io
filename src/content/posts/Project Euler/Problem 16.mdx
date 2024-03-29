@@ -18,25 +18,24 @@ import Spoiler from '@components/Astro/Spoiler.astro'
 This problem comes from [Project Euler 16](https://projecteuler.net/problem=16)
 
 {/* EXCERPT START */}
-
 > **Problem**
 >
-> <Math equation="2^{15} = 32768" /> and the sum of its digits is <Math equation="3+2+7+6+8=26" />
+> <Math eqn="2^{15} = 32768" /> and the sum of its digits is <Math eqn="3+2+7+6+8=26" />
 >
-> What is the sum of the digits of the number <Math equation="2^{1000}"/>?
-> {/* EXCERPT END */}
+> What is the sum of the digits of the number <Math eqn="2^{1000}"/>?
+{/* EXCERPT END */}
 
 ## Solution
 
 The solution I went for was fairly simple.
 
-1. Calculate <Math equation="2^{1000}"/>
+1. Calculate <Math eqn="2^{1000}"/>
 2. Turn that number into a string first, then an array of integers
 3. Sum the array of integers
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem16.py" tab="problem16.py">
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem16.py" tab="problem16.py">
 ```python
 # Project Euler: Problem 16
 # Power digit sum

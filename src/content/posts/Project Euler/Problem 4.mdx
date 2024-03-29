@@ -19,7 +19,7 @@ This problem comes from [Project Euler 4](https://projecteuler.net/problem=4)
 {/* EXCERPT START */}
 > **Problem**
 >
-> A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is <Math equation='9009 = 91 \times 99' />.
+> A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is <Math eqn='9009 = 91 \times 99' />.
 >
 > Find the largest palindrome made from the product of two 3-digit numbers.
 {/* EXCERPT END */}
@@ -28,8 +28,8 @@ This problem comes from [Project Euler 4](https://projecteuler.net/problem=4)
 
 The solution here may not be the most efficient, but it works.
 
-The program loops through all 3-digit number products, converts them to a string, reverses the string, and then checks if the reversed and unreversed string are equivalent.
-We convert the numbers to strings as reversing strings is easier than reversing numbers.
+The program loops through all 3-digit number products, converts them to a string, reverses the string, and then checks if the reversed and unreversed strings are equivalent.
+We convert the numbers to strings, as reversing strings is easier than reversing numbers.
 
 If the product is palindromic, we check to see if it is larger than the current `max` palindrome, and if it is, store it.
 
@@ -37,11 +37,11 @@ If the product is palindromic, we check to see if it is larger than the current 
     [
         {
             "tab": "problem04.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20%5B1-100)/problem04.py"
+            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem04.py"
         },
         {
             "tab": "main.rs",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems%20-%20Rust/problem_4/src/main.rs"
+            "url": "https://github.com/zlaast/Project-Euler/tree/main/Problems-Rust/problem_4/src/main.rs"
         },
     ]
 }>
@@ -94,7 +94,7 @@ fn main() {
 
 ### Note 1
 
-`num2`'s range is between `num1` and 1000 to avoid repeated calculations. For example, <Math equation='105 \times 22' /> is the same as <Math equation='22 \times 105' /> and would be an unnecessary calculation. This avoids that problem by setting `num2`'s bottom range to `num1`.
+`num2`'s range is between `num1` and 1000 to avoid repeated calculations. For example, <Math eqn='105 \times 22' /> is the same as <Math eqn='22 \times 105' /> and would be an unnecessary calculation. This avoids that problem by setting `num2`'s bottom range to `num1`.
 
 ### Note 2
 
