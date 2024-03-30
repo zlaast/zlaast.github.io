@@ -1,0 +1,127 @@
+---
+category: Coding
+series: Project Euler
+title: Project Euler
+subtitle: Problem 32 - Pandigital Products
+part: 32
+date: 2024-03-31
+tags: ['Coding', 'Math', 'Python']
+image: '/images/posts/project-euler/euler.jpg'
+---
+
+import Tab from '@components/Astro/Tab.astro'
+import Math from '@components/Astro/Math.astro'
+import Spoiler from '@components/Astro/Spoiler.astro'
+
+## Problem
+{/* EXCERPT START */}
+> **Problem**
+>
+> We shall say that an <Math eqn="n" />-digit number is pandigital if it makes use of all the digits 1 to <Math eqn="n" /> exactly once; for example, the 5-digit number, 
+> 15 234, is 1 through 5 pandigital.
+>
+> The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing multiplicand, multiplier, and product is 1 through 9 pandigital.
+>
+> Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital.
+>
+> HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
+{/* EXCERPT END */}
+
+## Solution
+
+The first thing to realize is that there are only two possibilities: 
+
+- 1-digit numbers × 4-digit numbers = 4-digit numbers
+- 2-digit numbers × 3-digit numbers = 4-digit numbers
+
+Any other combination would cause the multiplier × multiplicand to exceed the product. For example, 2-digit numbers × 4-digit numbers ≠ 3-digit numbers.
+
+You'll also want to avoid 4-digit numbers × 1-digit numbers and 3-digit numbers × 2-digit numbers, as that's just duplicating the work done above.
+I never had to consider this issue with the way I solved the problem, though.
+
+## Code
+<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem32.py" tab="problem32.py">
+```python
+# Project Euler: Problem 32
+# Pandigital Products
+
+from itertools import permutations
+
+numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+perms = permutations(numbers)
+
+sums = 0
+memo = {}
+
+for perm in perms:
+    # 1 by 4
+    a = perm[0]
+    b = ''.join(perm[1:5])
+    prod = int(a)*int(b)
+
+    if prod < 9999:
+        if prod not in memo:
+            prod_str = ''.join(sorted(a + b + str(prod)))
+
+            if prod_str == '123456789':
+                memo[prod] = True
+                sums += prod
+
+    # 2 by 3
+    a = ''.join(perm[:2])
+    b = ''.join(perm[2:5])
+    prod = int(a)*int(b)
+
+    if prod < 9999:
+        if prod not in memo:
+            prod_str = ''.join(sorted(a + b + str(prod)))
+
+            if prod_str == '123456789':
+                memo[prod] = True
+                sums += prod
+
+print(sums)
+```
+</Tab>
+
+The code does the following:
+
+1. Create a list<sup>1</sup> of every permutation of 1 to 9
+2. For every permutation, get the 1-digit × 4-digit product and check if we've already discovered it's pandigital, and if not, check if it's pandigital
+3. Do the same thing for 2-digit × 3-digit products
+
+[1] Python doesn't actually create a list, but a `generator`, which is more efficient in this case
+
+
+### Example
+We're essentially doing something like this (in pseudocode):
+
+```python
+permutation = ['3', '9', '1', '8', '6', '4', '2', '7', '5']
+
+# 1 by 4
+a = 3
+b = 9186
+prod = 3*9186 = 27558
+
+is prod < 9999? No
+    Continue
+
+# 2 by 4
+a = 39
+b = 186
+prod = 39*186 = 7254
+
+is prod < 9999? Yes
+    is prod stored? No.
+        Combine and Sort 39, 186, 7245 => 123456789
+            is 123456789 pandigital? Yes. Add to sum and store
+
+```
+
+Most of the code is string-to-number transformations and vice-versa, as sometimes working with strings can be easier 🤷.
+
+
+<Spoiler>
+45228
+</Spoiler>
