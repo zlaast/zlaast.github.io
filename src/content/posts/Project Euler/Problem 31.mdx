@@ -17,6 +17,8 @@ import Graph from '@components/Astro/Graph.astro'
 
 ## Problem
 
+This problem comes from [Project Euler 31](https://projecteuler.net/problem=31)
+
 {/* EXCERPT START */}
 > **Problem**
 >
@@ -86,85 +88,85 @@ After this, for every coin, we make a pass over the array from **Line 7** and wa
 
 From 0p and a 1p coin, can we make 1p? Yes, of course! So we take the value stored at 0p and add it to the value stored at 1p.
 
-| # of ways | 1  | 1  | 0  | 0  | 0  | 0  |
+| ways | 1  | 1  | 0  | 0  | 0  | 0  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 1p and a 1p coin, can we make 2p? Yep! We take the value stored at 1p and add it to the value stored at 2p.
 
-| # of ways | 1  | 1  | 1  | 0  | 0  | 0  |
+| ways | 1  | 1  | 1  | 0  | 0  | 0  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 2p and a 1p coin, can we make 3p? Yes, and I'll be quiet until I think I need to interject.
 
-| # of ways | 1  | 1  | 1  | 1  | 0  | 0  |
+| ways | 1  | 1  | 1  | 1  | 0  | 0  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 3p and a 1p coin, can we make 4p? Yes
 
-| # of ways | 1  | 1  | 1  | 1  | 1  | 0  |
+| ways | 1  | 1  | 1  | 1  | 1  | 0  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 4p and a 1p coin, can we make 5p? Yes
 
-| # of ways | 1  | 1  | 1  | 1  | 1  | 1  |
+| ways | 1  | 1  | 1  | 1  | 1  | 1  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 5p and a 1p coin, can we make 6p? **No, 6p doesn't exist**. We're out of bounds in our array.
 
-| # of ways | 1  | 1  | 1  | 1  | 1  | 1  |
+| ways | 1  | 1  | 1  | 1  | 1  | 1  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 #### Pass 2: 2p Coin
 
 From 0p and a 2p coin, can we make 2p? Yes. So we take the value stored at 0p and add it to the value stored at 2p.
 
-| # of ways | 1  | 1  | 2  | 1  | 1  | 1  |
+| ways | 1  | 1  | 2  | 1  | 1  | 1  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 1p and a 2p coin, can we make 3p? Yes. So we take the value stored at 1p and add it to the value stored at 3p.
 
-| # of ways | 1  | 1  | 2  | 2  | 1  | 1  |
+| ways | 1  | 1  | 2  | 2  | 1  | 1  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 2p and a 2p coin, can we make 4p? Yes. So we take the value stored at 2p and add it to the value stored at 4p.
 
-| # of ways | 1  | 1  | 2  | 2  | 3  | 1  |
+| ways | 1  | 1  | 2  | 2  | 3  | 1  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 3p and a 2p coin, can we make 5p? Yes. So we take the value stored at 3p and add it to the value stored at 5p.
 
-| # of ways | 1  | 1  | 2  | 2  | 3  | 3  |
+| ways | 1  | 1  | 2  | 2  | 3  | 3  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 4p and a 2p coin, can we make 6p? No. Out of bounds
 
-| # of ways | 1  | 1  | 2  | 2  | 3  | 3  |
+| ways | 1  | 1  | 2  | 2  | 3  | 3  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 From 5p and a 2p coin, can we make 7p? No. Out of bounds
 
-| # of ways | 1  | 1  | 2  | 2  | 3  | 3  |
+| ways | 1  | 1  | 2  | 2  | 3  | 3  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 #### Pass 3: 5p Coin
 
 From 0p and a 5p coin, can we make 5p? Yes. So we take the value stored at 0p and add it to the value stored at 5p.
 
-| # of ways | 1  | 1  | 2  | 2  | 3  | 4  |
+| ways | 1  | 1  | 2  | 2  | 3  | 4  |
 |-----------|----|----|----|----|----|----|
-| Sum/Index | 0p | 1p | 2p | 3p | 4p | 5p |
+| sum | 0p | 1p | 2p | 3p | 4p | 5p |
 
 The rest of the iterations are out of bounds so we'll stop here.
 
