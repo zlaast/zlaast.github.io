@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme 
+{
+    --color-coffee: #715A5A;
+    --font-kode: "Kode Mono", monospace;
+    --font-nunito: "Nunito", sans-serif;
+}
+
+body 
+{
+    background-color: #262626;
+    font-family: "Nunito", sans-serif;
+    color: #D3DAD9;
+}
+
+a
+{
+    color: #a684ff;
+}
+
+p
+{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.emoji
+{
+    display: inline;
+    width: 5.55%;
+    margin-bottom: 6px;
+    align-self: center;
+}
+
+.gradient-text 
+{
+    background: -webkit-linear-gradient(135deg, #1cffbb, #ff23ff);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

@@ -1,24 +1,25 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 24 - Lexicographic Permutations
 part: 24
 date: 2024-03-05
 tags: ['Coding', 'Math', 'Python']
 graph_tags: ['combinatorics']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Tab from '@components/Astro/Tab.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 24](https://projecteuler.net/problem=24)
 
 <div class="max-md:hidden">
-{/* EXCERPT START */}
+
 > **Problem**
 >
 > A permutation is an ordered arrangement of objects. For example, 3124 is one possible permutation of the digits 1, 2, 3 and 4. If all of the permutations are listed numerically or alphabetically, we call it lexicographic order. The lexicographic permutations of 0, 1 and 2 are:
@@ -26,11 +27,12 @@ This problem comes from [Project Euler 24](https://projecteuler.net/problem=24)
 > <pre class="justify-center">012   021   102   120   201   210</pre>
 >
 > What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
-{/* EXCERPT END */}
+
 </div>
 
 ## Solution and Code
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem24.py" tab="problem24.py">
+<Tabs>
+<Tab name="problem24.py" checked="checked">
 ```python
 # Project Euler: Problem 24
 # Lexicographic permutations
@@ -42,12 +44,11 @@ answer = ''.join([str(i) for i in lex[999999]])
 print(answer)
 ```
 </Tab>
+</Tabs>
 
 - **Line 6**: Create a list of all the permutations for the numbers 0 to 10.
 - **Line 7**: This code is just here so that I can easily copy and paste from `lex[999999]`. 
 It ironically took more time to write this code than to get the answer from `print(lex[999999])`.
 Work hard to be lazy 😤
 
-<Spoiler>
-2783915460
-</Spoiler>
+<Spoiler>2783915460</Spoiler>

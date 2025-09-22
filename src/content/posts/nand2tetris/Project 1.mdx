@@ -1,21 +1,19 @@
 ---
 category: Coding
-series: nand2tetris
+project: nand2tetris
 title: nand2tetris
 subtitle: Project 1 - Basic Gates and Chips
 part: 1
 date: 2023-01-21
 tags: ["Coding", "Computers", "Digital"]
-image: "/images/posts/nand2tetris/tetris.svg"
+read_time: 10
 ---
-import Tab from "@components/Astro/Tab.astro";
-import Math from "@components/Astro/Math.astro";
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
 
 ## Introduction
 
-{/* EXCERPT START */}
 In an effort to design a simple computer from the ground up, we need to create the relevant hardware to make such a machine work. The logic chips used in this course, and built in this post, are the foundation for this simple computer and the proceeding course projects.
-{/* EXCERPT END */}
 
 ## The Canonical Logic Gates
 
@@ -55,7 +53,8 @@ And the following image shows how a **NOT** gate is represented in schematics:
 
 The code below is the implementation of a **NOT** gate using a **NAND** gate.
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Not.hdl" tab="NOT.hdl" >
+<Tabs>
+<Tab name="NOT.hdl" checked="checked" group="1">
 ```
 CHIP Not {
     IN in;
@@ -67,6 +66,7 @@ CHIP Not {
 }
 ```
 </Tab>
+</Tabs>
 
 ### AND gate
 Creating an **AND** gate is fairly simple once we have an inverter. Looking at the **AND** gate truth table, we can see that the output is similar to the output of a **NAND** gate, just inverted. **NAND**, in fact, stands for "NOT AND".
@@ -88,7 +88,8 @@ And below is how an **AND** gate is normally represented in schematics
 
 And finally the HDL implementation
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/And.hdl" tab="And.hdl" >
+<Tabs>
+<Tab name="And.hdl" checked="checked" group="2">
 ```
 CHIP And {
 IN a, b;
@@ -101,6 +102,7 @@ OUT out;
 }
 ```
 </Tab>
+</Tabs>
 
 ### OR gate
 The **OR** gate has the following truth table
@@ -118,19 +120,19 @@ The **OR** gate sets its output to `true` when either A or B or _both_ are true.
 
 The implementation of an **OR** gate is more interesting than the previous gates. To implement this gate, we can make use of **De Morgan's Theorem**.
 
-<Math inline="false" eqn="\overline{A \land B} = \overline{A} \lor \overline{B}"/>
+<div class="text-center py-3">$$ \overline{A \land B} = \overline{A} \lor \overline{B} $$</div>
 <div class="caption italic text-center">Equation - De Morgan's Theorem</div>
 
 Note that
 1.  ∧ means logical **AND**
 2.  ∨ means logical **OR**
-3.  <Math eqn=" \overline{x} "/> means logical **NOT** (in this case, **NOT** x)
+3.  $$\overline{x} $$ means logical **NOT** (in this case, **NOT** x)
 
 De Morgan's theorem reads as (**NOT** A) **AND** (**NOT** B) = **NOT** (A **OR** B).
 
 Now, a problem with this is that it gives us an inverted **OR** as the output (called a **NOR** gate). So we must invert the output to get just an **OR** gate.
 
-<Math inline="false" eqn="\overline{\overline{A} \land \overline{B}} = \overline{\overline{A \lor B}} = A \lor B"/>
+<div class="text-center py-3">$$ \overline{\overline{A} \land \overline{B}} = \overline{\overline{A \lor B}} = A \lor B $$</div>
 
 The above boolean equation is demonstrated by the schematic below
 ![Or Internal](/images/posts/nand2tetris/project-1/Or-internal.png)
@@ -140,9 +142,9 @@ The normal schematic representation of an OR gate is shown below
 
 And finally the pertaining code
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Or.hdl" tab="Or.hdl">
+<Tabs>
+<Tab name="Or.hdl" checked="checked" group="3">
 ```
-
 CHIP Or {
 IN a, b;
 OUT out;
@@ -154,9 +156,9 @@ OUT out;
     Not (in=a1, out=out);
 
 }
-
 ```
 </Tab>
+</Tabs>
 
 ## Another Logic Gate and Chips
 
@@ -185,7 +187,7 @@ The **XOR** gate is sometimes called a "Difference Gate", as the output is only 
 
 To create an **XOR** gate, we can create a boolean expression by examining when the output is `true`.
 
-<Math inline="false" eqn=" (\overline A \land B) \lor (A \land \overline B) "/>
+<div class="text-center py-3">$$ (\overline A \land B) \lor (A \land \overline B) $$</div>
 
 We then can take the expression and implement it using previous logic gates. The colouring is for clarity and has nothing to do with Neo and Morpheus 😄
 ![Xor Internal](/images/posts/nand2tetris/project-1/XOR-internal.png)
@@ -195,7 +197,8 @@ As usual, the schematic representation
 
 And finally the code
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Xor.hdl" tab="Xor.hdl" >
+<Tabs>
+<Tab name="Xor.hdl" checked="checked" group="4">
 ```
 CHIP Xor {
 IN a, b;
@@ -209,9 +212,9 @@ OUT out;
     Or  (a=a1, b=a2, out=out);
 
 }
-
 ```
 </Tab>
+</Tabs>
 
 ### Multiplexer (MUX)
 
@@ -250,8 +253,8 @@ Below is the schematic representation usually seen for MUX "chips".
 ![Mux](/images/posts/nand2tetris/project-1/Mux.png)
 
 And the code
-
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Mux.hdl" tab="Mux.hdl" >
+<Tabs>
+<Tab name="Mux.hdl" checked="checked" group="5">
 ```
 CHIP Mux {
 IN a, b, sel;
@@ -268,6 +271,7 @@ OUT out;
 }
 ```
 </Tab>
+</Tabs>
 
 ### Demultiplexer (DMUX)
 
@@ -300,7 +304,8 @@ When `sel=1`, the opposite happens.
 
 ![Dmux](/images/posts/nand2tetris/project-1/DMux.png)
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/DMux.hdl" tab="DMux.hdl" >
+<Tabs>
+<Tab name="DMux.hdl" checked="checked" group="6">
 ```
 CHIP DMux {
 IN in, sel;
@@ -313,6 +318,7 @@ OUT a, b;
 }
 ```
 </Tab>
+</Tabs>
 
 ## Multi-bit Gates and Chips
 
@@ -322,7 +328,8 @@ The first few multi-bit gates are rather easy and don't require much explanation
 
 This is just a bank of 16 individual **NOT** gates
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Not16.hdl" tab="Not16.hdl" >
+<Tabs>
+<Tab name="Not16.hdl" checked="checked" group="7">
 ```
 CHIP Not16 {
 IN in[16];
@@ -348,12 +355,14 @@ OUT out[16];
 }
 ```
 </Tab>
+</Tabs>
 
 ### And16
 
 This is just a bank of 16 individual **AND** gates
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/And16.hdl" tab="And16.hdl" >
+<Tabs>
+<Tab name="And16.hdl" checked="checked" group="8">
 ```
 CHIP And16 {
 IN a[16], b[16];
@@ -379,12 +388,14 @@ OUT out[16];
 }
 ```
 </Tab>
+</Tabs>
 
 ### Or16
 
 This is just a bank of 16 individual **OR** gates
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Or16.hdl" tab="Or16.hdl" >
+<Tabs>
+<Tab name="Or16.hdl" checked="checked" group="9">
 ```
 CHIP Or16 {
 IN a[16], b[16];
@@ -410,12 +421,14 @@ OUT out[16];
 }
 ```
 </Tab>
+</Tabs>
 
 ### Mux16
 
 This a just a bank of 16 multiplexers. All of them are controlled simultaneously by a single `sel` bit
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Mux16.hdl" tab="Mux16.hdl" >
+<Tabs>
+<Tab name="Mux16.hdl" checked="checked" group="10">
 ```
 CHIP Mux16 {
 IN a[16], b[16], sel;
@@ -441,6 +454,7 @@ OUT out[16];
 }
 ```
 </Tab>
+</Tabs>
 
 ### Mux4Way16
 
@@ -453,7 +467,8 @@ If `sel[0]=1` then `B` is chosen from the top multiplexer and `D` is chosen from
 
 From there, `sel[1]` selects which of the two preceding multiplexers to use. For example, if `sel[1]=0` then the top multiplexer would be used.
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Mux4Way16.hdl" tab="Mux4Way16.hdl" >
+<Tabs>
+<Tab name="Mux4Way16.hdl" checked="checked" group="11">
 ```
 CHIP Mux4Way16 {
 IN a[16], b[16], c[16], d[16], sel[2];
@@ -466,14 +481,15 @@ OUT out[16];
 }
 ```
 </Tab>
+</Tabs>
 
 ### Mux8Way16
 
 Mux8Way16 has a similar construct to the preceding Mux4Way16. We just replace two of the Mux16 with Mux4Way16 instead.
 
 ![Mux8Way16](/images/posts/nand2tetris/project-1/Mux8Way16.png)
-
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Mux8Way16.hdl" tab="Mux8Way16.hdl" >
+<Tabs>
+<Tab name="Mux8Way16.hdl" checked="checked" group="12">
 ```
 CHIP Mux8Way16 {
 IN a[16], b[16], c[16], d[16],
@@ -488,6 +504,7 @@ OUT out[16];
 }
 ```
 </Tab>
+</Tabs>
 
 ### DMux4Way
 
@@ -495,7 +512,8 @@ The DMux4Way is essentially the Mux4Way16, but backwards and using demultiplexer
 
 ![Dmux4Way](/images/posts/nand2tetris/project-1/DMux4Way.png)
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/DMux4Way.hdl" tab="DMux4Way.hdl" >
+<Tabs>
+<Tab name="DMux4Way.hdl" checked="checked" group="13">
 ```
 CHIP DMux4Way {
 IN in, sel[2];
@@ -508,6 +526,7 @@ OUT a, b, c, d;
 }
 ```
 </Tab>
+</Tabs>
 
 ### DMux8Way
 
@@ -515,7 +534,8 @@ After the previous circuits, this requires no explanation. Just note that this a
 
 ![Dmux8Way](/images/posts/nand2tetris/project-1/DMux8Way.png)
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/DMux8Way.hdl" tab="DMux8Way.hdl" >
+<Tabs>
+<Tab name="DMux8Way.hdl" checked="checked" group="14">
 ```
 CHIP DMux8Way {
 IN in, sel[3];
@@ -528,6 +548,7 @@ OUT a, b, c, d, e, f, g, h;
 }
 ```
 </Tab>
+</Tabs>
 
 ### Or8Way
 
@@ -535,7 +556,8 @@ Or8Way is the final multi-bit chip. It **OR**s eight bits together to produce a 
 
 ![Or8Way](/images/posts/nand2tetris/project-1/Or8Way.png)
 
-<Tab tab="Or8Way.hdl" url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/01/Or8Way.hdl">
+<Tabs>
+<Tab name="Or8Way.hdl" checked="checked" group="15">
 ```
 CHIP Or8Way {
 IN in[8];
@@ -552,3 +574,4 @@ OUT out;
 }
 ```
 </Tab>
+</Tabs>

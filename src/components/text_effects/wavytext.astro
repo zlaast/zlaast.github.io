@@ -1,0 +1,25 @@
+---
+const text = Astro.props.text;
+let wavyText = '';
+
+text.split('').forEach((char:any, index:Number) => 
+{
+    if (char == ' ')
+        wavyText += "<span>&nbsp;</span>"
+    else
+        wavyText += `<span class="inline-block whitespace-nowrap animate-[wave_1s_infinite]" style="animation-delay: calc(0.04s * var(--i));--i:${index}">${ char }</span>`
+});
+---
+
+<span class="inline-block whitespace-nowrap">
+    <Fragment set:html={ wavyText } />
+</div>
+
+<style>
+@keyframes wave
+{
+    0%, 60%, 100% { transform: translateY(0); }
+    20% { transform: translateY(-3px); }
+    40% { transform: translateY(3px); }
+}
+</style>

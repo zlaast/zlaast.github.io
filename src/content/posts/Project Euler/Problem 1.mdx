@@ -1,26 +1,26 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 1 - Multiples of 3 and 5
 part: 1
 date: 2023-03-28
 tags: ['Coding', 'Math', 'Python', 'Rust']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Tabs from '@components/Astro/Tabs.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 1](https://projecteuler.net/problem=1)
 
-{/* EXCERPT START */}
 > **Problem**
 >
 > If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23. Find the sum of all the multiples of 3 or 5 below 1000.
-{/* EXCERPT END */}
+>
 
 ## Solution
 
@@ -32,54 +32,40 @@ In the code below, we check to see if any number is a multiple of three first, a
 
 ## Code
 
-<Tabs list={
-    [
-        {
-            "tab": "problem01.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem01.py"
-        },
-        {
-            "tab": "main.rs",
-            "url": "https://github.com/zlaast/Project-Euler/tree/main/Problems-Rust/problem_1/src/main.rs"
-        },
-    ]
-}>
+<Tabs>
+    <Tab name="problem01.py" checked="checked">
+    ```python
+    # Project Euler: Problem 1
+    # Multiples of 3 or 5
 
-<div class="tab-content" id="problem01.py">
-```python
-# Project Euler: Problem 1
-# Multiples of 3 or 5
+    sum = 0
+    for number in range (3, 1000):
+        # if number is divisible by 3 or 5
+        if (number % 3 == 0 or number % 5 == 0):
+            sum += number
 
-sum = 0
-for number in range (3, 1000):
-    # if number is divisible by 3 or 5
-    if (number % 3 == 0 or number % 5 == 0):
-        sum += number
+    print(sum)
+    ```
+    </Tab>
 
-print(sum)
-```
-</div>
+    <Tab name="main.rs">
+    ```rust
+    // Project Euler: Problem 1
+    // Multiples of 3 or 5
+    // Alternate Rust version
 
-<div class="tab-content" id="main.rs">
-```rust
-// Project Euler: Problem 1
-// Multiples of 3 or 5
-// Alternate Rust version
-
-fn main() {
-    let mut sum = 0;
-    for number in 3..1000 {
-        if number % 3 == 0 || number % 5 == 0 {
-            sum += number;
+    fn main() {
+        let mut sum = 0;
+        for number in 3..1000 {
+            if number % 3 == 0 || number % 5 == 0 {
+                sum += number;
+            }
         }
-    }
 
-    println!("{}", sum);
-}
-```
-</div>
+        println!("{}", sum);
+    }
+    ```
+    </Tab>
 </Tabs>
 
-<Spoiler>
-233168
-</Spoiler>
+<Spoiler>233168</Spoiler>

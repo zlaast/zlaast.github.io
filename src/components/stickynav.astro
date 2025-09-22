@@ -1,0 +1,83 @@
+---
+const { headings } = Astro.props
+
+let toc = ''
+headings.forEach((heading: any) => {
+    switch(heading['depth']) {
+        case 2: // H2
+            toc += `<a class='text-[0.95rem] leading-6 hover:ml-1 transition-all duration-150 ease-in-out toc-link toc-link-depth__0' href="#${heading['slug']}">${ heading['text'] }</a>`;
+            break;
+        case 3: // H3
+            toc += `<a class='text-[0.95rem] ml-3 leading-6 hover:ml-4 transition-all duration-150 ease-in-out toc-link toc-link-depth__1' href="#${heading['slug']}">${ heading['text'] }</a>`;
+            break;
+        case 4: // H4
+            toc += `<a class='text-[0.95rem] ml-6 leading-6 hover:ml-7 transition-all duration-150 ease-in-out toc-link toc-link-depth__2' href="#${heading['slug']}">${ heading['text'] }</a>`;
+            break;
+    }
+})
+---
+
+<nav class="max-lg:hidden sticky top-10 mb-5 h-full max-w-[200px]">
+    <div class="mb-1 w-[200px]">
+		<span class="scroll-watcher inline-block h-0.5"></span>
+		<span class="relative top-2.5 float-right inline-block"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" style="fill: white;transform: ;msFilter:;"><path d="M4 2v18H3v2h4v-2H6v-5h13a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H6V2H4zm4 3v2h2V5h2v2h2V5h2v2h2v2h-2v2h2v2h-2v-2h-2v2h-2v-2h-2v2H8v-2H6V9h2V7H6V5h2z"></path><path d="M8 9h2v2H8zm4 0h2v2h-2zm-2-2h2v2h-2zm4 0h2v2h-2z"></path></svg></span>
+	</div>
+    <div class="toc relative flex flex-col">
+        <div class="font-kode text-[1.1rem] font-bold">Contents</div>
+        <Fragment set:html={toc} />
+    </div>
+</nav>
+
+<style is:global>
+    .toc a {
+        color: whitesmoke;
+        font-weight: 400;
+    }
+
+    .toc-link-depth__0
+    {
+        color: #00d492 !important;
+    }
+
+    .toc-link-depth__1
+    {
+        color: #6ee7b7 !important;
+    }
+
+    .toc-link-depth__2
+    {
+        color: #a7f3d0 !important;
+    }
+
+    .scroll-watcher {
+        top: 100px;
+        animation: scroll-watcher linear;
+        animation-timeline: scroll();
+	}
+
+	@keyframes scroll-watcher {
+		from {
+			background-color: red;
+			width: 0px;
+		}
+
+		to {
+			background-color: #00d492;
+			width: 175px;
+		}
+	}
+</style>
+
+<script is:inline>
+document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+    
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+});
+</script>

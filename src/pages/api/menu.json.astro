@@ -1,58 +1,59 @@
 ---
 export const partial = true;
 
-const allPosts = await Astro.glob('../../content/**/*.mdx');
-
-// FORMAT
-// category: category,
-// categoryCount: new Set(series).size,
-// series: {
-// 	name?: String,
-// 	count?: Number
-// }
-
-// Menu
+// Variables
 let menu : Object[] = [];
+let project_progress = [
+    {
+        project: "Project Euler",
+        progress: 3.5
+    },
+    {
+        project: "nand2tetris",
+        progress: 40
+    }
+]
+// 1. Get all posts
+// const all_posts = await Astro.glob("@content/posts/**/*.mdx");
+const all_posts = Object.values(import.meta.glob("@content/posts/**/*.mdx", { eager: true }));
 
-// Get List of Categories
-let categoriesRawData = new Set();
-allPosts.forEach((post) => { categoriesRawData.add(post.frontmatter.category) });
-let categoriesList = [...categoriesRawData].sort();
+// 2. Get list of categories
+let categories_set = new Set();
+all_posts.forEach((post: any) => { categories_set.add(post.frontmatter.category) });
 
-// Get Series per Category
-categoriesList.forEach((category) => 
-{
-	let seriesList: String[] = [];
-	allPosts.forEach((post) => 
-	{
-		if (post.frontmatter.category == category)
-		{
-			seriesList.push(post.frontmatter.series)
-		}
-	});
+let categories_sorted = [...categories_set].sort();
 
-	let seriesSet = new Set(seriesList);
+// 3. Get projects per category
+categories_sorted.forEach((category) => {
 
-	interface series
-	{
-		name?: String,
-		count?: Number
-	}
+    let projects_list: String[] = [];
+    all_posts.forEach((post: any) => {
+        if (post.frontmatter.category == category)
+            projects_list.push(post.frontmatter.project)
+    });
+    let projects_set = new Set(projects_list);
 
-	let series: series [] = [];
-	seriesSet.forEach((serie) => 
-	{
-		series.push({
-			name: serie,
-			count: seriesList.filter(elements => elements == serie).length
-		});
-	});
+    interface Projects
+    {
+        Name?: String,
+        PostsAmount?: Number,
+        Progress?: Number
+    }
 
-	menu.push ({
-		category: category,
-		categoryCount: new Set(series).size,
-		series: series
-	})
+    let projects: Projects[] = [];
+    projects_set.forEach((project) => {
+        projects.push({
+            Name: project,
+            PostsAmount: projects_list.filter(el => el == project).length,
+            Progress: project_progress.find(proj => proj.project.toLowerCase() == project.toLowerCase())?.progress ?? 0
+        });
+    });
+
+    menu.push({
+        Category: category,
+        projectsCount: new Set(projects).size,
+        projects: projects
+    });
 });
 ---
 

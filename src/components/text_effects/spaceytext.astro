@@ -1,0 +1,32 @@
+---
+const text = Astro.props.text;
+let spaceyText = '';
+
+text.split('').forEach((char:any, index:Number) => 
+{
+    if (char == ' ')
+        spaceyText += "<span>&nbsp;</span>"
+    else
+        spaceyText += `<span class="relative inline-block animate-[spacey_1s_infinite]" style="animation-delay: calc(0.06s * var(--i));--i:${index}">${ char }</span>`
+});
+---
+
+<span class="inline-block whitespace-nowrap">
+    <Fragment set:html={ spaceyText } />
+</span>
+
+<style>
+@keyframes spacey
+{
+    0%, 100%
+    { 
+        left: 0;
+        right: 0; 
+    }
+    50% 
+    { 
+        left: -0.2rem;
+        right: 0.2rem; 
+    }
+}
+</style>

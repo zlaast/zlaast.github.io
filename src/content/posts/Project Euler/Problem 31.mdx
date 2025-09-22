@@ -1,25 +1,25 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 31 - Coin Sums
 part: 31
 date: 2024-03-12
 tags: ['Coding', 'Math', 'Python']
 graph_tags: ['dynamic programming']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 6
 ---
 
-import Tab from '@components/Astro/Tab.astro'
-import Math from '@components/Astro/Math.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
-import Graph from '@components/Astro/Graph.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
+import Graph from '@components/graph.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 31](https://projecteuler.net/problem=31)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
 > In the United Kingdom the currency is made up of pound (£) and pence (p). There are eight coins in general circulation:
@@ -31,7 +31,7 @@ This problem comes from [Project Euler 31](https://projecteuler.net/problem=31)
 > <span class="ml-5">1×£1 + 1×50p + 2×20p + 1×5p + 1×2p + 3×1p</span>
 >
 > How many different ways can £2 be made using any number of coins?
-{/* EXCERPT END */}
+
 
 I'll admit something: When I first solved this problem years ago, it almost broke me 😭. I found it exceedingly difficult,
 and my original solution wasn't much better than nearly [brute-forcing](#the--ole-days) the answer.
@@ -46,7 +46,8 @@ Back in [Problem 15](/blog/project-euler/problem-15), I used recursion for the d
 seem to quite get that to work here (must be my inexperience), but I *could* get **tabulation** to work (after days of learning more about dynamic programming).
 
 ## Code
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem31.py" tab="problem31.py">
+<Tabs>
+<Tab name="problem31.py" checked="checked">
 ```python
 # Problem 31
 # Coin Sums
@@ -65,13 +66,9 @@ for coin in coins:
 print(coin_sums[target])
 ```
 </Tab>
+</Tabs>
 
-<Spoiler>
-73682
-</Spoiler>
-
-<br />
-<br />
+<Spoiler>73682</Spoiler>
 
 ### Example
 Let's go over how this program works, using a smaller example of trying to create 5p from just the 5p, 2p, and 1p coins.

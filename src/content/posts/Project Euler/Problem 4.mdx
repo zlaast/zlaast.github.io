@@ -1,28 +1,27 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 4 - Largest palindrome product
 part: 4
 date: 2023-04-23
 tags: ['Coding', 'Math', 'Python', 'Rust']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Tabs from '@components/Astro/Tabs.astro'
-import Math from '@components/Astro/Math.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 4](https://projecteuler.net/problem=4)
 
-{/* EXCERPT START */}
 > **Problem**
 >
-> A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is <Math eqn='9009 = 91 \times 99' />.
+> A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is $$ 9009 = 91 \times 99$$ 
 >
 > Find the largest palindrome made from the product of two 3-digit numbers.
-{/* EXCERPT END */}
 
 ## Solution
 
@@ -33,68 +32,55 @@ We convert the numbers to strings, as reversing strings is easier than reversing
 
 If the product is palindromic, we check to see if it is larger than the current `max` palindrome, and if it is, store it.
 
-<Tabs list={
-    [
-        {
-            "tab": "problem04.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem04.py"
-        },
-        {
-            "tab": "main.rs",
-            "url": "https://github.com/zlaast/Project-Euler/tree/main/Problems-Rust/problem_4/src/main.rs"
-        },
-    ]
-}>
+<Tabs>
+    <Tab name="problem04.py" checked="checked">
+        ```python
+        # Project Euler: Problem 4
+        # Largest Palindrome Product
 
-<div class="tab-content mb-5" id="problem04.py">
-```python
-# Project Euler: Problem 4
-# Largest Palindrome Product
+        max = 0
 
-max = 0
+        for num1 in range(100, 1000):
+            for num2 in range(num1, 1000):
+                product = num1*num2
 
-for num1 in range(100, 1000):
-    for num2 in range(num1, 1000):
-        product = num1*num2
+                if (str(product) == str(product)[::-1]):
+                    if (product > max):
+                        max = product
 
-        if (str(product) == str(product)[::-1]):
-            if (product > max):
-                max = product
+        print(max)
+        ```
+        </Tab>
+        <Tab name="main.rs">
+        ```rust
+        // Project Euler: Problem 4
+        // Largest Palindrome Product
+        // Alternate Rust version
 
-print(max)
-```
-</div>
+        fn main() {
+            let mut max = 0;
 
-<div class="tab-content mb-5" id="main.rs">
-```rust
-// Project Euler: Problem 4
-// Largest Palindrome Product
-// Alternate Rust version
+            for a in 100..1000 {
+                for b in a..1000 {
+                    let product = a*b;
+                    let f_string: String = format!("{}", product);
+                    let r_string: String = f_string.chars().rev().collect();
 
-fn main() {
-    let mut max = 0;
-
-    for a in 100..1000 {
-        for b in a..1000 {
-            let product = a*b;
-            let f_string: String = format!("{}", product);
-            let r_string: String = f_string.chars().rev().collect();
-
-            if f_string == r_string && product > max {
-                max = product;
+                    if f_string == r_string && product > max {
+                        max = product;
+                    }
+                }
             }
-        }
-    }
 
-    println!("{}", max);
-}
-```
-</div>
+            println!("{}", max);
+        }
+        ```
+    </Tab>
 </Tabs>
 
 ### Note 1
 
-`num2`'s range is between `num1` and 1000 to avoid repeated calculations. For example, <Math eqn='105 \times 22' /> is the same as <Math eqn='22 \times 105' /> and would be an unnecessary calculation. This avoids that problem by setting `num2`'s bottom range to `num1`.
+`num2`'s range is between `num1` and 1000 to avoid repeated calculations. For example, $$ 105 \times 22$$ is the same as $$ 22 \times 105$$ and would be an unnecessary calculation. This avoids that problem by setting `num2`'s bottom range to `num1`.
 
 ### Note 2
 

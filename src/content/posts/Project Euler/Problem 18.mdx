@@ -1,22 +1,23 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 18 - Maximum Path Sum I
 part: 18
 date: 2024-03-03
 tags: ['Coding', 'Math', 'Python']
 graph_tags: ['dynamic programming']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 2
 ---
 
-import Tab from '@components/Astro/Tab.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 This problem comes from [Project Euler 18](https://projecteuler.net/problem=18)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
 > By starting at the top of the triangle below and moving to adjacent numbers on the row below, the maximum total from top to bottom is 23.
@@ -27,7 +28,7 @@ This problem comes from [Project Euler 18](https://projecteuler.net/problem=18)
 > <img class="mx-auto" src="/images/posts/project-euler/problem18_big.png" />
 > **NOTE**: As there are only 16384 routes, it is possible to solve this problem by trying every route. 
 > However, Problem 67, is the same challenge with a triangle containing one-hundred rows; it cannot be solved by brute force, and requires a clever method! ;o)
-{/* EXCERPT END */}
+
 
 ## Solution
 
@@ -35,14 +36,15 @@ It's easier to solve the problem by starting at the bottom and working towards t
 
 They say "a picture is worth a thousand words," so here's an animation of what the code will do.
 
-<img class="mx-auto" src="/images/posts/project-euler/problem-18.gif" />
+<img class="mx-auto" src="/images/posts/project-euler/problem-18.gif " />
 
 The code looks at two adjacent numbers in a lower row and adds whichever is greater to the number above them. 
 You may have to watch the animation a few times to get it, but this explains what's going on far better than any words I can say.
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem18.py" tab="problem18.py">
+<Tabs>
+<Tab name="problem18.py" checked="checked">
 ```python
 # Project Euler: Problem 18
 # Maximum path sum I
@@ -77,6 +79,7 @@ for x in range(rows, -1, -1):
 print(a[0])
 ```
 </Tab>
+</Tabs>
 
 ### Note
 I use `x` and `y` in the code above for coordinates for the 2D array `a` in the form `a[x][y]`.
@@ -84,6 +87,4 @@ I use `x` and `y` in the code above for coordinates for the 2D array `a` in the 
 - `x` is a row such as `a[2] = [17, 47, 82]` and, <br/>
 - `y` is a column of that row such as `a[2][0] = 17`.
 
-<Spoiler>
-1074
-</Spoiler>
+<Spoiler>1074</Spoiler>

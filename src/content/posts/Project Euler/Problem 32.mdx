@@ -1,34 +1,34 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 32 - Pandigital Products
 part: 32
 date: 2024-03-31
 tags: ['Coding', 'Math', 'Python']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 3
 ---
 
-import Tab from '@components/Astro/Tab.astro'
-import Math from '@components/Astro/Math.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 32](https://projecteuler.net/problem=32)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
-> We shall say that an <Math eqn="n" />-digit number is pandigital if it makes use of all the digits 1 to <Math eqn="n" /> exactly once; for example, the 5-digit number, 
-> 15 234, is 1 through 5 pandigital.
+> We shall say that an $$ n $$-digit number is pandigital if it makes use of all the digits 1 to $$ n $$ exactly once; for example, the $$5$$-digit number, 
+> $$15234$$, is $$1$$ through $$5$$ pandigital.
 >
-> The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing multiplicand, multiplier, and product is 1 through 9 pandigital.
+> The product $$7254$$ is unusual, as the identity, $$39 \times 186 = 7254$$, containing multiplicand, multiplier, and product is $$1$$ through $$9$$ pandigital.
 >
-> Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital.
+> Find the sum of all products whose multiplicand / multiplier / product identity can be written as a $$1$$ through $$9$$ pandigital.
 >
 > HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
-{/* EXCERPT END */}
+
 
 ## Solution
 
@@ -43,7 +43,8 @@ You'll also want to avoid 4-digit numbers × 1-digit numbers and 3-digit numbers
 I never had to consider this issue with the way I solved the problem, though.
 
 ## Code
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem32.py" tab="problem32.py">
+<Tabs>
+<Tab name="problem32.py" checked="checked">
 ```python
 # Project Euler: Problem 32
 # Pandigital Products
@@ -86,6 +87,7 @@ for perm in perms:
 print(sums)
 ```
 </Tab>
+</Tabs>
 
 The code does the following:
 
@@ -124,7 +126,4 @@ is prod < 9999? Yes
 
 Most of the code is string-to-number transformations and vice-versa, as sometimes working with strings can be easier 🤷.
 
-
-<Spoiler>
-45228
-</Spoiler>
+<Spoiler>45228</Spoiler>

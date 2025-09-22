@@ -1,21 +1,20 @@
 ---
 category: Coding
-series: nand2tetris
+project: nand2tetris
 title: nand2tetris
 subtitle: Project 2 - The ALU
 part: 3
 date: 2023-01-23
 tags: ["Coding", "Computers", "Digital"]
-image: "/images/posts/nand2tetris/tetris.svg"
+read_time: 10
 ---
-import Tab from "@components/Astro/Tab.astro";
-import Math from "@components/Astro/Math.astro";    
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
 
 ## Introduction
 
-{/* EXCERPT START */}
 This is the continuation of the previous post, Project 2 - Boolean Arithmetic. In this post, only the Arithmetic Logic Unit (ALU) is created, but it is deserving of its own writeup as there is a lot packed into this section that needs examining.
-{/* EXCERPT END */}
+
 
 ## The ALU Functions
 
@@ -43,7 +42,6 @@ This is the continuation of the previous post, Project 2 - Boolean Arithmetic. I
 The above table shows six control bits, and how setting each of them can produce a particular output. The ALU takes in two 16-bit numbers, `x` and `y` and performs a _series_ of operations on these inputs to produce an output.
 
 - `zx` means "zero x". If `zx=1` then `x=0`. Otherwise `x` is left untouched
-
 - `nx` means "not x". If `nx=1` then all of the bit for `x` are inverted
 - `zy` means "zero y". It is similar to `zx`
 - `ny` means "not y". It is similar to `nx`
@@ -53,7 +51,6 @@ The above table shows six control bits, and how setting each of them can produce
 There is also two extra output bits, `ng` and `zr`.
 
 - `ng=1` when our output is a negative number
-
 - `zr=1` when our output is zero
 
 ## How the ALU Works
@@ -143,27 +140,27 @@ This is just the same thing as the [`-x` instruction](#-x), but for `y`.
 
 This one requires some math to show how it works. We let **y = -1** and then perform the following
 
-<Math inline="false" eqn="x + 1 = \overline{(\overline x + y)}" />
+<div class="text-center py-3">$$ x + 1 = \overline{(\overline x + y)} $$</div>
 
 Just to be explicit, let's substitute `y` with `-1` and get
 
-<Math inline="false" eqn="x + 1 = \overline{ ( \overline x - 1 ) }" />
+<div class="text-center py-3">$$ x + 1 = \overline{ ( \overline x - 1 ) } $$</div>
 
 <div class="caption text-center italic">( x + 1 ) -- (Eq. 1)</div>
 
 Now it should be noted that, to get a negative number in 2s Complement, we do the following
 
-<Math inline="false" eqn="-x = \overline x + 1" />
+<div class="text-center py-3">$$ -x = \overline x + 1 $$</div>
 
 If we rearrange that to solve for <span class="overline">`x`</span>, we get
 
-<Math inline="false" eqn="\overline x = -x - 1" />
+<div class="text-center py-3">$$ \overline x = -x - 1 $$</div>
 
 <div class="caption text-center italic">( x + 1 ) -- (Eq. 2)</div>
 
 Substituting (Eq.2) into (Eq.1) and simplifying, we obtain
 
-<Math inline="false" eqn="x + 1 = \overline{ (-x - 2) }" />
+<div class="text-center py-3">$$ x + 1 = \overline{ (-x - 2) } $$</div>
 
 At this point, let's make **x = 6** and solve as an example
 
@@ -195,17 +192,17 @@ This instruction is one of the simplest. We just set `f=1` to perform `x+y`.
 
 This is implementation of 2s Complement subtraction, is not only interesting, but _elegant and fast_ as well. In 2s Complement, in order to obtain a negative number, we must first invert all the bits of a number, then add one. That is,
 
-<Math inline="false" eqn="-z = \overline z + 1" />
+<div class="text-center py-3">$$ -z = \overline z + 1 $$</div>
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 1)</div>
 
 One would think that if we wished to subtract two numbers, say `x-y`, then we would perform the following operation:
 
-<Math inline="false" eqn="x - y = x + (\overline y + 1)" />
+<div class="text-center py-3">$$ x - y = x + (\overline y + 1) $$</div>
 
 But what we actually did in the course was,
 
-<Math inline="false" eqn="x - y = \overline{ \overline x + y }" />
+<div class="text-center py-3">$$ x - y = \overline{ \overline x + y } $$</div>
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 2)</div>
 
@@ -213,49 +210,49 @@ This is bizarre. Not only do we not add one, but we invert the `x` instead of th
 
 If we rearrange (Eq.1) to solve for <span class="overline">`z`</span>, we get,
 
-<Math inline="false" eqn="\overline z = -z - 1" />
+<div class="text-center py-3">$$ \overline z = -z - 1 $$</div>
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 3)</div>
 
 And factoring out the negative sign leaves us with,
 
-<Math inline="false" eqn="\overline z = -(z + 1)" />
+<div class="text-center py-3">$$ \overline z = -(z + 1) $$</div>
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 4)</div>
 
 Now, if we substitute (Eq.3) into (Eq.2), of course using `x` instead of `z`, we get the following
 
-<Math inline="false" eqn="x - y = \overline { (-x -1) + y }" />
+<div class="text-center py-3">$$ x - y = \overline { (-x -1) + y } $$</div>
 
 Now, let's use a temporary variable to help us understand the next process. Let,
 
-<Math inline="false" eqn="q = (-x -1 ) + y" />
+<div class="text-center py-3">$$ q = (-x -1 ) + y $$</div>
 
 <div class="caption text-center italic">( x - y ) -- (Eq. 5)</div>
 
 Then the equation becomes,
 
-<Math inline="false" eqn="x - y = \overline q" />
+<div class="text-center py-3">$$ x - y = \overline q $$</div>
 
 Let's substitute (Eq.4) into this (Using Eq.3 won't work, which should be evident shortly)
 
-<Math inline="false" eqn="x - y = -(q + 1)" />
+<div class="text-center py-3">$$ x - y = -(q + 1) $$</div>
 
 If we substitute (Eq.5) back in, we get this monstrosity
 
-<Math inline="false" eqn="x - y = -[(-x - 1) + y + 1]" />
+<div class="text-center py-3">$$ x - y = -[(-x - 1) + y + 1] $$</div>
 
 All that's left is to simplify the equation. Get rid of the internal brackets
 
-<Math inline="false" eqn="x - y = -[x - 1 + y + 1]" />
+<div class="text-center py-3">$$ x - y = -[x - 1 + y + 1] $$</div>
 
 The `-1` and `+1` cancel each other out
 
-<Math inline="false" eqn="x - y = -[-x + y]" />
+<div class="text-center py-3">$$ x - y = -[-x + y] $$</div>
 
 And finally distribute the negative into the brackets
 
-<Math inline="false" eqn="x - y = x - y" />
+<div class="text-center py-3">$$ x - y = x - y $$</div>
 
 The fact that 2s Complement occurs twice _mathematically_, but is never seen in the implementation is elegant. And the fact that only inversion is used with a single addition makes this _fast_. This took a while to explain, but is something that worth understanding and appreciating.
 
@@ -263,7 +260,7 @@ The fact that 2s Complement occurs twice _mathematically_, but is never seen in 
 
 `y-x` isn't much different from `x-y` seen in the previous section, and the implementation is as such
 
-<Math inline="false" eqn="y - x = \overline { x + \overline y }" />
+<div class="text-center py-3">$$ y - x = \overline { x + \overline y } $$</div>
 
 ### x & y
 
@@ -273,7 +270,7 @@ No in-depth explanation is needed here. If we leave all controls bits as 0, then
 
 From the ALU Table
 
-<Math inline="false" eqn="\overline { \overline x \land \overline y } = x \lor y" />
+<div class="text-center py-3">$$ \overline { \overline x \land \overline y } = x \lor y $$</div>
 
 This was explored in [the first post of the series](/blog/nand2tetris/project-1#or-gate), but this is just _De Morgan's Theorem_.
 
@@ -360,7 +357,8 @@ Not(in=or3, out=zr);
 
 ## Code
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/02/ALU.hdl" tab="ALU.hdl">
+<Tabs>
+<Tab name="ALU.hdl" checked="checked" group="1">
 ```
 CHIP ALU {
     IN
@@ -409,3 +407,4 @@ CHIP ALU {
 }
 ```
 </Tab>
+</Tabs>

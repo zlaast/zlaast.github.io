@@ -1,41 +1,42 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 16 - Power Digit Sum
 part: 16
 date: 2024-02-02
 tags: ['Coding', 'Math', 'Python']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Math from '@components/Astro/Math.astro'
-import Tab from '@components/Astro/Tab.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 16](https://projecteuler.net/problem=16)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
-> <Math eqn="2^{15} = 32768" /> and the sum of its digits is <Math eqn="3+2+7+6+8=26" />
+> $$ 2^{15} = 32768$$ and the sum of its digits is $$ 3+2+7+6+8=26$$ 
 >
-> What is the sum of the digits of the number <Math eqn="2^{1000}"/>?
-{/* EXCERPT END */}
+> What is the sum of the digits of the number $$ 2^{1000} $$ ?
+
 
 ## Solution
 
 The solution I went for was fairly simple.
 
-1. Calculate <Math eqn="2^{1000}"/>
+1. Calculate $$ 2^{1000} $$ 
 2. Turn that number into a string first, then an array of integers
 3. Sum the array of integers
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem16.py" tab="problem16.py">
+<Tabs>
+<Tab name="problem16.py" checked="checked">
 ```python
 # Project Euler: Problem 16
 # Power digit sum
@@ -45,7 +46,6 @@ num_list = [int(i) for i in str(num)]
 print(sum(num_list))
 ```
 </Tab>
+</Tabs>
 
-<Spoiler>
-1366
-</Spoiler>
+<Spoiler>1366</Spoiler>

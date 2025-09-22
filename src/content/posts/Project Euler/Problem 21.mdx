@@ -1,36 +1,36 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 21 - Amicable Numbers
 part: 21
 date: 2024-03-04
 tags: ['Coding', 'Math', 'Python']
 graph_tags: ['primes', 'factorization']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Math from '@components/Astro/Math.astro'
-import Tabs from '@components/Astro/Tabs.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 This problem comes from [Project Euler 21](https://projecteuler.net/problem=21)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
-> Let <Math eqn="d(n)" /> be defined as the sum of proper divisors of <Math eqn="n" /> (numbers less than <Math eqn="n" /> 
-> which divide evenly into <Math eqn="n" />).
+> Let $$ d(n)$$ be defined as the sum of proper divisors of $$ n$$ (numbers less than $$ n$$ 
+> which divide evenly into $$ n$$ ).
 > 
-> If <Math eqn="d(a) = b" /> and <Math eqn="d(b) = a" />, where <Math eqn="a \neq b" />, 
-> then <Math eqn="a" /> and <Math eqn="b" /> are an amicable pair and each of <Math eqn="a" /> and <Math eqn="b" /> are called amicable numbers.
+> If $$ d(a) = b$$ and $$ d(b) = a$$, where $$ a \neq b$$, 
+> then $$ a$$ and $$ b$$ are an amicable pair and each of $$ a$$ and $$ b$$ are called amicable numbers.
 >
-> For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44, 55, and 110; therefore <Math eqn="d(220) = 284" />.
-> The proper divisors of 284 are 1, 2, 4, 71 and 142; so <Math eqn="d(284) = 220" />.
+> For example, the proper divisors of 220 are 1, 2, 4, 5, 10, 11, 20, 22, 44, 55, and 110; therefore $$ d(220) = 284$$ .
+> The proper divisors of 284 are 1, 2, 4, 71 and 142; so $$ d(284) = 220$$ .
 >
 > Evaluate the sum of all the amicable numbers under 10 000.
-{/* EXCERPT END */}
+
 
 ## Solution
 
@@ -135,16 +135,16 @@ It does exactly what the problem describes 🤷.
     [
         {
             "tab": "problem21.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem21.py"
+            "url": "https://github.com/zlaast/project-Euler/blob/main/Problems-Python/problem21.py"
         },
         {
             "tab": "PEF.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/PEF.py"
+            "url": "https://github.com/zlaast/project-Euler/blob/main/Problems-Python/PEF.py"
         },
     ]
 }>
 
-<div class="tab-content" id="problem21.py">
+<Tab name="problem21.py" checked="checked">
 ```python
 # Project Euler: Problem 21
 # Amicable numbers
@@ -164,8 +164,7 @@ for number in reversed(range(2, 10000)):
 
 print(sum(amicables))
 ```
-</div>
-<div class="tab-content" id="PEF.py">
+</Tab><Tab name="PEF.py">
 ```python
 # Note: soe() is defined in PEF.py, 
 # but is not included here for brevity.
@@ -207,9 +206,7 @@ def factor(num):
 
     return sorted(proper_factors)
 ```
-</div>
+</Tab>
 </Tabs>
 
-<Spoiler>
-31626
-</Spoiler>
+<Spoiler>31626</Spoiler>

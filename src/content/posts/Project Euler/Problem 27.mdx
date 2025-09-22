@@ -1,57 +1,58 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 27 - Quadratic Primes
 part: 27
 date: 2024-03-10
 tags: ['Coding', 'Math', 'Python']
 graph_tags: ['primes']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 2
 ---
 
-import Tab from '@components/Astro/Tab.astro'
-import Math from '@components/Astro/Math.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 27](https://projecteuler.net/problem=27)
 
-{/* EXCERPT START */}
+
 > **Problem**
 > 
 > Euler discovered the remarkable quadratic formula:
-> <Math inline="false" eqn="n^2 + n + 41" />
-> It turns out that the formula will produce 40 primes for the consecutive integer values <Math eqn="0 \leq n \leq 39"/>.
-> However, when <Math eqn="n=40"/>, <Math eqn="40^2 + 40 + 41 = 40(40+1)+41" /> is divisible by 41, and certainly
-> when <Math eqn="n=41"/>, <Math eqn="41^2 + 41 + 41" /> is clearly divisible by 41.
+> <div class="text-center py-4">$$ n^2 + n + 41$$</div>
+> It turns out that the formula will produce 40 primes for the consecutive integer values $$ 0 \leq n \leq 39 $$.
+> 
+> However, when $$ n=40 $$, $$ 40^2 + 40 + 41 = 40(40+1)+41$$ is divisible by 41, and certainly
+> when $$ n=41 $$, $$ 41^2 + 41 + 41$$ is clearly divisible by 41.
 >
-> The incredible formula <Math eqn="n^2 - 79n + 1601" /> was discovered, which produces 80 primes for the consecutive values
-> <Math eqn="0 \leq n \leq 79"/>. . The product of the coefficients, -79 and 1601, is -126 479.
+> The incredible formula $$ n^2 - 79n + 1601$$ was discovered, which produces 80 primes for the consecutive values
+> $$ 0 \leq n \leq 79 $$. The product of the coefficients, -79 and 1601, is -126 479.
 >
 > Considering quadratics of the form:
 > 
-> <span class="ml-10"><Math eqn="n^2 + an + b"/>,</span><br/>
-> <span class="ml-10">where <Math eqn="|a| \lt 1000"/> and <Math eqn="|b| \leq 1000"/></span><br/>
-> <span class="ml-10">where <Math eqn="|n|"/> is the modulus/absolute value of <Math eqn="n"/></span><br/>
-> <span class="ml-10">e.g <Math eqn="|11| = 1"/> and <Math eqn="|-4|=4"/></span>
+> <span class="ml-10">$$ n^2 + an + b $$,</span><br/>
+> <span class="ml-10">where $$ |a| \lt 1000 $$ and $$ |b| \leq 1000 $$ </span><br/>
+> <span class="ml-10">where $$ |n| $$ is the modulus/absolute value of $$ n $$ </span><br/>
+> <span class="ml-10">e.g $$ |11| = 1 $$ and $$ |-4|=4 $$ </span>
 >
-> Find the product of the coefficients, <Math eqn="a"/> and <Math eqn="b"/>,
+> Find the product of the coefficients, $$ a $$ and $$ b $$,
 > for the quadratic expression that produces the maximum number of primes for consecutive values of 
-> <Math eqn="n"/>, starting with <Math eqn="n=0"/>
-{/* EXCERPT END */}
+> $$ n $$, starting with $$ n=0 $$ 
+
 
 ## Solution
 
 The problem gives two example equations:
-<Math inline="false" eqn="n^2 + n + 41" />
-Where <Math eqn="a=1"/> and <Math eqn="b=41"/>, and
-<Math inline="false" eqn="n^2 - 79n + 1601" />
-Where <Math eqn="a=79"/> and <Math eqn="b=1601"/>
+<div class="text-center py-4">$$ n^2 + n + 41$$</div>
+Where $$ a=1 $$ and $$ b=41 $$, and
+<div class="text-center py-4">$$ n^2 - 79n + 1601$$</div>
+Where $$ a=79 $$ and $$ b=1601 $$ 
 
-We should first notice that <Math eqn="a"/> and <Math eqn="b"/> for both equations are **prime numbers**. We should
-try creating these equations using prime numbers for <Math eqn="a"/> and <Math eqn="b"/>.
+We should first notice that $$ a $$ and $$ b $$ for both equations are **prime numbers**. We should
+try creating these equations using prime numbers for $$ a $$ and $$ b $$ .
 
 To solve the problem, I came up with the following steps:
 
@@ -65,7 +66,8 @@ Why does \#3 use only positive primes? Actually, it doesn't have to, but from ob
 numbers produce chains, so we can do away with trying the negative side.
 
 ## Code
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem27.py" tab="problem27.py">
+<Tabs>
+<Tab name="problem27.py" checked="checked">
 ```python
 # Project Euler: Problem 27
 # Quadratic Primes
@@ -95,13 +97,11 @@ for a in primes:
 
 print(max_a*max_b)
 ```
-<br />
+</Tab>
+</Tabs>
+
 - `p_primes` means "positive primes"
 - `n_primes` means "negative primes"
 - `soe()` is the Sieve of Eratosthenes, a prime number sieve written in [Problem 3](/blog/project-euler/problem-3)
 
-</Tab>
-
-<Spoiler>
--59231
-</Spoiler>
+<Spoiler>-59231</Spoiler>

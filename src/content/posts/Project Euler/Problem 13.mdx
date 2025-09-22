@@ -1,23 +1,23 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 13 - Large Sum
 part: 13
 date: 2024-01-31
 tags: ['Coding', 'Math', 'Python']
-image: "/images/posts/project-euler/euler.jpg"
+read_time: 1
 ---
-import Math from "@components/Astro/Math.astro";
-import Tab from "@components/Astro/Tab.astro";
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 13](https://projecteuler.net/problem=13)
 
 <div class="max-md:hidden">
-{/* EXCERPT START */}
+
 > **Problem**
 > 
 > Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
@@ -122,7 +122,7 @@ This problem comes from [Project Euler 13](https://projecteuler.net/problem=13)
 > 72107838435069186155435662884062257473692284509516
 > 20849603980134001723930671666823555245252804609722
 > 53503534226472524250874054075591789781264330331690</pre>
-{/* EXCERPT END */}
+
 </div>
 
 ## Solution
@@ -135,8 +135,8 @@ This problem was very straight forward
 
 ## Code
 
-
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem13.py" tab="problem13.py">
+<Tabs>
+<Tab name="problem13.py" checked="checked">
 ```python
 # Project Euler: Problem 13
 # Large sum
@@ -250,7 +250,6 @@ print(str(large_number)[0:10])
 
 ```
 </Tab>
+</Tabs>
 
-<Spoiler>
-5537376230
-</Spoiler>
+<Spoiler>5537376230</Spoiler>

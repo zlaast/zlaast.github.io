@@ -1,151 +1,95 @@
 ---
-import { getCollection } from 'astro:content'
+// Layout
+import Base from '@layouts/base.astro'
+
+// Components
+import Spacey from '../components/text_effects/spaceytext.astro'
+import Postcard from "../components/postcard.astro";
+
+// Images and emojis
 import { Image } from 'astro:assets'
-import Base from '@layouts/Base.astro'
-import Card from '@components/Astro/Card.astro'
+import portrait from 'public/portrait.webp'
+import clapping from '@images/emojis/clapping.gif'
+import robot from '@images/emojis/robot.gif'
+import bolt from '@images/emojis/bolt.gif'
 
-import circuit from '@images/index/circuit_board.webp'
-import computer from '@images/index/computer_screen.webp'
-import portrait from '@images/index/portrait_index.webp'
-import video from '@images/index/index_background.webm'
-
+// Posts
+import { getCollection } from 'astro:content'
 const posts = await getCollection('posts')
 posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
 ---
 
 <Base>
-	<div class="bg-[#020102] max-md:ml-4">
-		<!-- Background Video -->
-		<video
-			autoplay
-			loop
-			muted
-			plays-inline
-			disablepictureinpicture
-			src={video}
-			class="fixed left-[-10px] top-0 z-10 min-h-full max-w-[unset] object-cover"></video>
-
-		<!-- Hero Section  -->
-		<div class="relative z-20 mx-auto flex max-w-5xl flex-col px-10 pt-20 text-neutral-200">
-			<div class="flex flex-row max-lg:flex-wrap">
-				<Image
-					class="mx-auto scale-75"
-					width="400"
-					height="400"
-					src={portrait}
-					alt="A pixelated portrait of me"
-				/>
-				<div class="pt-14">
-					<h1 class="name-hue mb-6 font-nabla text-9xl max-lg:text-center max-md:text-6xl">
-						Z'Laast
-					</h1>
-					<h2
-						class="name-hue my-3 bg-[#f4d91f] p-3 text-center font-readex text-3xl font-bold text-bg max-md:text-xl"
-					>
-						A B.Eng's Blog
-					</h2>
-					<p class="my-auto text-xl">
-						It's been known that, on occasion, I make or learn something interesting (at least to
-						me) and this is where I get to talk about it. This blog is about software and circuits
-						⚡.
-					</p>
-				</div>
-			</div>
-
-			<div class="flex flex-row max-lg:flex-wrap">
-				<Image
-					class="mx-auto scale-[85%]"
-					width="400"
-					height="400"
-					src={computer}
-					alt="Computer Screen"
-				/>
-				<p class="my-auto text-xl">
-					The code consists of programming challenges, circuits, and various other projects that I
-					occasionally do.
-				</p>
-			</div>
-
-			<div class="flex flex-row max-lg:flex-wrap">
-				<Image
-					class="mx-auto scale-75"
-					width="400"
-					height="400"
-					src={circuit}
-					alt="Circuit board"
-				/>
-				<p class="my-auto text-xl">
-					Developing circuits is costly, time consuming, and often difficult to debug. <strong
-						>But</strong
-					> for the circuits I <em>do</em> make, I try to have detailed writeups.
-				</p>
-			</div>
-		</div>
-
-		<!-- Recent Posts -->
-		<div class="recent-posts relative z-20 mt-5 pt-2">
-			<div class="w-[99vw] bg-bg pb-12">
-				<div class="mx-auto flex max-w-4xl flex-col px-10">
-					<h1
-						class="my-16 max-w-fit bg-title p-3 font-readex text-6xl font-bold text-bg max-lg:mx-auto"
-					>
-						Recent
-					</h1>
-					<div class="flex flex-row flex-wrap justify-between max-lg:mx-auto max-lg:flex-col">
-						{
-							posts
-								.slice(posts.length - 4, posts.length)
-								.reverse()
-								.map((post) => {
-									return <Card post={post} />
-								})
-						}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <section class="flex justify-center min-h-screen text-xl bg-[#19191b]">
+        <div class="flex gap-8 items-center space-x-5 ml-10">
+            <div class="max-w-[500px]">
+                <h1 class="text-neutral-200 text-7xl font-light max-md:text-center">
+                    Hi, I'm <span class="text-emerald-400 font-bold font-kode">Z'Laast</span>.
+                </h1>
+                <p class="px-1">
+                    And the rules dictate that I mention that I have a degree in 
+                    <span class="text-emerald-400">Electrical Engineering</span>. 
+                    <i>Ooh aah.</i> 
+                    <Image class="emoji" src={ clapping } alt="clapping hands emoji" />
+                </p>
+                <p class="px-1">
+                    To display my <b>mighty</b>
+                    <i><Spacey text="unimpressiveness," /></i> 
+                    I have made this blog so that I may perform a show and tell of my various 
+                    <b class="gradient-text">coding</b>
+                    <Image src={ robot } class="emoji" alt="Robot emoji" /> and
+                    <b class="gradient-text">electronics</b> 
+                    <Image src={ bolt } class="emoji" alt="Lightning bolt emoji" /> projects.
+                </p>
+            </div>
+            <div class="max-md:hidden portrait relative place-self-center">
+                <Image class="mx-auto drop-shadow-xl/50 select-none min-w-[300px] max-w-[300px]" src={ portrait } alt="Sometimes funny guy. Always funny name." />
+            </div>
+        </div>
+    </section>
+    <section class="flex flex-col bg-neutral-800 py-20 px-8">
+        <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
+            <h2 class="text-5xl text-emerald-400 mb-10 font-kode">Recent</span></h2>
+            {
+                posts.slice(posts.length - 3, posts.length).reverse().map((post) => { return <Postcard post={ post } />})
+            }
+        </div>
+    </section>
 </Base>
 
-<style is:global>
-	.recent-posts {
-		background: linear-gradient(
-			65deg,
-			hsl(226, 81%, 64%),
-			hsl(271, 81%, 64%),
-			hsl(316, 81%, 64%),
-			hsl(1, 81%, 64%),
-			hsl(46, 81%, 64%),
-			hsl(91, 81%, 64%),
-			hsl(136, 81%, 64%),
-			hsl(181, 81%, 64%)
-		);
-		background-size: 200% 200%;
-		animation: rainbow-anim 20s alternate infinite;
-	}
+<style>
+.portrait::after, .portrait::before
+{
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    height: 220px;
+    width: 220px;
+    background: conic-gradient(from var(--angle) at 50% 50%, #003f5b, #2b4b7d, #5f5195, #98509d, #cc4c91, #f25375, #ff6f4e, #ff9913);
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    z-index: -1;
+    filter: blur(3rem);
+    animation: 10s portrait-bg-spin linear infinite;
+}
 
-	@keyframes rainbow-anim {
-		50% {
-			background-position: 100% 50%;
-		}
-	}
+.portrait::before
+{
+    filter: blur(1.5rem);
+    opacity: 0.5;
+}
 
-	.name-hue {
-		animation-duration: 15s;
-		animation-timing-function: linear;
-		animation-iteration-count: infinite;
-		animation-name: name-hue-anim;
-	}
+@keyframes portrait-bg-spin
+{
+    from { --angle: 0deg; }
+    to { --angle: 360deg; }
+}
 
-	@keyframes name-hue-anim {
-		0% {
-			filter: hue-rotate(0deg);
-		}
-		50% {
-			filter: hue-rotate(180deg);
-		}
-		100% {
-			filter: hue-rotate(1turn);
-		}
-	}
+@property --angle
+{
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
 </style>

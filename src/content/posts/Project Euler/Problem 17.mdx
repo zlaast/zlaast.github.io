@@ -1,21 +1,22 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 17 - Number Letter Counts
 part: 17
 date: 2024-03-03
 tags: ['Coding', 'Math', 'Python']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 2
 ---
 
-import Tab from '@components/Astro/Tab.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 This problem comes from [Project Euler 17](https://projecteuler.net/problem=17)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
 > If the numbers 1 to 5 are written out in words: one, two, three, four, five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
@@ -24,11 +25,12 @@ This problem comes from [Project Euler 17](https://projecteuler.net/problem=17)
 >
 > **NOTE:** Do not count spaces or hyphens. For example, 342 (three hundred and forty-two) contains 23 letters and 115 (one hundred and fifteen) contains
 > 20 letters. The use of "and" when writing out numbers is in compliance with British usage.
-{/* EXCERPT END */}
+
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem17.py" tab="problem17.py">
+<Tabs>
+<Tab name="problem17.py" checked="checked">
 ```python
 # Project Euler: Problem 17
 # Number Letter Counts
@@ -55,6 +57,7 @@ hundreds += below_100*9                         # below_100 is repeated 9 times
 print(below_100 + hundreds + len("onethousand"))
 ```
 </Tab>
+</Tabs>
 
 ## Solution
 The solutions is split into three sections
@@ -81,6 +84,4 @@ This one is a bit more complicated.
 
 The rest is self-explanatory.
 
-<Spoiler>
-21124
-</Spoiler>
+<Spoiler>21124</Spoiler>

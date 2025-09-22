@@ -1,8 +1,8 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content'
 
-import Base from '@layouts/Base.astro'
-import SeriesCard from '@components/Astro/SeriesCard.astro'
+import Base from '@layouts/base.astro'
+import Postcard from '@components/postcard.astro'
 
 // Dynamic URL Paths
 export async function getStaticPaths() {
@@ -30,62 +30,35 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
 ---
 
 <Base>
-	<div class="mx-auto flex">
-		<main class="mb-24 mt-10 max-w-6xl pl-10 pr-3 lg:mt-16">
-			<!-- Breadcrumbs -->
-			<div class="mb-4 text-[20px] text-neutral-300">
-				<a
-					class="font-medium decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
-					href="/">Home</a
-				> /
-				<a
-					class="font-medium decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
-					href=`/tags/${ Object.values(tag) }`>{Object.values(tag)}</a
-				>
-			</div>
+    <section class="flex flex-col bg-neutral-800 py-20 px-8">
+        <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
+           <!-- Breadcrumbs -->
+            <div class="flex breadcrumbs text-[1rem]">            
+                <a href="/">Home</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: grey;transform: ;msFilter:;"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path></svg>
+                <a class="capitalize" href=`/posts/${ Object.values(tag) }`>{ Object.values(tag) }</a>             
+            </div>
+            <h2 class="text-5xl text-emerald-400 my-10 font-kode capitalize">{ Object.values(tag) }</span></h2>
+            {
+                posts.reverse().map((allPosts: any) => {
+                    let flag = false
+                    allPosts.data.tags.map((tags: any) => {
+                        if (tags.toLowerCase().replaceAll(' ', '-') == Object.values(tag)[0].toLowerCase().replaceAll(' ', '-')) {
+                            flag = true
+                        }
+                    })
 
-			<hr class="mb-12 border-neutral-700" />
-
-			<h1
-				class="my-16 max-w-fit bg-title p-3 font-readex text-6xl font-bold text-bg max-sm:text-center"
-			>
-				Tag: {Object.values(tag)}
-			</h1>
-			<div>
-				{
-					posts.reverse().map((allPosts) => {
-						let flag = false
-						allPosts.data.tags.map((tags) => {
-							if (
-								tags.toLowerCase().replaceAll(' ', '-') ==
-								Object.values(tag)[0].toLowerCase().replaceAll(' ', '-')
-							) {
-								flag = true
-							}
-						})
-
-						if (flag) return <SeriesCard post={allPosts} />
-					})
-				}
-			</div>
-		</main>
-	</div>
+                    if (flag) return <Postcard post={ allPosts } />
+                })
+            }
+        </div>
+    </section>
 </Base>
 
 <style is:global>
-	/* Note:
-    * This CSS is to style the markdown content,
-    * since this content is inaccessible to tailwind.
-    * Some of the styling is based off the tailwind Typography plugin.
-    */
-
-	:root {
-		--link: #cd9eec;
-		--subtitle: #c2410c;
-		--title: #979b8d;
+.breadcrumbs {
+	a {
+		color: whitesmoke !important;
 	}
-
-	html {
-		scroll-behavior: smooth;
-	}
+}
 </style>

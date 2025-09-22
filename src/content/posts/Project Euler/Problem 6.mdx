@@ -1,36 +1,36 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 6 - Sum Square Difference
 part: 6
 date: 2023-10-01
 tags: ['Coding', 'Math', 'Python', 'Rust']
-image: "/images/posts/project-euler/euler.jpg"
+read_time: 1
 ---
-import Math from "@components/Astro/Math.astro";
-import Tabs from "@components/Astro/Tabs.astro";
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 6](https://projecteuler.net/problem=6)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
 > The sum of the squares of the first ten natural numbers is,
 >
-> <Math inline="false" eqn="1^2 + 2^2 + \ldots + 10^2 = 385" />
+> <div class="text-center py-3">$$ 1^2 + 2^2 + \ldots + 10^2 = 385$$ </div>
 >
 > The square of the sum of the first ten natural numbers is,
 >
-> <Math inline="false" eqn="(1 + 2 + \ldots + 10)^2 = 55^2 = 3025" />
+> <div class="text-center py-3">$$ (1 + 2 + \ldots + 10)^2 = 55^2 = 3025$$ </div>
 >
-> Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is <Math eqn="3025-385 = 2640" />
+> Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is $$ 3025-385 = 2640$$ .
 >
 > Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
-{/* EXCERPT END */}
+
 
 ## Solution
 
@@ -58,41 +58,29 @@ Well, we have two formulas for the "sum of squares" and "square of sums"!
 ### Sum of Squares
 
 For the "sum of squares", it is known that
-<Math inline="false" eqn="\sum\limits_{x=1}^{n}x^2 = \dfrac{ n(n+1)(2n+1) }{ 6 }" />
+<div class="text-center py-3">$$ \sum\limits_{x=1}^{n}x^2 = \dfrac{ n(n+1)(2n+1) }{ 6 }$$ </div>
 
 
-And that's it. Since <Math eqn="n = 100" />, then
-<Math inline="false" eqn="\sum\limits_{x=1}^{100}x^2 = \dfrac{ 100 \times 101 \times 201 }{ 6 }" />
+And that's it. Since $$ n = 100$$, then
+<div class="text-center py-3">$$ \sum\limits_{x=1}^{100}x^2 = \dfrac{ 100 \times 101 \times 201 }{ 6 }$$ </div>
 
 <br/>
 ### Square of Sums
 
-The sum of all natural numbers from 1 to <Math eqn="n" /> is
-<Math inline="false" eqn="\sum\limits_{1}^{n}n = \dfrac{ n(n+1) }{ 2 }" />
+The sum of all natural numbers from 1 to $$ n$$ is
+<div class="text-center py-3">$$ \sum\limits_{1}^{n}n = \dfrac{ n(n+1) }{ 2 }$$ </div>
 
 We just have to use this formula, then square the sum at the end!
 
-Since <Math eqn="n = 100" />, we'll get
-<Math inline="false" eqn="\left[\dfrac{ 100 \times 101 }{ 2 } \right]^2 = \dfrac{ 100 \times 101 \times 100 \times 101 }{ 4 }" />
+Since $$ n = 100$$, we'll get
+<div class="text-center py-3">$$ \left[\dfrac{ 100 \times 101 }{ 2 } \right]^2 = \dfrac{ 100 \times 101 \times 100 \times 101 }{ 4 }$$ </div>
 
 ## Code
 
-I decided to leave the formulas in the code in case I wished to change <Math eqn="n" /> later. And instead of calculating <Math eqn="n(n+1)" /> twice, I calculated it once and placed it in the variable "<Math eqn="a" />".
+I decided to leave the formulas in the code in case I wished to change $$ n$$ later. And instead of calculating $$ n(n+1)$$ twice, I calculated it once and placed it in the variable "$$ a$$ ".
 
-<Tabs list={
-    [
-        {
-            "tab": "problem06.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem06.py"
-        },
-        {
-            "tab": "main.rs",
-            "url": "https://github.com/zlaast/Project-Euler/tree/main/Problems-Rust/problem_6/src/main.rs"
-        },
-    ]
-}>
-
-<div class="tab-content" id="problem06.py">
+<Tabs>
+<Tab name="problem06.py" checked="checked">
 ```python
 # Project Euler: Problem 6
 # Sum square difference
@@ -105,9 +93,8 @@ square_sum = (a/2)**2
 
 print(square_sum-sum_square)
 ```
-</div>
-
-<div class="tab-content" id="main.rs">
+</Tab>
+<Tab name="main.rs">
 ```rust
 // Project Euler: Problem 6
 // Sum square difference
@@ -123,9 +110,7 @@ fn main() {
     println!("{}", square_sum - sum_square);
 }
 ```
-</div>
+</Tab>
 </Tabs>
 
-<Spoiler>
-25164150
-</Spoiler>
+<Spoiler>25164150</Spoiler>

@@ -1,0 +1,38 @@
+<button class="spoiler w-full bg-[#15161a] font-bold text-rose-400 py-3 my-5" onclick="showSpoiler(this)">
+    <div class="font-kode">SPOILER</div>
+    <div class="hide font-kode">
+        <slot />
+    </div>
+</button>
+
+<style>
+    .spoiler {
+        background: repeating-linear-gradient(45deg, #15161a, #15161a 10px, #24292e 10px, #24292e 20px);
+        box-shadow: 0 0 0 0 #ff637e;
+		transition: all 0.2s ease-in-out;
+
+        &:hover
+        {
+            box-shadow: 0 0 0px 1px #ff637e;
+		    transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+</style>
+
+
+<script type="text/javascript">
+    function showSpoiler(el) {
+        el.firstElementChild.classList.add('hide');
+        el.lastElementChild.classList.remove('hide');
+        el.lastElementChild.classList.add('show');
+    }
+</script>

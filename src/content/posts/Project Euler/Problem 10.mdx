@@ -1,52 +1,39 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 10 - Summation of Primes
 part: 10
 date: 2023-10-06
 tags: ['Coding', 'Math', 'Python']
 graph_tags: ['primes']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Tabs from '@components/Astro/Tabs.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 10](https://projecteuler.net/problem=10)
-
-{/* EXCERPT START */}
 
 > **Problem**
 >
 > The sum of the primes below 10 is 2 + 3 + 5 + 7 = 17.
 >
 > Find the sum of all primes below two million.
-> {/* EXCERPT END */}
+> 
 
 ## Solution
 
-We can once again use the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) as seen in [Problem 3](/posts/Project%20Euler/Problem%203).
+We can once again use the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes) as seen in [Problem 3](/posts/project%20Euler/Problem%203).
 Since the sieve returns a list (array), we can just sum the returned list.
 
 ## Code
 
-<Tabs list={
-    [
-        {
-            "tab": "problem10.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem10.py"
-        },
-        {
-            "tab": "PEF.py",
-            "url": "https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/PEF.py"
-        },
-    ]
-}>
-
-<div class="tab-content" id="problem10.py">
+<Tabs>
+<Tab name="problem10.py" checked="checked">
 ```python
 # Project Euler: Problem 10
 # Summation of primes
@@ -56,9 +43,9 @@ from PEF import soe
 primes = soe(2000000)
 print(sum(primes))
 ```
-</div>
+</Tab>
 
-<div class="tab-content" id="PEF.py">
+<Tab name="PEF.py">
 ```python
 # PEF: Project Euler Functions
 
@@ -80,9 +67,7 @@ def soe(n):
     
     return primes
 ```
-</div>
+</Tab>
 </Tabs>
 
-<Spoiler>
-142913828922
-</Spoiler>
+<Spoiler>142913828922</Spoiler>

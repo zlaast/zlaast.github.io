@@ -1,21 +1,22 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 19 - Counting Sundays
 part: 19
 date: 2024-03-03
 tags: ['Coding', 'Math', 'Python']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Tab from '@components/Astro/Tab.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 This problem comes from [Project Euler 19](https://projecteuler.net/problem=19)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
 > You are given the following information, but you may prefer to do some research for yourself.
@@ -29,11 +30,12 @@ And on leap years, twenty-nine.
 > - A leap year occurs on any year evenly divisible by 4, but not on a century unless it is divisible by 400.
 >
 > How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?
-{/* EXCERPT END */}
+
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem19.py" tab="problem19.py">
+<Tabs>
+<Tab name="problem19.py" checked="checked">
 ```python
 # Project Euler: Problem 19
 # Counting Sundays
@@ -48,6 +50,7 @@ for year in range(1901, 2001):
 print(count)
 ```
 </Tab>
+</Tabs>
 
 ## Solution
 
@@ -61,6 +64,4 @@ This function has the form `date(year, month, day)`, so the first of March, 1905
 But what day of the week is that? Easy, just add `.weekday()` and it will return a numeric day of the week for that date, 
 which ranges from 0 (Monday) to 6 (Sunday).
 
-<Spoiler>
-171
-</Spoiler>
+<Spoiler>171</Spoiler>

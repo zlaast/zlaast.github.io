@@ -1,0 +1,313 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import { parseDate } from '@utils/utils';
+import { Image } from 'astro:assets'
+import StickyNav from '@components/stickynav.astro'
+import Base from '@layouts/base.astro'
+import robot from '@images/emojis/robot.gif'
+import bolt from '@images/emojis/bolt.gif'
+import unknown from '@images/emojis/rocket.gif'
+
+/* Generate URL path for post */
+export async function getStaticPaths() {
+    const posts = await getCollection("posts");
+
+	return posts.map((post) => 
+	({
+		params: { post: post.slug },
+		props: post
+	}));
+}
+
+type Props = CollectionEntry<"posts">;
+const post  = Astro.props;
+const { Content, headings } = await post.render();
+
+/* Format Date */
+const date = parseDate(post.data.date);
+
+/* Use appropriate image badge */
+let image
+if (post.data.category == 'Coding') { image = robot }
+else if (post.data.category == 'Electronics') { image = bolt }
+else { image = unknown }
+
+/* Get adjacent links in a project */
+const posts = await getCollection("posts");
+const thisproject = post.data.project;
+const nextPost = post.data.part + 1;
+const prevPost = post.data.part - 1;
+
+let adjacentLinks = [`${thisproject.toLowerCase().replaceAll(' ', '-')}`, `${thisproject.toLowerCase().replaceAll(' ', '-')}`]
+let adjacentSubtitles = [`${thisproject}`, `${thisproject}`]
+
+function getLinks(post: any) {
+    // Prev Post
+    if (post.data.project == thisproject && post.data.part == prevPost) {
+        adjacentLinks[0] = post.slug;
+        adjacentSubtitles[0] = post.data.subtitle;
+    }
+
+    // Next post
+    if (post.data.project == thisproject && post.data.part == nextPost) {
+        adjacentLinks[1] = post.slug;
+        adjacentSubtitles[1] = post.data.subtitle;
+    }
+}
+posts.some(getLinks);
+---
+
+<Base>
+    <div class="flex max-w-[1000px] mx-auto text-xl my-10 font-[300]">
+        <article class="mx-10 max-w-[800px]">
+            <!-- Breadcrumbs -->
+            <div class="flex breadcrumbs text-[1rem]">            
+                <a href="/">Home</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: grey;transform: ;msFilter:;"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path></svg>
+                <a href=`/posts/${ post.data.project.toLowerCase().replaceAll(' ', '-') }`>{ post.data.project }</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: grey;transform: ;msFilter:;"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path></svg>
+                { post.data.subtitle }                
+            </div>
+            <!-- Post Card -->
+            <div class="flex grow items-center my-10 gap-7 text-neutral-200 max-w-[800px]">
+                <Image src={ image } class="max-md:hidden w-35 drop-shadow-xl/50" alt="Badge" />
+                <div class="flex grow flex-col">
+                    <div class="text-2xl font-bold font-kode">{ post.data.subtitle }</div>
+                    <div class="text-lg font-bold">
+                        <span class="text-rose-400">{ post.data.project }</span>
+                        <span> · </span>
+                        <span>{ date }</span>
+                    </div>
+                    <div class="text-lg font-bold">
+                        <span class="text-neutral-400">Read time: </span>
+                        <span>{ post.data.read_time }min</span>
+                    </div>
+                    <hr class="my-1 text-neutral-500 border-0.5 border-dashed" />
+                    <div class="flex items-center text-[1rem]">
+                        <svg class="inline mr-1" xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" style="fill: white;transform: scaleX(-1);msFilter:progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);"><path d="M13.707 3.293A.996.996 0 0 0 13 3H4a1 1 0 0 0-1 1v9c0 .266.105.52.293.707l8 8a.997.997 0 0 0 1.414 0l9-9a.999.999 0 0 0 0-1.414l-8-8zM12 19.586l-7-7V5h7.586l7 7L12 19.586z"></path><circle cx="8.496" cy="8.495" r="1.505"></circle></svg>
+                        <span class="font-bold mr-1">Tags:</span>
+                        {
+                            post.data.tags.sort().map((tag: any) => (
+                                <span class="mr-1 whitespace-nowrap rounded-md after:content-[','] last:after:content-none"><a href={`/tags/${ tag.toLowerCase() }`}>{ tag }</a></span>
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+            <!-- Content -->
+            <div class="content">
+                <Content />
+            </div>
+            <!-- Prev Next Post -->
+            <div class="max-md:text-md mt-6 font-semibold flex flex-row justify-between text-lg max-md:flex-col max-md:text-center">
+                <a class="btn my-3" href=`/posts/${adjacentLinks[0]}`>← { adjacentSubtitles[0] }</a>
+                <a class="btn my-3" href=`/posts/${adjacentLinks[1]}`>{ adjacentSubtitles[1] } →</a>
+            </div>
+        </article>
+        <StickyNav headings={ headings } />
+    </div>
+</Base>
+
+<style is:global>
+:root {
+	--code-color: #5d6164;
+}
+
+.breadcrumbs {
+	a {
+		color: whitesmoke !important;
+	}
+}
+
+h2 {
+	font-size: 1.5rem;
+	color: #00d492;
+	font-family: "Kode Mono", monospace;
+	margin: 1.5rem 0rem;
+	font-weight: bold;
+}
+
+h3 {
+	color: #6ee7b7;
+	font-family: "Kode Mono", monospace;
+	margin: 1.5rem 0rem;
+	font-weight: bold;
+}
+
+h4 {
+	color: #a7f3d0;
+	font-family: "Kode Mono", monospace;
+	margin: 1.5rem 0rem;
+	font-weight: bold;
+}
+
+blockquote {
+	background-color: #15161a;
+	padding: 1rem 2rem;
+	margin: 2rem 0;
+	border-left: 0.25rem solid #715A5A;
+	max-width: 800px;
+	
+    code {
+		background-color: var(--code-color);
+		padding: 0.25rem;
+		border-radius: 0.5rem;
+	}
+}
+
+.tabs {
+	margin: 1rem 0;
+	max-width: 800px;
+}
+
+ol {
+	background-color: #15161a;
+	padding: 1rem 2rem;
+	margin: 2rem 0;
+	border-left: 3px solid #00d492;
+
+	code {
+		background-color: var(--code-color);
+		padding: 0.25rem;
+		border-radius: 0.5rem;
+	}
+
+	li {
+		list-style-type: decimal;
+		margin-left: 1.3rem;
+		line-height: 2.5rem;
+	}
+}
+
+
+.content {
+	word-spacing: 0.15rem;
+
+    img {
+	    margin: 3rem auto;
+    }
+
+    ul {
+        background-color: #15161a;
+        padding: 1rem 2rem;
+        margin: 2rem 0;
+        border-left: 3px solid #00d492;
+
+        li {
+            list-style-type: square;
+            margin-left: 1.3rem;
+            line-height: 2.5rem;
+        }
+    }
+}
+
+.alert
+{
+    font-size: 20px;
+    padding: 1rem 2rem;
+
+    ul
+    {
+        margin: 0;
+        background-color: #2c2e2d;
+        border-left: 0;
+    }
+}
+
+p {
+	line-height: 2;
+
+	code {
+		background-color: var(--code-color);
+		padding: 0.25rem;
+		border-radius: 0.5rem;
+	}
+}
+
+.astro-code {
+	font-size: 1rem;
+	padding: 1rem;
+	background-color: #24292e !important;
+	max-width: 720px;
+}
+
+.tabs {
+	.astro-code {
+		padding: 0rem;
+		background-color: #24292e !important;
+	}
+}
+
+pre code {
+	counter-reset: code-line;
+
+	.line {
+		counter-increment: code-line;
+		&::before {
+			content: counter(code-line);
+			color: #414b54;
+			display: inline-block;
+			width: 1.5rem;
+			margin-right: 0.5rem;
+		}
+	}
+}
+
+table {
+	min-width: 100%;
+	margin: auto;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+	background-color: #1f1f1f;
+}
+
+thead tr {
+	background-color: #ff637e;
+	color: #ffffff;
+	text-align: center;
+}
+
+th, td {
+	text-align: center;
+	padding: 10px;
+}
+
+tbody tr {
+	border-bottom: 1px solid #dddddd;
+}
+
+tbody tr:nth-child(even) {
+	background-color: #15161a;
+}
+
+tbody tr:last-of-type {
+	border-bottom: 2px solid #ff637e;
+}
+
+.caption
+{
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
+@media only screen and (max-width: 600px) {
+	pre {
+		width: 80vw;
+		font-size: 12px !important;
+	}
+	.tabs .astro-code {
+		width: 60vw !important;
+		font-size: 12px !important;
+	}
+	code:not(pre code) {
+		font-size: 14px;
+	}
+	.katex {
+		font-size: 16px;
+	}
+	table {
+		margin: 0;
+		padding: 0;
+		font-size: 1rem;
+	}
+}
+</style>

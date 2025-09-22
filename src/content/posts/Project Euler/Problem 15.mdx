@@ -1,24 +1,24 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 15 - Lattice Paths
 part: 15
 date: 2024-02-01
 tags: ['Coding', 'Math', 'Python']
 graph_tags: ['dynamic programming', 'combinatorics']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 5
 ---
 
-import Math from '@components/Astro/Math.astro'
-import Tab from '@components/Astro/Tab.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 15](https://projecteuler.net/problem=15)
 
-{/* EXCERPT START */}
+
 > **Problem**
 >
 > Starting in the top left corner of a 2 × 2 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner.
@@ -26,21 +26,20 @@ This problem comes from [Project Euler 15](https://projecteuler.net/problem=15)
 > <img class="mx-auto invert" src="/images/posts/project-euler/problem15.png" />
 >
 > How many such routes are there through a 20 × 20 grid?
-{/* EXCERPT END */}
 
 ## Solution 1: Combinatorics
 
 We can use combinatorics to solve this question! If we look at the grid, we always make a total of four moves in some combination of moving right and moving down.
 Of the four possible moves, we should choose two of them to be in a particular direction, say, towards the right. With that, we get "4 choose 2."
 
-<Math inline="false" eqn=" \binom{4}{2}= 6 " />
+<div class="text-center py-4">$$ \binom{4}{2}= 6 $$</div>
 
 This means that there are six possible combinations of moving rightward from the four moves we have. That is, RRxx, RxRx, RxxR, xRxR, xRRx, and xxRR. I used 'x' to help emphasize
 the rightward movements, but we know that 'x', by default here, means downwards.
 
 For a 20 × 20 grid, we have forty moves, so we should choose 20 of them to be in a particular direction.
 
-<Math inline="false" eqn=" \binom{40}{20} = \text{137 846 528 820}" />
+<div class="text-center py-4">$$ \binom{40}{20} = \text{137 846 528 820}$$</div>
 
 ## Solution 2: Dynamic Programming
 
@@ -88,8 +87,8 @@ In the 2 × 2 grid example given, we can make six moves. What about other grids?
 - 0 × 2 "grid"? Similar to the 0 × 1 "grid," but we can move twice in one direction.
 - 0 × 0 "grid"? This is just a point, so there are no moves.
 
-This shows that for <Math eqn="m \times n" /> grid, we have <Math eqn="m" /> moves in one direction
-and <Math eqn="n" /> moves in another direction.
+This shows that for $$ m \times n$$ grid, we have $$ m$$ moves in one direction
+and $$ n$$ moves in another direction.
 
 ### Recursion
 This program uses recursion to solve the problem. Let's see how.
@@ -126,8 +125,8 @@ return paths(1, 2, True) + return paths(2, 1, True)
 
 Due to `m == 1 or n == 1`, both functions `return 1`, leading to the incorrect output of `2`.
 
-The reason for this is that we have only calculated the answer for <Math eqn="m-1" /> and <Math eqn="n-1" /> but *not* <Math eqn="m" /> and <Math eqn="n" />!
-So, we correct this by adding one to <Math eqn="m" /> and <Math eqn="n" />, but only for the first time `pass()` is called.
+The reason for this is that we have only calculated the answer for $$ m-1$$ and $$ n-1$$ but *not* $$ m$$ and $$ n$$!
+So, we correct this by adding one to $$ m$$ and $$ n$$, but only for the first time `pass()` is called.
 
 ```python
 if not ran:
@@ -151,7 +150,7 @@ if m <= 0 or n <= 0:
     return 0
 ```
 
-Since we add one to <Math eqn="m" /> and <Math eqn="n" /> and check for `m == 1 or n == 1`, any grid size involving
+Since we add one to $$ m$$ and $$ n$$ and check for `m == 1 or n == 1`, any grid size involving
 zero will automatically `return 1`, which is incorrect. This code fixes that. That's right, this is a fix *for a fix* 😵.
 And yes, the title is a play on words.
 
@@ -167,7 +166,8 @@ We already know that there are six possible paths for a 2 × 2 grid, so instead 
 
 
 ## Code
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem15.py" tab="problem15.py">
+<Tabs>
+<Tab name="problem15.py" checked="checked">
 ```python
 # Project Euler: Problem 15
 # Lattice paths
@@ -202,7 +202,6 @@ def paths(m, n, memo={}, ran=False):
 print(paths(20, 20))
 ```
 </Tab>
+</Tabs>
 
-<Spoiler>
-137846528820
-</Spoiler>
+<Spoiler>137846528820</Spoiler>

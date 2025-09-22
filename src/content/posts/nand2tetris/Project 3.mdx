@@ -1,20 +1,19 @@
 ---
 category: Coding
-series: nand2tetris
+project: nand2tetris
 title: nand2tetris
 subtitle: Project 3 - Memory
 part: 4
 date: 2023-02-14
 tags: ['Coding', 'Computers', 'Digital']
-image: "/images/posts/nand2tetris/tetris.svg"
+read_time: 5
 ---
-import Tab from "@components/Astro/Tab.astro";
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
 
 ## Introduction
 
-{/* EXCERPT START */}
 Here, we create the memory modules for the computer.
-{/* EXCERPT END */}
 
 ## Basic chips
 ### Bit
@@ -30,7 +29,8 @@ When `load=0` the current bit is kept by feeding the output `Q` into the multipl
 
 When `load=1` the `in` bit is fed into the input of the flip-flop, thus loading a new bit.
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/03/Bit.hdl" tab="Bit.hdl" >
+<Tabs>
+<Tab name="Bit.hdl" checked="checked" group="1">
 ```
 CHIP Bit {
     IN in, load;
@@ -42,6 +42,7 @@ CHIP Bit {
 }
 ```
 </Tab>
+</Tabs>
 
 ### Register
 
@@ -58,7 +59,8 @@ Note (out of interest):
 
 So our 16-bit register is called a `WORD`.
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/03/Register.hdl" tab="Register.hdl" >
+<Tabs>
+<Tab name="Register.hdl" checked="checked" group="2">
 ```
 CHIP Register {
     IN in[16], load;
@@ -84,6 +86,7 @@ CHIP Register {
 }
 ```
 </Tab>
+</Tabs>
 
 ### Program Counter (PC)
 
@@ -97,7 +100,8 @@ We can accomplish this digitally by using a "pipeline" approach shown in the ima
 
 Each multiplexer represents a stage at which we can manipulate the program counter. We can choose whether to increment the current memory address (inc), whether load a new address (load), and whether to set the memory address to 0 (reset). In the end, the result is stored in a register.
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/03/PC.hdl" tab="PC.hdl" >
+<Tabs>
+<Tab name="PC.hdl" checked="checked" group="3">
 ```
 CHIP PC {
     IN in[16],load,inc,reset;
@@ -114,6 +118,7 @@ CHIP PC {
 }
 ```
 </Tab>
+</Tabs>
 
 ## Random Access Memory (RAM)
 
@@ -124,7 +129,8 @@ If we need to *read* a register, we can use a multiplexer to choose which regist
 
 ![RAM8](/images/posts/nand2tetris/project-3/RAM8.png)
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/03/RAM8.hdl" tab="RAM8.hdl" >
+<Tabs>
+<Tab name="RAM8.hdl" checked="checked" group="4">
 ```
 CHIP RAM8 {
     IN in[16], load, address[3];
@@ -144,11 +150,13 @@ CHIP RAM8 {
 }
 ```
 </Tab>
+</Tabs>
 
 ### RAM64
 The RAM64 module is similar to RAM8. It should be noted that the multiplexer and demultiplexer use the most-significant-bits (MSB), while the addresses use the least-significant-bits (LSB). This is because the MSB chooses which RAM8 modules to access, while the LSB chooses the smaller RAM modules (the registers) in RAM8. A similar concept applies to all the other RAM modules made in this project.
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/03/RAM64.hdl" tab="RAM64.hdl" >
+<Tabs>
+<Tab name="RAM64.hdl" checked="checked" group="5">
 ```
 CHIP RAM64 {
     IN in[16], load, address[6];
@@ -168,9 +176,11 @@ CHIP RAM64 {
 }
 ```
 </Tab>
+</Tabs>
 
 ### RAM512
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/03/RAM512.hdl" tab="RAM512.hdl" >
+<Tabs>
+<Tab name="RAM512.hdl" checked="checked" group="6">
 ```
 CHIP RAM512 {
     IN in[16], load, address[9];
@@ -190,9 +200,11 @@ CHIP RAM512 {
 }
 ```
 </Tab>
+</Tabs>
 
 ### RAM4k
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/03/RAM4K.hdl" tab="RAM4K.hdl" >
+<Tabs>
+<Tab name="RAM4k.hdl" checked="checked" group="7">
 ```
 CHIP RAM4K {
     IN in[16], load, address[12];
@@ -212,11 +224,13 @@ CHIP RAM4K {
 }
 ```
 </Tab>
+</Tabs>
 
 ### RAM16k
 This one is a little different from the previous RAM modules. All the other RAM modules went up by a factor of eight (8, 64, 512, 4k). but this module only goes up by a factor of four (4k to 16k). Thus, instead of using DMux8Way and Mux8Way16, we use DMux4Way and Mux4Way16.
 
-<Tab url="https://github.com/zlaast/nand2tetris/blob/main/nand2tetris%20-%20Part%201/03/RAM16K.hdl" tab="RAM16K.hdl" >
+<Tabs>
+<Tab name="RAM16k.hdl" checked="checked" group="8">
 ```
 CHIP RAM16K {
     IN in[16], load, address[14];
@@ -232,3 +246,4 @@ CHIP RAM16K {
 }
 ```
 </Tab>
+</Tabs>

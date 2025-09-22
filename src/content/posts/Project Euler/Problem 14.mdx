@@ -1,41 +1,41 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 14 - Longest Collatz Sequence
 part: 14
 date: 2024-01-31
 tags: ['Coding', 'Math', 'Python']
 graph_tags: ['sequences']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 2
 ---
 
-import Math from '@components/Astro/Math.astro'
-import Tab from '@components/Astro/Tab.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 14](https://projecteuler.net/problem=14)
 
-{/* EXCERPT START */}
+
 > **Problem**
 > The following iterative sequence is defined for the set of positive integers:
 >
-> <Math inline="false" eqn="n \rarr \dfrac{n}{2} \text{  (n is even)}" />
+> <div class="text-center py-4">$$ n \rarr \dfrac{n}{2} \text{  (n is even)}$$</div>
 >
-> <Math inline="false" eqn="n \rarr 3n+1 \text{  (n is odd)} " />
+> <div class="text-center py-4">$$ n \rarr 3n+1 \text{  (n is odd)} $$</div>
 >
 > Using the rule above and starting with 13, we generate the following sequence:
 >
-> <Math inline="false" eqn="13 \rarr 40 \rarr 20 \rarr 10 \rarr 5 \rarr 16 \rarr 8 \rarr 4 \rarr 2 \rarr 1 " />
+> <div class="text-center py-4">$$ 13 \rarr 40 \rarr 20 \rarr 10 \rarr 5 \rarr 16 \rarr 8 \rarr 4 \rarr 2 \rarr 1 $$</div>
 >
 > It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms. terms. Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.
 >
 > Which starting number, under one million, produces the longest chain?
 >
 > **NOTE**: Once the chain starts the terms are allowed to go above one million.
-{/* EXCERPT END */}
+
 
 ## Solution
 
@@ -72,20 +72,21 @@ The above code works, but it's slow. This is because we recalculate past chains 
 Let's say we're currently at 40, so the program divides 40 by 2, which results in 20. 
 But since we're working sequentially, the chain length for 20 has _already_ been calculated, so why do it again?
 
-The optimization is to store past chain lengths. During the process, if <Math eqn="n" /> drops below the starting number, that means we have already calculated <Math eqn="n" />, so we can just grab the previous calculation and add it to the current chain length. Then we store the chain length for our starting number.
+The optimization is to store past chain lengths. During the process, if $$ n$$ drops below the starting number, that means we have already calculated $$ n$$, so we can just grab the previous calculation and add it to the current chain length. Then we store the chain length for our starting number.
 
 Using the previous example
 
 1. Starting number is 40
-2. Divide 40 by 2 resulting in <Math eqn="n" /> = 20. (Chain length has increased by 1)
-3. <Math eqn="n" /> < 40, so grab `stored_chain_length[20] = 8` and add it to current chain length
+2. Divide 40 by 2 resulting in $$ n$$ = 20. (Chain length has increased by 1)
+3. $$ n$$ < 40, so grab `stored_chain_length[20] = 8` and add it to current chain length
 4. Store chain length for starting number using `stored_chain_length.append()`
 
-Lastly in the code below, I initialize `stored_chain_length = [0, 1]`. This is because `stored_chain_length[0]` doesn't exist so it's set to zero, and `stored_chain_length[1]` is never calculated as <Math eqn="n = 1" /> marks the end of a Collatz sequence. This also allows us to perform `stored_chain_length[n]` otherwise the index would be off by two.
+Lastly in the code below, I initialize `stored_chain_length = [0, 1]`. This is because `stored_chain_length[0]` doesn't exist so it's set to zero, and `stored_chain_length[1]` is never calculated as $$ n = 1$$ marks the end of a Collatz sequence. This also allows us to perform `stored_chain_length[n]` otherwise the index would be off by two.
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem14.py" tab="problem14.py">
+<Tabs>
+<Tab name="problem14.py" checked="checked">
 ```python
 # Project Euler: Problem 14
 # Longest chain chain
@@ -120,7 +121,6 @@ for starting_number in range(1, 1000000):
 print(max_starting_number, max_chain_length)
 ```
 </Tab>
+</Tabs>
 
-<Spoiler>
-837799
-</Spoiler>
+<Spoiler>837799</Spoiler>

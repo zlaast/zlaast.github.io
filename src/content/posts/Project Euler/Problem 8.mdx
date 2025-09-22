@@ -1,28 +1,28 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
-subtitle: Problem 8 - Largest Product in a Series
+subtitle: Problem 8 - Largest Product in a project
 part: 8
 date: 2023-10-05
 tags: ['Coding', 'Math', 'Python']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Math from '@components/Astro/Math.astro'
-import Tab from '@components/Astro/Tab.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 8](https://projecteuler.net/problem=8)
 
 <div class="max-md:hidden">
-{/* EXCERPT START */}
+
 >	**Problem** 
 >
 >	The four adjacent digits in the 1000-digit number that have the greatest product
->	are <Math eqn="9 \times 9 \times 8 \times 9 = 5832." />
+>	are $$ 9 \times 9 \times 8 \times 9 = 5832.$$ 
 >	<pre class="not-italic">
 >	73167176531330624919225119674426574742355349194934
 >	96983520312774506326239578318016984801869478851843
@@ -47,7 +47,7 @@ This problem comes from [Project Euler 8](https://projecteuler.net/problem=8)
 >	</pre>
 >	Find the thirteen adjacent digits in the
 >	1000-digit number that have the greatest product. What is the value of this product?
-{/* EXCERPT END */}
+
 </div>
 
 ## Solution
@@ -62,10 +62,11 @@ We rinse and repeat until we reach the end of the 1000-digit number.
 
 ## Code
 
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem08.py" tab="problem08.py">
+<Tabs>
+<Tab name="problem08.py" checked="checked">
 ```python
 # Project Euler: Problem 8
-# Largest product in a series
+# Largest product in a project
 
 import math
 
@@ -104,10 +105,10 @@ for i in range (0, len(number_list)-13):
 print(max)
 ```
 </Tab>
+</Tabs>
+
 `number_list = [int(i) for i in number]` converts the string of numbers into an array of integers. Then we proceed as previously discussed.
 
 **Note:** `math.prod()` requires a minimum version of Python 3.8 to work
 
-<Spoiler>
-23514624000
-</Spoiler>
+<Spoiler>23514624000</Spoiler>

@@ -1,6 +1,6 @@
 ---
-import Base from '@layouts/Base.astro'
-import '@styles/pages.css'
+import Base from '@layouts/base.astro'
+import '@styles/global.css'
 
 import { getCollection } from 'astro:content'
 const posts = await getCollection('posts')
@@ -63,29 +63,15 @@ json.forEach((post) => {
 })
 ---
 
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 <Base>
-	<div class="mx-auto flex text-neutral-300 lg:text-xl">
-		<main class="mb-24 mt-10 max-w-5xl pl-10 pr-3 lg:mt-16">
-			<article>
-				<!-- Breadcrumbs -->
-				<div class="mb-10 text-[20px] text-neutral-300">
-					<a
-						class="font-medium text-neutral-300 decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
-						href="/">Home</a
-					> /
-					<a
-						class="font-medium text-neutral-300 decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
-						href="/blog/search">Network</a
-					>
-				</div>
-				<h1 class="white my-1 mb-7 text-4xl font-bold">Network Graph</h1>
-				<button
-					id="reset-zoom"
-					class="mb-2 border border-neutral-500 px-2 py-1 font-bold text-[#CBA0E7] transition-all hover:bg-slate-700"
-					>Reset Zoom</button
-				>
+    <section class="flex flex-col bg-neutral-800 py-20 px-8">
+        <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
+            <div class="content">
+                <h2 class="white my-1 mb-7 text-4xl font-bold">Network Graph</h2>
 				<!-- Network Graph -->
-				<div id="concepts" class="w-5xl h-[900px] border max-md:h-[300px]"></div>
+				<div id="concepts" class="w-5xl border"></div>
+				<button id="reset-zoom" class="mb-2 border border-neutral-500 px-2 py-1 font-bold text-[#CBA0E7] transition-all hover:bg-slate-700">Reset Zoom</button>
 				<h2 class="text-3xl text-subtitle">Features</h2>
 				<ul>
 					<li>
@@ -117,17 +103,72 @@ json.forEach((post) => {
 						could help me figure out a problem.
 					</p>
 				</p>
-			</article>
-		</main>
-	</div>
-</Base>
+            </div>
+        </div>
+    </section>
 
-<style>
-	#concepts {
-		border: 1px solid #444444;
-		background-color: #222222;
+
+<style is:global>
+#concepts {
+    border: 1px solid #444444;
+    background-color: #222222;
+    height: 900px;
+    width: 800px;
+    margin: 1rem 0;
+}
+
+.breadcrumbs {
+	a {
+		color: whitesmoke !important;
 	}
+}
+
+h2 {
+	font-size: 1.5rem;
+	color: #00d492;
+	font-family: "Kode Mono", monospace;
+	margin: 1.5rem 0rem;
+	font-weight: bold;
+}
+
+h3 {
+	color: #6ee7b7;
+	font-family: "Kode Mono", monospace;
+	margin: 1.5rem 0rem;
+	font-weight: bold;
+}
+
+
+.content {
+	word-spacing: 0.15rem;
+
+    ul {
+        background-color: #15161a;
+        padding: 1rem 2rem;
+        margin: 2rem 0;
+        border-left: 3px solid #00d492;
+
+        li {
+            list-style-type: square;
+            margin-left: 1.3rem;
+            line-height: 2.5rem;
+        }
+    }
+}
+
+p {
+	line-height: 2;
+}
+
+@media only screen and (max-width: 600px) {
+    #concepts
+    {
+        width: 300px;
+        height: 300px;
+    }
+}
 </style>
+
 
 <script type="text/javascript" define:vars={{ nodes, edges }}>
 	// Graph Information
@@ -170,7 +211,7 @@ json.forEach((post) => {
 		let node = params.nodes[0]
 
 		if (node.indexOf('/') > -1) {
-			window.location.href = `/blog/${node}`
+			window.location.href = `/posts/${node}`
 		} else {
 			network.focus(node, {
 				scale: 2.5,

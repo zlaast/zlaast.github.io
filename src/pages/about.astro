@@ -1,91 +1,91 @@
 ---
-import Base from '@layouts/Base.astro'
-import '@styles/pages.css'
+// Layout
+import Base from '@layouts/base.astro'
 ---
 
 <Base>
-	<div class="mx-auto flex text-neutral-300 lg:text-xl">
-		<main class="mb-24 mt-10 max-w-3xl pl-10 pr-3 lg:mt-16">
-			<article>
-				<!-- Breadcrumbs -->
-				<div class="mb-10 text-[20px] text-neutral-300">
-					<a
-						class="font-medium text-neutral-300 decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
-						href="/">Home</a
-					> /
-					<a
-						class="font-medium text-neutral-300 decoration-dotted decoration-1 underline-offset-8 hover:text-link hover:underline"
-						href="/blog/search">About</a
-					>
-				</div>
-				<h1 class="white my-1 text-4xl font-bold">Hi, I'm Z'Laast</h1>
-
-				<h2 class="mt-5 text-2xl text-subtitle">About Me</h2>
-				<p class="mt-5">
-					I have a degree in ⚡ Electrical Engineering ⚡ from the University of Ottawa. With that
-					out of the way, what can I say?
-				</p>
-
-				<ul class="mt-5">
-					<li>
-						I like programming. I do it a lot just cause it's fun. Not even joking. It's cheap too!
-					</li>
-					<li>
-						I like electronics. It's harder to do than programming due to how low level it can be
-						(compared to programming). It's also pretty expensive, and messing it up is even more
-						expensive, so I have to limit making circuits otherwise I'd have no money 💸
-					</li>
-					<li>I like baking, cause I get to eat what I bake 🍰</li>
-					<li>I work out, usually by running (because no gyms are near me).</li>
-					<li>
-						I spend a lot of time learning and I actually have a daily learning goal list. It has
-						electronics, cybersecurity, and the guitar on it.
-					</li>
-				</ul>
-
-				<h2 class="mt-5 text-2xl text-subtitle">This website</h2>
-
-				<h3 class="mt-5"><i>Why</i> I made it</h3>
-				I wanted to document the various projects that I do, both software and hardware. I figured if
-				I did that, whenever I stumble into a problem I've already solved, I can always come back here
-				and reference it. Also if I need to troubleshoot projects I've already done, I can use this site
-				as documentation!
-
-				<h3 class="mt-5"><i>How</i> I made it</h3>
-
-				This website was built with 😡 by me. I'm just kidding, it's built with ❤️ and as a learning
-				project for front-end web development. It took a while (months) and underwent <i>a lot</i> of
-				changes, and will definitely undergo more, but here I am.
-
-				<h4 class="mt-5 font-semibold">Tools</h4>
-
-				<ul class="mt-5">
-					<li>
-						<a href="https://astro.build">Astro JS 🚀</a> - Static site generation
-					</li>
-					<li>
-						CSS3 and
-						<a href="https://tailwindcss.com">Tailwind CSS</a> - Website styling
-					</li>
-					<li>
-						JavaScript and
-						<a href="https://www.typescriptlang.org">Typescript</a>
-						- Interactivity
-					</li>
-					<li>
-						<a href="https://svelte.dev">Svelte</a>
-						- Used to make the menu on the left and the search "engine"
-					</li>
-					<li>
-						<a href="https://mdxjs.com">MDX</a>
-						- A type of Markdown that can include components. Used to write the posts
-					</li>
-					<li>
-						<a href="https://visjs.org">vis.js</a>
-						- Network Graph Visualization
-					</li>
-				</ul>
-			</article>
-		</main>
-	</div>
+    <section class="flex flex-col bg-neutral-800 py-20 px-8">
+        <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
+            <div class="content">
+                <h2 class="my-10">About Me</h2>
+                I like <i>lists</i>, so here's a <i>list</i> about me!
+                <p>
+                    <ul>
+                        <li>I like programming. I do it a lot just cause it's fun. Not even joking. It's cheap too!</li>
+                        <li>I like electronics. It's harder to do than programming due to how low level it can be (compared to programming). It's also pretty expensive, and messing it up is even more expensive, so I have to limit making circuits otherwise I'd have no money 💸</li>
+                        <li>I like baking, cause I get to eat what I bake 🍰</li>
+                        <li>I work out, usually by running (because no gyms are near me).</li>
+                        <li>I spend a lot of time learning and I actually have a daily learning goal list. It has electronics, cybersecurity, and the guitar on it.</li>
+                    </ul>
+                </p>
+                <h2 class="my-10">This Website</h2>
+                <h3>Why I made it</h3>
+                <p>
+                    I wanted to document the various projects that I do, both software and hardware. I figured if I did that, whenever I stumble into a problem I've already solved, I can always come back here and reference it. Also if I need to troubleshoot projects I've already done, I can use this site as documentation!
+                </p>
+                <h3>How I made it</h3>
+                <p>
+                    I wanted to document the various projects that I do, both software and hardware. I figured if I did that, whenever I stumble into a problem I've already solved, I can always come back here and reference it. Also if I need to troubleshoot projects I've already done, I can use this site as documentation!
+                </p>
+                <p>
+                    <ul>
+                        <li>AstroJS 🚀 - Static site generation</li>
+                        <li>CSS3 and TailwindCSS - Website styling</li>
+                        <li>DaisyUI - Some tailwind components</li>
+                        <li>JavaScript and Typescript - Interactivity</li>
+                        <li>Svelte - Used to make the menu on the left and the search page</li>
+                        <li>Fuse.js - The actual search engine</li>
+                        <li>MDX - A type of Markdown that can include components. Used to write the posts</li>
+                        <li>vis.js - Network Graph Visualization</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </section>
 </Base>
+
+<style is:global>
+
+.breadcrumbs {
+	a {
+		color: whitesmoke !important;
+	}
+}
+
+h2 {
+	font-size: 1.5rem;
+	color: #00d492;
+	font-family: "Kode Mono", monospace;
+	margin: 1.5rem 0rem;
+	font-weight: bold;
+}
+
+h3 {
+	color: #6ee7b7;
+	font-family: "Kode Mono", monospace;
+	margin: 1.5rem 0rem;
+	font-weight: bold;
+}
+
+
+.content {
+	word-spacing: 0.15rem;
+
+    ul {
+        background-color: #15161a;
+        padding: 1rem 2rem;
+        margin: 2rem 0;
+        border-left: 3px solid #00d492;
+
+        li {
+            list-style-type: square;
+            margin-left: 1.3rem;
+            line-height: 2.5rem;
+        }
+    }
+}
+
+p {
+	line-height: 2;
+}
+</style>

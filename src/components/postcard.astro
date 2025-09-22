@@ -1,0 +1,47 @@
+---
+const { post } = Astro.props
+
+import { parseDate } from '@utils/utils'
+import { Image } from 'astro:assets'
+import robot from '@images/emojis/robot.gif'
+import bolt from '@images/emojis/bolt.gif'
+import unknown from '@images/emojis/rocket.gif'
+
+let image
+if (post.data.category == 'Coding') { image = robot }
+else if (post.data.category == "Electronics") { image = bolt }
+else { image = unknown }
+
+const date = parseDate(post.data.date)
+---
+
+<a href=`/posts/${ post.slug }`>
+    <div class="flex my-5 p-1 gap-4 text-neutral-200 hover:ml-3 transition-all duration-150 ease-in-out">
+        <div class="flex flex-col items-center h-[108px] max-md:hidden">
+            <Image src={ image } class="bg-coffee w-20 p-4 rounded-t-lg h-[80px]" alt="Badge emoji" />
+            <div class="text-center text-sm font-bold bg-emerald-600 w-20 py-1 rounded-b-lg">{ post.data.category }</div>
+        </div>
+        <div class="flex flex-col justify-between">
+            <h3 class="text-2xl font-kode">{ post.data.subtitle }</h3>
+            <div class="text-[1rem] font-bold">
+                <span class="text-rose-400">{ post.data.project }</span>
+                <span>·</span>
+                <span>{ date }</span>
+            </div>
+            <div class="text-[1rem] font-bold">
+                <span class="text-neutral-400">Read time: </span>
+                <span>{ post.data.read_time }min</span>
+            </div>
+            <hr class="my-1 text-neutral-500 border-0.5 border-dashed" />
+            <div class="flex items-center text-sm">
+                <svg class="inline mr-1" xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" style="fill: white;transform: scaleX(-1);msFilter:progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);"><path d="M13.707 3.293A.996.996 0 0 0 13 3H4a1 1 0 0 0-1 1v9c0 .266.105.52.293.707l8 8a.997.997 0 0 0 1.414 0l9-9a.999.999 0 0 0 0-1.414l-8-8zM12 19.586l-7-7V5h7.586l7 7L12 19.586z"></path><circle cx="8.496" cy="8.495" r="1.505"></circle></svg>
+                <span class="font-bold mr-1">Tags:</span>
+                {
+                    post.data.tags.sort().map((tag: any) => (
+                        <span class="mr-1 whitespace-nowrap rounded-md after:content-[','] last:after:content-none">{ tag }</span>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</a>

@@ -1,31 +1,31 @@
 ---
 category: Coding
-series: Project Euler
+project: Project Euler
 title: Project Euler
 subtitle: Problem 28 - Number Spiral Diagonals
 part: 28
 date: 2024-03-11
 tags: ['Coding', 'Math', 'Python']
-image: '/images/posts/project-euler/euler.jpg'
+read_time: 1
 ---
 
-import Tab from '@components/Astro/Tab.astro'
-import Math from '@components/Astro/Math.astro'
-import Spoiler from '@components/Astro/Spoiler.astro'
+import Tab from '@components/tab.astro'
+import Tabs from '@components/tabs.astro'
+import Spoiler from '@components/spoiler.astro'
 
 ## Problem
 
 This problem comes from [Project Euler 28](https://projecteuler.net/problem=28)
 
-{/* EXCERPT START */}
+
 > **Problem**
 > 
 > Starting with the number 1 and moving to the right in a clockwise direction a 5 by 5 spiral is formed as follows:
-> <img src="/images/posts/project-euler/problem28.png"/>
+> <img class="mx-auto" src="/images/posts/project-euler/problem28.png"/>
 > It can be verified that the sum of the numbers on the diagonals is 101.
 >
 > What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral formed in the same way?
-{/* EXCERPT END */}
+
 
 ## Solution
 Let's notice a few things:
@@ -33,11 +33,12 @@ Let's notice a few things:
 - In the first "ring," the numbers 3, 5, 7, and 9 go up by two
 - In the second "ring," the numbers 13, 17, 21, and 25 go up by four
 
-We can see that every "corner" increases by <Math eqn="2 \times \text{ring}" />. Therefore, we can
+We can see that every "corner" increases by $$ 2 \times \text{ring}$$ . Therefore, we can
 calculate the total by calculating each corner and adding that to the total.
 
 ## Code
-<Tab url="https://github.com/zlaast/Project-Euler/blob/main/Problems-Python/problem28.py" tab="problem28.py">
+<Tabs>
+<Tab name="problem28.py" checked="checked">
 ```python
 # Project Euler: Problem 28
 # Number Spiral Diagonals
@@ -52,7 +53,6 @@ for ring in range(1, 501):
 print(total)
 ```
 </Tab>
+</Tabs>
 
-<Spoiler>
-669171001
-</Spoiler>
+<Spoiler>669171001</Spoiler>
