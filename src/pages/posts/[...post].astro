@@ -6,6 +6,7 @@ import StickyNav from '@components/stickynav.astro'
 import Base from '@layouts/base.astro'
 import robot from '@images/emojis/robot.gif'
 import bolt from '@images/emojis/bolt.gif'
+import invader from '@images/emojis/invader.gif'
 import unknown from '@images/emojis/rocket.gif'
 
 /* Generate URL path for post */
@@ -28,8 +29,9 @@ const date = parseDate(post.data.date);
 
 /* Use appropriate image badge */
 let image
-if (post.data.category == 'Coding') { image = robot }
-else if (post.data.category == 'Electronics') { image = bolt }
+if (post.data.category == "Coding") { image = robot }
+else if (post.data.category == "Electronics") { image = bolt  }
+else if (post.data.category == "Pentesting") { image = invader  }
 else { image = unknown }
 
 /* Get adjacent links in a project */
@@ -153,6 +155,10 @@ blockquote {
 		padding: 0.25rem;
 		border-radius: 0.5rem;
 	}
+
+    strong {
+        font-weight: bold;
+    }
 }
 
 .tabs {

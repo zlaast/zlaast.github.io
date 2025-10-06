@@ -7,7 +7,7 @@
     let query = '';
     let results = [];
     let Database;
-    const DatabaseEndpoint = "https://zlaast.github.io/api/database.json";
+    const DatabaseEndpoint = `${ url }/api/database.json`;
 
     onMount(async function() 
     {

@@ -5,12 +5,27 @@ import { parseDate } from '@utils/utils'
 import { Image } from 'astro:assets'
 import robot from '@images/emojis/robot.gif'
 import bolt from '@images/emojis/bolt.gif'
+import invader from '@images/emojis/invader.gif'
 import unknown from '@images/emojis/rocket.gif'
 
 let image
-if (post.data.category == 'Coding') { image = robot }
-else if (post.data.category == "Electronics") { image = bolt }
-else { image = unknown }
+let color = ""
+if (post.data.category == "Coding") { 
+    image = robot
+    color = "bg-coffee"
+}
+else if (post.data.category == "Electronics") { 
+    image = bolt 
+    color = "bg-red-500"
+}
+else if (post.data.category == "Pentesting") { 
+    image = invader 
+    color = "bg-lime-300"
+}
+else { 
+    image = unknown
+    color = "bg-coffee"
+}
 
 const date = parseDate(post.data.date)
 ---
@@ -18,7 +33,7 @@ const date = parseDate(post.data.date)
 <a href=`/posts/${ post.slug }`>
     <div class="flex my-5 p-1 gap-4 text-neutral-200 hover:ml-3 transition-all duration-150 ease-in-out">
         <div class="flex flex-col items-center h-[108px] max-md:hidden">
-            <Image src={ image } class="bg-coffee w-20 p-4 rounded-t-lg h-[80px]" alt="Badge emoji" />
+            <Image src={ image } class=`${ color } w-20 p-4 rounded-t-lg h-[80px]` alt="Badge emoji" />
             <div class="text-center text-sm font-bold bg-emerald-600 w-20 py-1 rounded-b-lg">{ post.data.category }</div>
         </div>
         <div class="flex flex-col justify-between">
