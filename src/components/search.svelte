@@ -1,7 +1,8 @@
 <script>
-    import { onMount } from "svelte";
     import Fuse from 'fuse.js';
-    import { parseDate } from '@utils/utils'
+    import { onMount } from "svelte";
+    import { parseDate } from '@utils/utils';
+    import { url } from '@utils/consts';
 
     let fuse;
     let query = '';
