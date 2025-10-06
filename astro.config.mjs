@@ -15,6 +15,6 @@ export default defineConfig({
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
   },
-
-  integrations: [svelte(), mdx()]
+  integrations: [svelte(), mdx()],
+  site: 'https://zlaast.github.io',
 });
