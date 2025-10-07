@@ -1,0 +1,36 @@
+<div class="terminal w-full bg-[#2f343f] rounded-t-md border-1 border-t-[#4b5365] border-b-[#282c36] border-x-[#282c36] text-[1rem] my-5">
+    <div class="h-[3.4rem] m-1 ml-2">
+        <div class="flex select-none">
+            <div class="mt-1">
+                <span class="bg-[#f25056] h-4 w-4 rounded-full inline-block"></span>
+                <span class="bg-[#39ea49] h-4 w-4 rounded-full inline-block"></span>
+                <span class="bg-[#fac536] h-4 w-4 rounded-full inline-block"></span>
+            </div>
+            <div class="mx-auto place-center pr-20">Terminal</div>
+        </div>
+        <div class="bg-[#2f343f] select-none">
+            <span>File</span>
+            <span>Edit</span>
+            <span>View</span>
+            <span>Search</span>
+            <span>Terminal</span>
+            <span>Help</span>
+        </div>
+    </div>
+    <pre class="bg-[#424652] p-1 border-b-1 border-x-1 border-[#2f343f]"><slot /></pre>
+</div>
+
+<style is:global>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+    
+    .terminal p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .terminal pre {
+        font-family: "Ubuntu Mono", monospace;
+        white-space: pre-wrap;
+        word-spacing: 0;
+    }
+</style>
