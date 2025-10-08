@@ -8,7 +8,8 @@ date: 2023-01-07
 tags: ['3D Printing']
 read_time: 3
 ---
-import Important from "@components/important.astro";
+import Important from "@components/content/important.astro";
+import Gallery from '@components/content/gallery.astro';
 
 ## Introduction
 
@@ -30,7 +31,7 @@ I designed replacement parts for the headphones, while trying to maintain the or
 
 The Band Assembly attaches to the headband and pivot. It routes the wire from the headband to the pivot. [View Band Assembly on Github](https://github.com/zlaast/ATH-M40X/blob/main/Headphones%20Assembly%20-%20Band%20Assembly%20(Right%20Ear).STL)
 
-![Band Assembly](/images/posts/Misc/ATH-M40X/Band%20Assembly.png)
+<Gallery src="/images/posts/Misc/ATH-M40X/Band%20Assembly.png" alt="Band Assembly" />
 
 ### Part 1B - Band Assembly Cover
 
@@ -40,13 +41,13 @@ The Pivot allows the headphones to twist and bend. [View Pivot on Github](https:
 
 The Pivot allows the headphones to twist and bend. [View Pivot on Github](https://github.com/zlaast/ATH-M40X/blob/main/Headphones%20Assembly%20-%20Pivot%20(Right%20Ear).STL)
 
-![Pivot](/images/posts/Misc/ATH-M40X/Pivot.png)
+<Gallery src="/images/posts/Misc/ATH-M40X/Pivot.png" alt="Pivot" />
 
 <Important>
     The orientation in which the pivot is 3D printed is critical! An incorrect orientation can weaken the part, causing it to snap prematurely.
 </Important>
 
-![Pivot with bad orientation](/images/posts/Misc/ATH-M40X/Pivot%20-%20Bad%20Orientation.png)
+<Gallery src="/images/posts/Misc/ATH-M40X/Pivot%20-%20Bad%20Orientation.png" alt="Pivot with bad orientation" />
 
 The red lines represent how the plastic would be layered in a vertical print.
 
@@ -54,7 +55,7 @@ The arrow shows a shearing force at the point where the part is the weakest. The
 
 Due to the print orientation, only a thin layer of plastic separates the top part and the bottom part. Essentially, the force is applied in the same direction as the "grain", causing it to snap easily.
 
-![Pivot with good orientation](/images/posts/Misc/ATH-M40X/Pivot%20-%20Good%20Orientation.png)
+<Gallery src="/images/posts/Misc/ATH-M40X/Pivot%20-%20Good%20Orientation.png" alt="Pivot with good orientation" />
 
 The green lines represent how the plastic would be layered in a horizontal print.
 
@@ -64,7 +65,7 @@ We solve the previous problem by printing the pivot horizontally. Instead of a t
 
 The Arm Assembly attaches directly to the earcups, and routes the headphone wire directly to the headphone driver. It also attaches to the pivot. [View Arm Assembly on Github](https://github.com/zlaast/ATH-M40X/blob/main/Headphones%20Assembly%20-%20Arm%20Assembly%20(Right%20Ear).STL)
 
-![Arm Assembly](/images/posts/Misc/ATH-M40X/Arm%20Assembly%20-%20Back.png)
+<Gallery src="/images/posts/Misc/ATH-M40X/Arm%20Assembly%20-%20Back.png" alt="Arm Assembly" />
 
 ### Part 3B - Arm Assembly Cover
 
@@ -74,4 +75,4 @@ The Arm Assembly Cover is just a cover that can be screwed onto the Arm Assembly
 
 Here's the headphone assembly, fully printed and on my headphones!
 
-![Fully assembled headphones](/images/posts/Misc/ATH-M40X/Headphones.jpg)
+<Gallery src="/images/posts/Misc/ATH-M40X/Headphones.jpg" alt="Fully assembled headphones" />

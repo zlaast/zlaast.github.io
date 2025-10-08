@@ -1,0 +1,7 @@
+---
+const { group="gallery", src, alt="image" } = Astro.props;
+---
+
+<a data-fslightbox={ group } href={ src } class="mx-auto">
+    <img src={ src } alt={ alt } />
+</a>

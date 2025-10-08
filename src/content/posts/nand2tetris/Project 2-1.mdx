@@ -8,8 +8,9 @@ date: 2023-01-22
 tags: ["Coding", "Computers", "Digital"]
 read_time: 5
 ---
-import Tab from '@components/tab.astro'
-import Tabs from '@components/tabs.astro'
+import Tab from '@components/content/tab.astro'
+import Tabs from '@components/content/tabs.astro'
+import Gallery from '@components/content/gallery.astro'
 
 ## Introduction
 
@@ -38,7 +39,7 @@ If we examine where the outputs are `1` in the table, we can produce the followi
 
 The `Sum` should look familiar: It's the boolean equation for an `XOR` gate (see [Project 1](/blog/nand2tetris/project-1) if you don't remember). The `Carry` should be even easier, as it's just an `AND` gate.
 
-![Half Adder](/images/posts/nand2tetris/project-2/Half-Adder.png)
+<Gallery src="/images/posts/nand2tetris/project-2/Half-Adder.png" alt="Half-Adder" />
 
 <Tabs>
 <Tab name="HalfAdder.hdl" checked="checked" group="1">
@@ -75,7 +76,7 @@ The purpose of a "Full Adder" is to add 3 bits: Two bits from the current operat
 
 While we _could_ make boolean equations, like in the Half Adder implementation, another approach is used instead: Two Half Adders and an `OR` gate.
 
-![Half Adder](/images/posts/nand2tetris/project-2/Full-Adder.png)
+<Gallery src="/images/posts/nand2tetris/project-2/Full-Adder.png" alt="Full-Adder" />
 
 How does this work? Let's look at two scenarios: When `A=0`, `B=1` and when `A=B=1`. We'll let `Cin=1`.
 

@@ -8,8 +8,9 @@ date: 2023-02-14
 tags: ['Coding', 'Computers', 'Digital']
 read_time: 5
 ---
-import Tab from '@components/tab.astro'
-import Tabs from '@components/tabs.astro'
+import Tab from '@components/content/tab.astro'
+import Tabs from '@components/content/tabs.astro'
+import Gallery from '@components/content/gallery.astro'
 
 ## Introduction
 
@@ -20,7 +21,7 @@ Here, we create the memory modules for the computer.
 
 In order to create blocks of memory, we first need to be able to store just one `bit` of information: a zero or a one. This is done by using a `D Flip-Flop` (Data Flip-Flop). The flip-flop on its own can store a single bit, but it is not complete yet. We need to be able to *choose* whether (and when) to keep the current bit, or store (load) a new bit.
 
-![Bit](/images/posts/nand2tetris/project-3/bit.png)
+<Gallery src="/images/posts/nand2tetris/project-3/bit.png" alt="bit" />
 
 The above diagram shows a circuit which allows us to choose to keep the current bit or load a new one.
 `D` is the input to the D Flip-Flop and `Q` is the output. The other two inputs for the D Flip-Flop are not used.
@@ -96,7 +97,7 @@ A "program counter" is a special piece of memory which does just that. It stores
 
 We can accomplish this digitally by using a "pipeline" approach shown in the image below (note that all inputs/outputs are 16-bits wide, and the select/load bits are just 1-bit wide).
 
-![Program Counter](/images/posts/nand2tetris/project-3/PC.png)
+<Gallery src="/images/posts/nand2tetris/project-3/PC.png" alt="PC" />
 
 Each multiplexer represents a stage at which we can manipulate the program counter. We can choose whether to increment the current memory address (inc), whether load a new address (load), and whether to set the memory address to 0 (reset). In the end, the result is stored in a register.
 
@@ -127,7 +128,7 @@ Here we have eight registers that need to be accessed individually.
 If we need to *load* a register, we can use a demultiplexer to choose which register to load.
 If we need to *read* a register, we can use a multiplexer to choose which register to output.
 
-![RAM8](/images/posts/nand2tetris/project-3/RAM8.png)
+<Gallery src="/images/posts/nand2tetris/project-3/RAM8.png" alt="RAM8" />
 
 <Tabs>
 <Tab name="RAM8.hdl" checked="checked" group="4">

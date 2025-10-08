@@ -9,9 +9,10 @@ tags: ['Coding', 'Math', 'Python']
 read_time: 1
 ---
 
-import Tab from '@components/tab.astro'
-import Tabs from '@components/tabs.astro'
-import Spoiler from '@components/spoiler.astro'
+import Tab from '@components/content/tab.astro'
+import Tabs from '@components/content/tabs.astro'
+import Spoiler from '@components/content/spoiler.astro'
+import Gallery from '@components/content/gallery.astro'
 
 ## Problem
 
@@ -53,7 +54,7 @@ This problem comes from [Project Euler 8](https://projecteuler.net/problem=8)
 ## Solution
 We have to multiply 13 adjacent digits and find the largest. To do this, we can use a “sliding window” to multiply an array of numbers.
 
-![Sliding Window](/images/posts/project-euler/Slide_100.gif)
+<Gallery src="/images/posts/project-euler/Slide_100.gif" alt="Sliding Window" />
 
 We multiply the first 13 numbers and check if it is greater than our previous maximum (our previous maximum is set to 0 initially). 
 If it is, we store the new maximum. Then we slide our “window” over by one number, 

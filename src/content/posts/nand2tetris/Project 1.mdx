@@ -8,8 +8,9 @@ date: 2023-01-21
 tags: ["Coding", "Computers", "Digital"]
 read_time: 10
 ---
-import Tab from '@components/tab.astro'
-import Tabs from '@components/tabs.astro'
+import Tab from '@components/content/tab.astro'
+import Tabs from '@components/content/tabs.astro'
+import Gallery from '@components/content/gallery.astro'
 
 ## Introduction
 
@@ -46,10 +47,10 @@ That is, the input bit is simply inverted.
 Since we have only been provided with **NAND** gates, we must somehow make a **NOT** gate from a **NAND** gate. But a **NOT** gate only takes a single input, while a **NAND** gate has two inputs. To solve this, if we look at the truth table of a **NAND** gate (Table 1), we notice that when `A=B=0`, that the output is `1`. And when `A=B=1`, the output is `0`. So, we simply connect the inputs together and a **NOT** gate is formed!
 
 Here's a schematic of a **NAND** gate connected to become a **NOT** gate:
-![Not Internal](/images/posts/nand2tetris/project-1/Not-internal.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Not-internal.png" alt="Not internal" />
 
 And the following image shows how a **NOT** gate is represented in schematics:
-![Not](/images/posts/nand2tetris/project-1/Not.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Not.png" alt="Not" />
 
 The code below is the implementation of a **NOT** gate using a **NAND** gate.
 
@@ -81,10 +82,10 @@ Creating an **AND** gate is fairly simple once we have an inverter. Looking at t
 <div class="caption italic text-center">Table 3 - AND Gate Truth Table</div>
 
 Below is a schematic version of the implementation
-![And Internal](/images/posts/nand2tetris/project-1/And-internal.png)
+<Gallery src="/images/posts/nand2tetris/project-1/And-internal.png" alt="And internal" />
 
 And below is how an **AND** gate is normally represented in schematics
-![And](/images/posts/nand2tetris/project-1/And.png)
+<Gallery src="/images/posts/nand2tetris/project-1/And.png" alt="And" />
 
 And finally the HDL implementation
 
@@ -135,10 +136,10 @@ Now, a problem with this is that it gives us an inverted **OR** as the output (c
 <div class="text-center py-3">$$ \overline{\overline{A} \land \overline{B}} = \overline{\overline{A \lor B}} = A \lor B $$</div>
 
 The above boolean equation is demonstrated by the schematic below
-![Or Internal](/images/posts/nand2tetris/project-1/Or-internal.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Or-internal.png" alt="Or internal" />
 
 The normal schematic representation of an OR gate is shown below
-![Or](/images/posts/nand2tetris/project-1/Or.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Or.png" alt="Or" />
 
 And finally the pertaining code
 
@@ -190,10 +191,10 @@ To create an **XOR** gate, we can create a boolean expression by examining when 
 <div class="text-center py-3">$$ (\overline A \land B) \lor (A \land \overline B) $$</div>
 
 We then can take the expression and implement it using previous logic gates. The colouring is for clarity and has nothing to do with Neo and Morpheus 😄
-![Xor Internal](/images/posts/nand2tetris/project-1/XOR-internal.png)
+<Gallery src="/images/posts/nand2tetris/project-1/XOR-internal.png" alt="Xor Internal" />
 
 As usual, the schematic representation
-![Xor](/images/posts/nand2tetris/project-1/XOR.png)
+<Gallery src="/images/posts/nand2tetris/project-1/XOR.png" alt="XOR" />
 
 And finally the code
 
@@ -230,7 +231,7 @@ A multiplexer routes either A or B to the output, depending on the `sel` (select
 <div class="caption italic text-center">Table 6 - Multiplexer Truth Table</div>
 
 Notice that the output is written as A or B and not a number. This is because we only care about what input we route to the output, and not the input's actual value. When `sel=0` then `OUT=A`, and when `sel=1` then `OUT=B`. Seeing the schematic makes the logic a lot easier to understand.
-![Mux Internal](/images/posts/nand2tetris/project-1/Mux-internal.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Mux-internal.png" alt="Mux internal" />
 
 Since we already know about **AND**, **OR**, and **NOT**, then the logic should be fairly easy to follow along, but an example follows:
 
@@ -250,7 +251,7 @@ Since we already know about **AND**, **OR**, and **NOT**, then the logic should 
 If we want to output B, just set `sel=1`.
 
 Below is the schematic representation usually seen for MUX "chips".
-![Mux](/images/posts/nand2tetris/project-1/Mux.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Mux.png" alt="Mux" />
 
 And the code
 <Tabs>
@@ -289,7 +290,7 @@ Compared to the multiplexer, the demultiplexer is a bit more complicated. While 
 Similar to the multiplexer, our two outputs have either `0` or `in`. The input itself isn't important, just which output it has been routed to. When `sel=0` then `A=in`, and when `sel=1` then `B=in`.
 
 
-![Dmux Internal](/images/posts/nand2tetris/project-1/DMux-internal.png)
+<Gallery src="/images/posts/nand2tetris/project-1/DMux-internal.png" alt="DMux internal" />
 
 The implementation above uses two multiplexers. Let's walk through an example
 
@@ -302,7 +303,7 @@ The implementation above uses two multiplexers. Let's walk through an example
 
 When `sel=1`, the opposite happens.
 
-![Dmux](/images/posts/nand2tetris/project-1/DMux.png)
+<Gallery src="/images/posts/nand2tetris/project-1/DMux.png" alt="DMux" />
 
 <Tabs>
 <Tab name="DMux.hdl" checked="checked" group="6">
@@ -460,7 +461,7 @@ OUT out[16];
 
 Mux4Way16 takes four 16-bit inputs and routes it to a single 16-bit output. There are two `select` bits, `sel[0]` and `sel[1]`.
 
-![Mux4Way16](/images/posts/nand2tetris/project-1/Mux4Way16.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Mux4Way16.png" alt="Mux4Way16" />
 
 If `sel[0]=0` then `A` is chosen from the top multiplexer and `C` is chosen from the bottom multiplexer.
 If `sel[0]=1` then `B` is chosen from the top multiplexer and `D` is chosen from the bottom multiplexer.
@@ -487,7 +488,7 @@ OUT out[16];
 
 Mux8Way16 has a similar construct to the preceding Mux4Way16. We just replace two of the Mux16 with Mux4Way16 instead.
 
-![Mux8Way16](/images/posts/nand2tetris/project-1/Mux8Way16.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Mux8Way16.png" alt="Mux8Way16" />
 <Tabs>
 <Tab name="Mux8Way16.hdl" checked="checked" group="12">
 ```
@@ -510,7 +511,7 @@ OUT out[16];
 
 The DMux4Way is essentially the Mux4Way16, but backwards and using demultiplexers. Note that the DMux4Way isn't 16-bit.
 
-![Dmux4Way](/images/posts/nand2tetris/project-1/DMux4Way.png)
+<Gallery src="/images/posts/nand2tetris/project-1/DMux4Way.png" alt="DMux4Way" />
 
 <Tabs>
 <Tab name="DMux4Way.hdl" checked="checked" group="13">
@@ -532,7 +533,7 @@ OUT a, b, c, d;
 
 After the previous circuits, this requires no explanation. Just note that this also isn't 16-bit.
 
-![Dmux8Way](/images/posts/nand2tetris/project-1/DMux8Way.png)
+<Gallery src="/images/posts/nand2tetris/project-1/DMux8Way.png" alt="DMux8Way" />
 
 <Tabs>
 <Tab name="DMux8Way.hdl" checked="checked" group="14">
@@ -554,7 +555,7 @@ OUT a, b, c, d, e, f, g, h;
 
 Or8Way is the final multi-bit chip. It **OR**s eight bits together to produce a single output. Implementing this requires cascading seven **OR** gates together, feeding the output of one **OR** gate, into the input of another.
 
-![Or8Way](/images/posts/nand2tetris/project-1/Or8Way.png)
+<Gallery src="/images/posts/nand2tetris/project-1/Or8Way.png" alt="Or8Way" />
 
 <Tabs>
 <Tab name="Or8Way.hdl" checked="checked" group="15">
