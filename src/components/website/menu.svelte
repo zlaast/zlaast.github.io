@@ -73,7 +73,7 @@
                         <a href="/posts/{ projects.Name.toLowerCase().replaceAll(" ", "-") }">
                             <div class="rounded-md px-3 py-5 transition-all hover:bg-neutral-900">
                                 <span class="w-full flex">
-                                    <span class="grow text-sm capitalize">{ projects.Name }</span>
+                                    <span class="grow text-sm capitalize text-emerald-300">{ projects.Name }</span>
                                     <div class="badge badge-outline min-md:badge-soft text-emerald-400">{ projects.PostsAmount }</div>
                                 </span>
 
@@ -101,7 +101,7 @@
                         <a href="/tags/{ tag.toLowerCase().replaceAll(" ", "-") }">
                             <div class="rounded-md px-3 py-5 transition-all hover:bg-neutral-900">
                                 <span class="w-full flex">
-                                    <span class="grow text-sm capitalize">{ tag }</span>
+                                    <span class="grow text-sm capitalize text-emerald-300">{ tag }</span>
                                 </span>
                             </div>
                         </a>
