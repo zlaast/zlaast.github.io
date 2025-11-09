@@ -1,7 +1,8 @@
 ---
-const { group="gallery", src, alt="image" } = Astro.props;
+const { group="gallery", src, alt="image", caption="" } = Astro.props;
 ---
 
 <a data-fslightbox={ group } href={ src } class="mx-auto">
     <img src={ src } alt={ alt } />
 </a>
+<p class="m-0 p-0 font-thin text-center text-sm">{ caption }</p>
