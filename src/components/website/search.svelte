@@ -35,6 +35,10 @@
                     weight: 0.1
                 },
                 {
+                    name: "excerpt",
+                    weight: 0.05
+                },
+                {
                     name: "tags",
                     weight: 0.05
                 }
@@ -53,7 +57,7 @@
 
 <div>
 
-    <label class="flex w-full input border-none">
+    <label class="flex w-full input border-none focus-within:outline-none focus-within:ring-0 bg-[#19191b]">
         <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <svg
             stroke-linejoin="round"
@@ -66,25 +70,36 @@
             <path d="m21 21-4.3-4.3"></path>
             </svg>
         </svg>
-        <input type="search" class="grow text-lg" placeholder="Search" bind:value={query} oninput={search} />
+        <input type="search" class="grow text-lg bg-[#19191b]" placeholder="Search" bind:value={query} oninput={search} />
     </label>
 
     {#if results.length > 0}
-        {#each results as item}
-            <a href="/posts/{ item.url }">
-                <div class="flex my-5 p-1 gap-4 text-neutral-200 hover:ml-3 transition-all duration-150 ease-in-out">
-                    <div class="flex flex-col justify-between">
-                        <h3 class="text-2xl font-kode">{ item.subtitle }</h3>
-                        <div class="text-[1rem] font-bold">
-                            <span class="text-rose-400">{ item.project }</span>
-                            <span>·</span>
-                            <span>{ parseDate(new Date(item.date)) }</span>
+        {#each results as post, index}
+            <a href="/posts/{ post.url }">
+               <div class="flex group items-stretch border-1 border-neutral-600 bg-[#222222] rounded-lg overflow-hidden my-5 shadow-lg/40 hover:bg-[#2b2b2b] duration-300">
+                    <div class="hidden sm:flex flex-shrink-0 bg-[#2b2b2b] px-8 border-l-1 border-emerald-400">
+                        <div class="flex items-center h-full">
+                            <p class="text-neutral-400 text-4xl w-[50px] text-center group-hover:text-emerald-400 duration-300">{ index + 1 }</p>
                         </div>
-                        <hr class="my-1 text-neutral-500 border-0.5 border-dashed" />
-                        <div class="flex items-center text-sm">
-                            <svg class="inline mr-1" xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" style="fill: white;transform: scaleX(-1);msFilter:progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);"><path d="M13.707 3.293A.996.996 0 0 0 13 3H4a1 1 0 0 0-1 1v9c0 .266.105.52.293.707l8 8a.997.997 0 0 0 1.414 0l9-9a.999.999 0 0 0 0-1.414l-8-8zM12 19.586l-7-7V5h7.586l7 7L12 19.586z"></path><circle cx="8.496" cy="8.495" r="1.505"></circle></svg>
-                            <span class="font-bold mr-1">Tags:</span>
-                            <span class="whitespace-nowrap">{ item.tags }</span>
+                    </div>
+                    <div class="text-neutral-200 font-normal text-xl p-5 py-6 inline">
+                        <div class="text-xl">
+                            { post.project }
+                            <span class="text-neutral-400"> # </span>
+                            { post.subtitle }
+                        </div>
+                        <div class="text-base my-3 text-neutral-400">
+                            { post.excerpt }
+                        </div>
+                        <div class="text-neutral-400 text-sm">
+                            <div class="flex items-center gap-1 my-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0);transform: ;msFilter:;"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+                                <span>Read Time: { post.read_time } min</span>
+                            </div>
+                            <div class="flex items-center gap-1 my-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0); transform: ;msFilter:;"><path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm.002 16H5V8h14l.002 12z"></path><path d="m11 17.414 5.707-5.707-1.414-1.414L11 14.586l-2.293-2.293-1.414 1.414z"></path></svg>
+                                <span>{ parseDate(new Date(post.date)) }</span>
+                            </div>
                         </div>
                     </div>
                 </div>

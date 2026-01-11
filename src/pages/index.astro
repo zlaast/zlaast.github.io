@@ -51,7 +51,7 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
         <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
             <h2 class="text-5xl text-emerald-400 mb-10 font-kode">Recent</span></h2>
             {
-                posts.slice(posts.length - 3, posts.length).reverse().map((post) => { return <Postcard post={ post } />})
+                posts.slice(posts.length - 3, posts.length).reverse().map((post, index) => { return <Postcard post={ post } index={ index } pageType="index" />})
             }
         </div>
     </section>

@@ -12,6 +12,7 @@ const postsCollection = defineCollection({
     tags: z.array(z.string()),
     graph_tags: z.array(z.string()).optional(),
     image: z.string().optional(),
+    excerpt: z.string().optional(),
     read_time: z.number().optional(),
   }),
 });

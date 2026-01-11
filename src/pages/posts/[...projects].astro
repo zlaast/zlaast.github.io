@@ -16,8 +16,9 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'posts'>
 const post = Astro.props
 
-const posts = await getCollection('posts')
-posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
+const project = Astro.params.projects
+const posts = await getCollection('posts', ({ data }) => data.project.toLowerCase().replaceAll(' ', '-') === project);
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
 <Base>
@@ -31,8 +32,8 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
             </div>
             <h2 class="text-5xl text-emerald-400 my-10 font-kode">{ post.data.project }</span></h2>
 				{
-					posts.reverse().map((allPosts) => {
-						if (allPosts.data.project == post.data.project) return <Postcard post={allPosts} />
+					posts.map((allPosts, index) => {
+						if (allPosts.data.project == post.data.project) return <Postcard post={ allPosts } index={ posts.length - index } pageType="projects" />
 					})
 				}
         </div>
@@ -43,6 +44,7 @@ posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
 .breadcrumbs {
 	a {
 		color: whitesmoke !important;
+        font-weight: 400;
 	}
 }
 </style>

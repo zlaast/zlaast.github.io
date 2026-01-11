@@ -1,5 +1,5 @@
 ---
-const { post } = Astro.props
+const { post, index, pageType } = Astro.props
 
 import { parseDate } from '@utils/utils'
 import { Image } from 'astro:assets'
@@ -27,35 +27,63 @@ else {
     color = "bg-coffee"
 }
 
+let showNumbers = false;
+let showTags = false;
+if (pageType == "projects")
+{
+    showNumbers = true;
+    showTags = false;
+}
+else if (pageType == "tags")
+{
+    showNumbers = false;
+    showTags = true;
+}
+
 const date = parseDate(post.data.date)
 ---
 
 <a href=`/posts/${ post.slug }`>
-    <div class="flex my-5 p-1 gap-4 text-neutral-200 hover:ml-3 transition-all duration-150 ease-in-out">
-        <div class="flex flex-col items-center h-[108px] max-md:hidden">
-            <Image src={ image } class=`${ color } w-20 p-4 rounded-t-lg h-[80px]` alt="Badge emoji" />
-            <div class="text-center text-sm font-bold bg-emerald-600 w-20 py-1 rounded-b-lg">{ post.data.category }</div>
+    <div class="flex group items-stretch border-1 border-neutral-600 bg-[#222222] rounded-lg overflow-hidden my-5 shadow-lg/40 hover:bg-[#2b2b2b] duration-300">
+        <div class="hidden sm:flex flex-shrink-0 bg-[#2b2b2b] px-8 border-l-1 border-emerald-400">
+            <div class="flex items-center h-full">
+            {
+                showTags && <svg xmlns="http://www.w3.org/2000/svg" class="fill-neutral-400 group-hover:fill-emerald-400 duration-300" width="48" height="48" viewBox="0 0 24 24" style="transform: ;msFilter:;"><path d="M11.707 2.293A.997.997 0 0 0 11 2H6a.997.997 0 0 0-.707.293l-3 3A.996.996 0 0 0 2 6v5c0 .266.105.52.293.707l10 10a.997.997 0 0 0 1.414 0l8-8a.999.999 0 0 0 0-1.414l-10-10zM13 19.586l-9-9V6.414L6.414 4h4.172l9 9L13 19.586z"></path><circle cx="8.353" cy="8.353" r="1.647"></circle></svg>
+            }
+            {
+                showNumbers && <p class="text-neutral-400 text-4xl w-[50px] text-center group-hover:text-emerald-400 duration-300">{ index }</p>
+            }
+            {
+                !showTags && !showNumbers && <Image src={image} alt="Badge emoji" class="max-h-[80px] w-auto" />
+            }
+            </div>
         </div>
-        <div class="flex flex-col justify-between">
-            <h3 class="text-2xl font-kode">{ post.data.subtitle }</h3>
-            <div class="text-[1rem] font-bold">
-                <span class="text-rose-400">{ post.data.project }</span>
-                <span>·</span>
-                <span>{ date }</span>
+        <div class="text-neutral-200 font-normal text-xl p-5 py-6 inline">
+            <div class="text-xl">
+                { post.data.project }
+                <span class="text-neutral-400"> # </span>
+                { post.data.subtitle }
             </div>
-            <div class="text-[1rem] font-bold">
-                <span class="text-neutral-400">Read time: </span>
-                <span>{ post.data.read_time }min</span>
+            <div class="text-base my-3 text-neutral-400">
+                { post.data.excerpt }
             </div>
-            <hr class="my-1 text-neutral-500 border-0.5 border-dashed" />
-            <div class="flex items-center text-sm">
-                <svg class="inline mr-1" xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" style="fill: white;transform: scaleX(-1);msFilter:progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);"><path d="M13.707 3.293A.996.996 0 0 0 13 3H4a1 1 0 0 0-1 1v9c0 .266.105.52.293.707l8 8a.997.997 0 0 0 1.414 0l9-9a.999.999 0 0 0 0-1.414l-8-8zM12 19.586l-7-7V5h7.586l7 7L12 19.586z"></path><circle cx="8.496" cy="8.495" r="1.505"></circle></svg>
-                <span class="font-bold mr-1">Tags:</span>
-                {
-                    post.data.tags.sort().map((tag: any) => (
-                        <span class="mr-1 whitespace-nowrap rounded-md after:content-[','] last:after:content-none">{ tag }</span>
-                    ))
-                }
+            <div class="text-neutral-400 text-sm">
+                <div class="flex items-center gap-1 my-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0);transform: ;msFilter:;"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+                    <span>Read Time: { post.data.read_time } min</span>
+                </div>
+                <div class="flex items-center gap-1 my-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0); transform: ;msFilter:;"><path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm.002 16H5V8h14l.002 12z"></path><path d="m11 17.414 5.707-5.707-1.414-1.414L11 14.586l-2.293-2.293-1.414 1.414z"></path></svg>
+                    <span>{ date }</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0); transform: ;msFilter:;"><path d="M11.707 2.293A.997.997 0 0 0 11 2H6a.997.997 0 0 0-.707.293l-3 3A.996.996 0 0 0 2 6v5c0 .266.105.52.293.707l10 10a.997.997 0 0 0 1.414 0l8-8a.999.999 0 0 0 0-1.414l-10-10zM13 19.586l-9-9V6.414L6.414 4h4.172l9 9L13 19.586z"></path><circle cx="8.353" cy="8.353" r="1.647"></circle></svg>
+                    {
+                        post.data.tags.sort().map((tag: any) => (
+                            <span class="mr-1 whitespace-nowrap rounded-md after:content-[','] last:after:content-none">{ tag }</span>
+                        ))
+                    }
+                </div>
             </div>
         </div>
     </div>
