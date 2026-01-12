@@ -36,6 +36,13 @@ p
     align-self: center;
 }
 
+.breadcrumbs {
+	a {
+		color: whitesmoke !important;
+        font-weight: 400;
+	}
+}
+
 .gradient-text 
 {
     background: -webkit-linear-gradient(135deg, #1cffbb, #ff23ff);

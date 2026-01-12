@@ -1,13 +1,8 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import { parseDate } from '@utils/utils';
-import { Image } from 'astro:assets'
 import StickyNav from '@components/website/stickynav.astro'
 import Base from '@layouts/base.astro'
-import robot from '@images/emojis/robot.gif'
-import bolt from '@images/emojis/bolt.gif'
-import invader from '@images/emojis/invader.gif'
-import unknown from '@images/emojis/rocket.gif'
 
 /* Generate URL path for post */
 export async function getStaticPaths() {
@@ -26,13 +21,6 @@ const { Content, headings } = await post.render();
 
 /* Format Date */
 const date = parseDate(post.data.date);
-
-/* Use appropriate image badge */
-let image
-if (post.data.category == "Coding") { image = robot }
-else if (post.data.category == "Electronics") { image = bolt  }
-else if (post.data.category == "Pentesting") { image = invader  }
-else { image = unknown }
 
 /* Get adjacent links in a project */
 const posts = await getCollection("posts");
@@ -60,8 +48,8 @@ posts.some(getLinks);
 ---
 
 <Base>
-    <div class="flex max-w-[1000px] mx-auto text-xl my-10 font-[300]">
-        <article class="mx-10 max-w-[800px]">
+    <div class="flex w-full justify-center text-xl my-10 font-[300]">
+        <article class="w-full max-w-[800px] 2xl:max-w-[800px] xl:max-w-[800px] lg:max-w-[800px] md:max-w-[600px] px-10">
             <!-- Breadcrumbs -->
             <div class="flex breadcrumbs text-[1rem]">            
                 <a href="/">Home</a>
@@ -71,26 +59,26 @@ posts.some(getLinks);
                 { post.data.subtitle }                
             </div>
             <!-- Post Card -->
-            <div class="flex grow items-center my-10 gap-7 text-neutral-200 max-w-[800px]">
-                <Image src={ image } class="max-md:hidden w-35 drop-shadow-xl/50 select-none" alt="Badge" />
-                <div class="flex grow flex-col">
-                    <div class="text-2xl font-bold font-kode">{ post.data.subtitle }</div>
-                    <div class="text-lg font-bold">
-                        <span class="text-rose-400">{ post.data.project }</span>
-                        <span> · </span>
+            <div class="mt-8 mb-10">
+                <h1 class="text-4xl text-neutral-200 font-bold">{ post.data.subtitle }</h1>
+                <div class="text-neutral-400 my-2">{ post.data.project }</div>
+                <div class="bg-[#19191b] rounded-lg my-3">
+                    <img class="mx-auto select-none max-w-[500px]" src={ post.data.image } alt="Post Image" />
+                </div>
+                <div class="flex gap-x-5 text-neutral-400 text-sm">
+                    <div class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0); transform: ;msFilter:;"><path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm.002 16H5V8h14l.002 12z"></path><path d="m11 17.414 5.707-5.707-1.414-1.414L11 14.586l-2.293-2.293-1.414 1.414z"></path></svg>
                         <span>{ date }</span>
                     </div>
-                    <div class="text-lg font-bold">
-                        <span class="text-neutral-400">Read time: </span>
-                        <span>{ post.data.read_time }min</span>
+                    <div class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0);transform: ;msFilter:;"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+                        <span>Read Time: { post.data.read_time } min</span>
                     </div>
-                    <hr class="my-1 text-neutral-500 border-0.5 border-dashed" />
-                    <div class="flex items-center text-[1rem]">
-                        <svg class="inline mr-1" xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" style="fill: white;transform: scaleX(-1);msFilter:progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);"><path d="M13.707 3.293A.996.996 0 0 0 13 3H4a1 1 0 0 0-1 1v9c0 .266.105.52.293.707l8 8a.997.997 0 0 0 1.414 0l9-9a.999.999 0 0 0 0-1.414l-8-8zM12 19.586l-7-7V5h7.586l7 7L12 19.586z"></path><circle cx="8.496" cy="8.495" r="1.505"></circle></svg>
-                        <span class="font-bold mr-1">Tags:</span>
+                    <div class="flex items-center text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0); transform: ;msFilter:;"><path d="M11.707 2.293A.997.997 0 0 0 11 2H6a.997.997 0 0 0-.707.293l-3 3A.996.996 0 0 0 2 6v5c0 .266.105.52.293.707l10 10a.997.997 0 0 0 1.414 0l8-8a.999.999 0 0 0 0-1.414l-10-10zM13 19.586l-9-9V6.414L6.414 4h4.172l9 9L13 19.586z"></path><circle cx="8.353" cy="8.353" r="1.647"></circle></svg>
                         {
                             post.data.tags.sort().map((tag: any) => (
-                                <span class="mr-1 whitespace-nowrap rounded-md after:content-[','] last:after:content-none"><a href={`/tags/${ tag.toLowerCase() }`}>{ tag }</a></span>
+                                <a href=`/tags/${ tag.toLowerCase().replaceAll(' ', '-')}` class="mr-1 whitespace-nowrap rounded-md after:content-[','] last:after:content-none">{ tag }</a>
                             ))
                         }
                     </div>
@@ -100,10 +88,18 @@ posts.some(getLinks);
             <div class="content">
                 <Content />
             </div>
-            <!-- Prev Next Post -->
+            <!-- Prev and Next Post -->
             <div class="max-md:text-md mt-6 font-semibold flex flex-row justify-between text-lg max-md:flex-col max-md:text-center">
-                <a class="btn my-3" href=`/posts/${adjacentLinks[0]}`>← { adjacentSubtitles[0] }</a>
-                <a class="btn my-3" href=`/posts/${adjacentLinks[1]}`>{ adjacentSubtitles[1] } →</a>
+                <a class="my-3" href=`/posts/${adjacentLinks[0]}`>
+                    <button class="btn btn-outline btn-success">
+                        ← { adjacentSubtitles[0] }
+                    </button>
+                </a>
+                <a class="my-3" href=`/posts/${adjacentLinks[1]}`>
+                    <button class="btn btn-outline btn-success">
+                        { adjacentSubtitles[1] } →
+                    </button>
+                </a>
             </div>
         </article>
         <StickyNav headings={ headings } />
@@ -111,160 +107,200 @@ posts.some(getLinks);
 </Base>
 
 <style is:global>
-:root {
-	--code-color: #5d6164;
+:root
+{
+    --block-bg-color: #222222;
+    --emerald-color: #00d492;
 }
 
-.breadcrumbs {
-	a {
-		color: whitesmoke !important;
-        font-weight: 400;
-	}
-}
+/* CSS for text content */
+.content 
+{
+    font-size: 18px;
 
-h2 {
-	font-size: 1.5rem;
-	color: #00d492;
-	font-family: "Kode Mono", monospace;
-	margin: 1.5rem 0rem;
-	font-weight: bold;
-}
-
-h3 {
-	color: #6ee7b7;
-	font-family: "Kode Mono", monospace;
-	margin: 1.5rem 0rem;
-	font-weight: bold;
-}
-
-h4 {
-	color: #a7f3d0;
-	font-family: "Kode Mono", monospace;
-	margin: 1.5rem 0rem;
-	font-weight: bold;
-}
-
-blockquote {
-	background-color: #15161a;
-	padding: 1rem 2rem;
-	margin: 2rem 0;
-	border-left: 0.25rem solid #715A5A;
-	max-width: 800px;
-	
-    code {
-		background-color: var(--code-color);
-		padding: 0.25rem;
-		border-radius: 0.5rem;
-	}
-
-    strong {
+    h2
+    {
+        color: var(--emerald-color);
+        font-family: "Kode Mono", monospace;
+        font-size: 1.4rem;
         font-weight: bold;
-    }
-}
-
-.tabs {
-	margin: 1rem 0;
-	max-width: 800px;
-}
-
-ol {
-	background-color: #15161a;
-	padding: 1rem 2rem;
-	margin: 2rem 0;
-	border-left: 3px solid #00d492;
-
-	code {
-        color: #00d492;
-	}
-
-	li {
-		list-style-type: decimal;
-		margin-left: 1.3rem;
-		line-height: 2.5rem;
-	}
-}
-
-
-.content {
-	word-spacing: 0.15rem;
-
-    img {
-	    margin: 0 auto;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
     }
 
-    ul {
-        background-color: #15161a;
+    h3
+    {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    h4
+    {
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    blockquote
+    {
+        border-radius: 0.5rem;
+        background-color: var(--block-bg-color);
         padding: 1rem 2rem;
-        margin: 2rem 0;
-        border-left: 3px solid #00d492;
+        margin-bottom: 1rem;
+        max-width: 100%;
+        line-height: 2;
 
-        li {
-            list-style-type: square;
-            margin-left: 1.3rem;
+        strong
+        {
+            font-weight: 600;
+        }
+    }
+
+    code
+    {
+        color: #6eb8ff;
+    }
+
+    .caption
+    {
+        margin-top: 1rem;
+        font-size: 1rem;  
+    }
+
+    img
+    {
+        margin: 2rem auto;
+    }
+
+    p
+    {
+        line-height: 2;
+        word-spacing: 0.05rem;
+    }
+
+    ol
+    {
+        border-radius: 0.5rem;
+        background-color: var(--block-bg-color);
+        padding: 1.5rem 2rem;
+        margin-bottom: 1rem;
+        max-width: 100%;
+        line-height: 2;
+
+        li
+        {
+            list-style-type: decimal;
             line-height: 2.5rem;
+            margin-left: 1.5rem;
+        }   
+    }
+
+    ul
+    {
+        border-radius: 0.5rem;
+        background-color: var(--block-bg-color);
+        padding: 1.5rem 2rem;
+        margin-bottom: 1rem;
+        max-width: 100%;
+        line-height: 2;
+
+        li
+        {
+            list-style-type: disc;
+            line-height: 2.5rem;
+            margin-left: 1.5rem;
         }
     }
 }
 
-.alert
+/* Code Snippet (Not Tabbed) */
+.astro-code:not(:where(.tabs *))
 {
-    font-size: 20px;
-    padding: 1rem 2rem;
+    background-color: var(--block-bg-color) !important;
+    border-radius: 0.5rem !important;
+    border: 3px solid var(--emerald-color);
+    font-size: 16px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
 
-    ul
+    code
     {
-        margin: 0;
-        background-color: #2c2e2d;
-        border-left: 0;
+	    counter-reset: code-line;
+
+        .line 
+        {
+            counter-increment: code-line;
+            &::before {
+                content: counter(code-line);
+                color: #414b54;
+                display: inline-block;
+                width: 1.5rem;
+                margin-right: 0.5rem;
+            }
+        }     
     }
 }
 
-p {
-	line-height: 2;
+/* Tabbed Content (Code) */
+.tabs
+{
+    margin: 1rem 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--emerald-color);
 
-	code {
-        color: #00d492;
-	}
+    .astro-code
+    {
+        padding: 0rem;
+        background-color: var(--block-bg-color) !important;
+    }
+
+    .tab
+    {
+        background-color: #353535;
+        border-radius: 0.25rem 0.25rem 0 0 !important;
+        margin-right: 0.1rem;
+    }
+
+    .tab-content
+    {
+        background-color: var(--block-bg-color) !important;
+        border-radius: 0 0 0.5rem 0.5rem !important;
+        border: 0;
+    }
+
+    pre code
+    {
+	    counter-reset: code-line;
+
+        .line 
+        {
+            counter-increment: code-line;
+            &::before {
+                content: counter(code-line);
+                color: #414b54;
+                display: inline-block;
+                width: 1.5rem;
+                margin-right: 0.5rem;
+            }
+        }     
+    }
 }
 
-.astro-code {
-	padding: 1rem;
-	background-color: #24292e !important;
-	max-width: 720px;
-}
-
-.tabs {
-	.astro-code {
-		padding: 0rem;
-		background-color: #24292e !important;
-	}
-}
-
-pre code {
-	counter-reset: code-line;
-
-	.line {
-		counter-increment: code-line;
-		&::before {
-			content: counter(code-line);
-			color: #414b54;
-			display: inline-block;
-			width: 1.5rem;
-			margin-right: 0.5rem;
-		}
-	}
-}
-
+/* Tables */
 table {
 	min-width: 100%;
 	margin: auto;
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-	background-color: #1f1f1f;
+	background-color: var(--block-bg-color);
 }
 
 thead tr {
-	background-color: #ff637e;
-	color: #ffffff;
+	background-color: var(--emerald-color);
+	color: white;
 	text-align: center;
 }
 
@@ -278,20 +314,14 @@ tbody tr {
 }
 
 tbody tr:nth-child(even) {
-	background-color: #15161a;
+	background-color: var(--block-bg-color);
 }
 
 tbody tr:last-of-type {
-	border-bottom: 2px solid #ff637e;
+	border-bottom: 2px solid var(--emerald-color);
 }
 
-.caption
-{
-    margin-top: 1rem;
-    font-size: 1rem;
-}
-
-@media only screen and (max-width: 600px) {
+/* @media only screen and (max-width: 600px) {
 	pre {
 		width: 80vw;
 		font-size: 12px !important;
@@ -311,5 +341,5 @@ tbody tr:last-of-type {
 		padding: 0;
 		font-size: 1rem;
 	}
-}
+} */
 </style>

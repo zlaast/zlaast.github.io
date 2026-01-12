@@ -1,6 +1,19 @@
-<div role="alert" class="flex flex-col alert alert-warning alert-soft">
-    <div class="text-2xl font-bold font-kode text-yellow-400">Warning</div>
-    <div class="text-yellow-300">
+<div role="alert" class="flex flex-col alert bg-[#2c2e2d]  text-[18px]">
+    <div class="text-2xl font-bold font-kode text-rose-400">Warning</div>
+    <div class="text-neutral-300 bg-[#2c2e2d]">
         <slot />
     </div>
 </div>
+
+<style is:global>
+.alert
+{
+    font-size: 18px;
+    padding: 2rem;
+
+    ul, ol
+    {
+        background-color: #2c2e2d;
+    }
+}
+</style>
