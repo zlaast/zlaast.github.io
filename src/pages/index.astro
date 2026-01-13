@@ -3,93 +3,70 @@
 import Base from '@layouts/base.astro'
 
 // Components
-import Spacey from '../components/text_effects/spaceytext.astro'
-import Postcard from "../components/website/postcard.astro";
+import Spacey from '@components/text_effects/spaceytext.astro'
+import Postcard from '@components/website/postcard.astro'
 
-// Images and emojis
+// Assets
 import { Image } from 'astro:assets'
 import portrait from 'public/portrait.webp'
 import clapping from '@images/emojis/clapping.gif'
 import robot from '@images/emojis/robot.gif'
 import bolt from '@images/emojis/bolt.gif'
 
-// Posts
+// Content
 import { getCollection } from 'astro:content'
-const posts = await getCollection('posts')
-posts.sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
+
+const posts = (await getCollection('posts'))
+  .sort((a, b) => Date.parse(a.data.date) - Date.parse(b.data.date))
+  .slice(-3)
+  .reverse()
 ---
 
 <Base>
-    <section class="flex justify-center min-h-screen text-xl bg-[#19191b]">
-        <div class="flex gap-8 items-center space-x-5 ml-10">
-            <div class="max-w-[500px]">
-                <h1 class="text-neutral-200 text-7xl font-light max-md:text-center">
-                    Hi, I'm <span class="text-emerald-400 font-bold font-kode">Z'Laast</span>.
-                </h1>
-                <p class="px-1">
-                    And the rules dictate that I mention that I have a degree in 
-                    <span class="text-emerald-400">Electrical Engineering</span>. 
-                    <i>Ooh aah.</i> 
-                    <Image class="emoji" src={ clapping } alt="clapping hands emoji" />
-                </p>
-                <p class="px-1">
-                    To display my <b>mighty</b>
-                    <i><Spacey text="unimpressiveness," /></i> 
-                    I have made this blog so that I may perform a show and tell of my various 
-                    <b class="gradient-text">coding</b>
-                    <Image src={ robot } class="emoji" alt="Robot emoji" /> and
-                    <b class="gradient-text">electronics</b> 
-                    <Image src={ bolt } class="emoji" alt="Lightning bolt emoji" /> projects.
-                </p>
-            </div>
-            <div class="max-md:hidden portrait relative place-self-center">
-                <Image class="mx-auto drop-shadow-xl/50 select-none min-w-[300px] max-w-[300px]" src={ portrait } alt="Sometimes funny guy. Always funny name." />
-            </div>
-        </div>
-    </section>
-    <section class="flex flex-col bg-neutral-800 py-20 px-8">
-        <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
-            <h2 class="text-5xl text-emerald-400 mb-10 font-kode">Recent</span></h2>
-            {
-                posts.slice(posts.length - 3, posts.length).reverse().map((post, index) => { return <Postcard post={ post } index={ index } pageType="index" />})
-            }
-        </div>
-    </section>
+  <!-- Hero -->
+  <section class="flex min-h-screen justify-center bg-[#19191b] text-xl pt-10">
+    <div class="ml-10 flex items-center gap-8 max-md:ml-0 max-md:flex-col max-md:px-6">
+      <div class="max-w-[500px]">
+        <h1 class="text-7xl font-light text-neutral-200 max-md:text-5xl max-md:px-10 max-md:text-center">
+          Hi, I'm <span class="font-kode font-bold text-emerald-400">Z'Laast</span>.
+        </h1>
+
+        <p class="px-1">
+          And the rules dictate that I mention that I have a degree in
+          <span class="text-emerald-400"> Electrical Engineering</span>.
+          <i> Ooh aah.</i>
+          <Image class="emoji" src={clapping} alt="Clapping hands emoji" />
+        </p>
+
+        <p class="px-1">
+          To display my <b>mighty</b>
+          <i><Spacey text="unimpressiveness," /></i>
+          I have made this blog so that I may perform a show and tell of my various
+          <b class="gradient-text"> coding</b>
+          <Image class="emoji" src={robot} alt="Robot emoji" /> and
+          <b class="gradient-text"> electronics</b>
+          <Image class="emoji" src={bolt} alt="Lightning bolt emoji" /> projects.
+        </p>
+      </div>
+
+      <div class="portrait relative place-self-center max-md:hidden">
+        <Image
+          src={portrait}
+          alt="Sometimes funny guy. Always funny name."
+          class="mx-auto min-w-[300px] max-w-[300px] select-none drop-shadow-xl/50"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Posts -->
+  <section class="bg-neutral-800 px-8 py-20">
+    <div class="mx-auto max-md:max-w-[500px] min-md:w-[800px]">
+      <h2 class="mb-10 font-kode text-5xl text-emerald-400">Recent</h2>
+
+      {posts.map((post, index) => (
+        <Postcard post={post} index={index} pageType="index" />
+      ))}
+    </div>
+  </section>
 </Base>
-
-<style>
-.portrait::after, .portrait::before
-{
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    height: 220px;
-    width: 220px;
-    background: conic-gradient(from var(--angle) at 50% 50%, #003f5b, #2b4b7d, #5f5195, #98509d, #cc4c91, #f25375, #ff6f4e, #ff9913);
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
-    z-index: -1;
-    filter: blur(3rem);
-    animation: 10s portrait-bg-spin linear infinite;
-}
-
-.portrait::before
-{
-    filter: blur(1.5rem);
-    opacity: 0.5;
-}
-
-@keyframes portrait-bg-spin
-{
-    from { --angle: 0deg; }
-    to { --angle: 360deg; }
-}
-
-@property --angle
-{
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
-}
-</style>

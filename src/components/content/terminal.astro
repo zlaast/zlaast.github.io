@@ -1,38 +1,45 @@
-<div class="terminal w-full bg-[#2f343f] rounded-t-md border-1 border-t-[#4b5365] border-b-black border-x-[#282c36] text-[1rem] my-5">
-    <div class="h-[3.3rem] m-1 ml-2">
-        <div class="flex select-none">
-            <div class="mt-1">
-                <span class="bg-[#f25056] h-3.5 w-3.5 rounded-full inline-block"></span>
-                <span class="bg-[#39ea49] h-3.5 w-3.5 rounded-full inline-block"></span>
-                <span class="bg-[#fac536] h-3.5 w-3.5 rounded-full inline-block"></span>
-            </div>
-            <div class="mx-auto place-center pr-20 pb-2">Terminal</div>
-        </div>
-        <div class="bg-[#2f343f] select-none text-md">
-            <span class="pr-2">File</span>
-            <span class="pr-2">Edit</span>
-            <span class="pr-2">View</span>
-            <span class="pr-2">Search</span>
-            <span class="pr-2">Terminal</span>
-            <span class="pr-2">Help</span>
-        </div>
+<div
+  class="terminal
+         w-full
+         max-w-[800px]
+         mx-auto
+         rounded-md
+         border
+         border-t-[#4b5365]
+         border-b-black
+         border-x-[#282c36]
+         my-5
+         bg-black
+         overflow-hidden"
+>
+  <!-- Header -->
+  <div class="h-8 w-full px-3 bg-[#2f343f] flex items-center select-none">
+    <div class="flex gap-2">
+      <span class="bg-[#f25056] h-3 w-3 rounded-full"></span>
+      <span class="bg-[#39ea49] h-3 w-3 rounded-full"></span>
+      <span class="bg-[#fac536] h-3 w-3 rounded-full"></span>
     </div>
-    <pre class="bg-black p-1"><slot /></pre>
+    <div class="mx-auto text-sm text-gray-300 pr-6">Terminal</div>
+  </div>
+  <pre class="bg-black p-3 text-sm sm:text-base overflow-x-auto"><slot /></pre>
 </div>
 
 <style is:global>
-    @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-    
-    .terminal p {
-        margin: 0;
-        padding: 0;
-    }
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap');
 
-    .terminal pre {
-        font-family: "Ubuntu Mono", monospace;
-        font-weight: 200;
-        white-space: pre-wrap;
-        word-spacing: 0;
-        color: #00f500;
-    }
+.terminal pre 
+{
+  font-family: "Ubuntu Mono", monospace;
+  font-weight: 400;
+  white-space: pre;
+  word-break: normal;
+  color: #00f500;
+  line-height: 1.4;
+}
+
+.terminal p 
+{
+  margin: 0;
+  padding: 0;
+}
 </style>
