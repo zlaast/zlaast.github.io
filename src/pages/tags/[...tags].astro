@@ -8,11 +8,13 @@ import Postcard from '@components/website/postcard.astro'
 export async function getStaticPaths() {
 	const allPosts = await getCollection('posts')
 	const posts = Array.from(allPosts)
-	const tags = new Set()
+	const tags = new Set<string>()
 	let paths: Object[] = []
 
 	posts.forEach((post) => {
-		post.data.tags.forEach((tag) => tags.add(tag.toLowerCase().replaceAll(' ', '-')))
+		post.data.tags.forEach((tag) =>
+			tags.add(tag.toLowerCase().replaceAll(' ', '-'))
+		)
 	})
 
 	tags.forEach((tag) => {
@@ -25,32 +27,49 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'posts'>
 const tag = Astro.params
 
-const posts = await getCollection('posts')
-posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = (await getCollection('posts')).sort(
+	(a, b) => b.data.date.getTime() - a.data.date.getTime()
+)
 ---
 
 <Base>
-    <section class="flex flex-col bg-neutral-800 py-20 px-8">
-        <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
-           <!-- Breadcrumbs -->
-            <div class="flex breadcrumbs text-[1rem]">            
-                <a href="/">Home</a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: grey;transform: ;msFilter:;"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path></svg>
-                <a class="capitalize" href=`/tags/${ Object.values(tag) }`>Tag: { Object.values(tag) }</a>             
-            </div>
-            <h2 class="text-5xl text-emerald-400 my-10 font-kode capitalize">Tag:{ Object.values(tag) }</span></h2>
-            {
-                posts.reverse().map((allPosts: any, index) => {
-                    let flag = false
-                    allPosts.data.tags.map((tags: any) => {
-                        if (tags.toLowerCase().replaceAll(' ', '-') == (Object.values(tag)[0] as string).toLowerCase().replaceAll(' ', '-')) {
-                            flag = true
-                        }
-                    })
+	<section class="bg-neutral-800 px-8 py-20">
+		<div class="mx-auto max-w-[800px] max-md:max-w-[500px]">
+			<!-- Breadcrumbs -->
+			<div class="breadcrumbs flex items-center text-base text-gray-400">
+				<a href="/" class="hover:text-white">Home</a>
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="mx-2 fill-gray-400"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" /></svg>
+				<a class="capitalize hover:text-white" href={`/tags/${Object.values(tag)}`}>Tag: {Object.values(tag)}</a>
+			</div>
 
-                    if (flag) return <Postcard post={ allPosts } index={ index } pageType="tags" />
-                })
-            }
-        </div>
-    </section>
+            <!-- Tag Title -->
+			<h2 class="my-10 text-5xl font-kode capitalize text-emerald-400">Tag: {Object.values(tag)}</h2>
+
+            <!-- Posts -->
+			{
+				posts.map((allPosts: any, index) => 
+                {
+					let flag = false
+
+					allPosts.data.tags.map((tags: any) => 
+                    {
+						if (tags.toLowerCase().replaceAll(' ', '-') ==
+						    (Object.values(tag)[0] as string).toLowerCase().replaceAll(' ', '-')) 
+                        {
+							flag = true
+						}
+					})
+
+					if (flag)
+						return (
+							<Postcard
+								post={allPosts}
+								index={index}
+								pageType="tags"
+							/>
+						)
+				})
+			}
+		</div>
+	</section>
 </Base>

@@ -17,25 +17,40 @@ type Props = CollectionEntry<'posts'>
 const post = Astro.props
 
 const project = Astro.params.projects
-const posts = await getCollection('posts', ({ data }) => data.project.toLowerCase().replaceAll(' ', '-') === project);
-posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posts = await getCollection(
+	'posts',
+	({ data }) => data.project.toLowerCase().replaceAll(' ', '-') === project
+)
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 ---
 
 <Base>
-    <section class="flex flex-col bg-neutral-800 my-10 px-8">
-        <div class="max-md:max-w-[400px] min-md:w-[800px] mx-auto">
-           <!-- Breadcrumbs -->
-            <div class="flex breadcrumbs text-[1rem]">            
-                <a href="/">Home</a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: grey;transform: ;msFilter:;"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path></svg>
-                <a href=`/posts/${ post.data.project.toLowerCase().replaceAll(' ', '-') }`>{ post.data.project }</a>             
-            </div>
-            <h2 class="text-5xl text-emerald-400 my-10 font-kode">{ post.data.project }</span></h2>
-				{
-					posts.map((allPosts, index) => {
-						if (allPosts.data.project == post.data.project) return <Postcard post={ allPosts } index={ posts.length - index } pageType="projects" />
-					})
-				}
-        </div>
-    </section>
+	<section class="bg-neutral-800 px-8 py-10">
+		<div class="mx-auto max-w-[800px] max-md:max-w-[400px]">
+			<!-- Breadcrumbs -->
+			<div class="breadcrumbs flex items-center text-base text-gray-400">
+				<a href="/" class="hover:text-white">Home</a>
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="mx-2 fill-gray-400"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" /></svg>
+				<a href={`/posts/${post.data.project.toLowerCase().replaceAll(' ', '-')}`} class="hover:text-white">{post.data.project}</a>
+			</div>
+
+            <!-- Title -->
+			<h2 class="my-10 text-5xl font-kode text-emerald-400">{post.data.project}</h2>
+
+            <!-- Posts -->
+			{
+				posts.map((allPosts, index) => 
+                {
+					if (allPosts.data.project == post.data.project)
+						return (
+							<Postcard
+								post={allPosts}
+								index={posts.length - index}
+								pageType="projects"
+							/>
+						)
+				})
+			}
+		</div>
+	</section>
 </Base>

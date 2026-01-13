@@ -2,68 +2,73 @@
 import Base from '@layouts/base.astro'
 import '@styles/global.css'
 
-import { getCollection } from 'astro:content'
-const posts = await getCollection('posts')
+import { getCollection, type CollectionEntry } from 'astro:content'
 
-let checkForValue = (value) => nodes.some((obj) => Object.values(obj).includes(value))
+type Post = CollectionEntry<'posts'>
 
-let json = posts
-	.map((post) => {
-		return {
-			title: post.data.title,
-			subtitle: post.data.subtitle,
-			url: post.slug,
-			graph_tags: post.data.graph_tags
-		}
-	})
-	.filter((key) => key.graph_tags)
+interface GraphNode {
+  id: string
+  label: string
+  group?: string
+}
 
-// Primary Nodes
-let graph_tags: any = []
-json.forEach((post) => {
-	graph_tags.push(post.graph_tags)
+interface GraphEdge {
+  from: string
+  to: string
+}
+
+const posts: Post[] = await getCollection('posts')
+
+const postData = posts
+  .map((post) => ({
+    title: post.data.title,
+    subtitle: post.data.subtitle,
+    url: post.slug,
+    graphTags: post.data.graph_tags as string[] | undefined
+  }))
+  .filter((post) => post.graphTags && post.graphTags.length > 0)
+
+
+const graphTags = new Set<string>(
+  postData.flatMap((post) => post.graphTags ?? [])
+)
+
+const nodes: GraphNode[] = []
+const edges: GraphEdge[] = []
+const nodeIds = new Set<string>()
+
+// Concept nodes
+graphTags.forEach((tag) => {
+  nodes.push({
+    id: tag,
+    label: tag,
+    group: 'principle'
+  })
+  nodeIds.add(tag)
 })
-graph_tags = new Set(graph_tags.flat())
 
-// Create Nodes and Edges
-let nodes = []
-let edges = []
+// Post nodes + edges
+postData.forEach((post) => {
+  post.graphTags!.forEach((tag) => {
+    if (!nodeIds.has(post.url)) {
+      nodes.push({
+        id: post.url,
+        label: `${post.title}\n${post.subtitle}`,
+        group: tag
+      })
+      nodeIds.add(post.url)
+    }
 
-Array.from(graph_tags).forEach((tag) => {
-	nodes.push({
-		id: tag,
-		label: tag,
-		group: 'principle'
-	})
-})
-
-json.forEach((post) => {
-	Array.from(graph_tags)
-		.sort()
-		.forEach((tag) => {
-			// Add Nodes
-			if (!checkForValue(post.url)) {
-				if (post.graph_tags?.includes(tag)) {
-					nodes.push({
-						id: post.url,
-						label: post.title + '\n' + post.subtitle,
-						group: tag
-					})
-				}
-			}
-
-			// Add Edges
-			if (post.graph_tags?.includes(tag)) {
-				edges.push({
-					from: post.url,
-					to: tag
-				})
-			}
-		})
+    edges.push({
+      from: post.url,
+      to: tag
+    })
+  })
 })
 ---
 
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
 <Base>
     <section class="flex flex-col bg-neutral-800 py-20 px-8">
         <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
@@ -75,6 +80,7 @@ json.forEach((post) => {
             </div>
             <div class="content">
                 <h2 class="my-1 mb-7 text-4xl font-bold">Network Graph</h2>
+                
 				<!-- Network Graph -->
 				<div id="concepts" class="w-5xl"></div>
                 <button id="reset-zoom" class="btn btn-outline btn-success">Reset Zoom</button>
@@ -109,6 +115,7 @@ json.forEach((post) => {
             </div>
         </div>
     </section>
+</Base>
 
 <style is:global>
 :root
@@ -132,73 +139,10 @@ json.forEach((post) => {
         margin-bottom: 1rem;
     }
 
-    h3
-    {
-        font-size: 1.3rem;
-        font-weight: bold;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-    }
-
-    h4
-    {
-        font-weight: bold;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-    }
-
-    blockquote
-    {
-        border-radius: 0.5rem;
-        background-color: var(--block-bg-color);
-        padding: 1rem 2rem;
-        margin-bottom: 1rem;
-        max-width: 100%;
-        line-height: 2;
-
-        strong
-        {
-            font-weight: 600;
-        }
-    }
-
-    code
-    {
-        color: #6eb8ff;
-    }
-
-    .caption
-    {
-        margin-top: 1rem;
-        font-size: 1rem;  
-    }
-
-    img
-    {
-        margin: 2rem auto;
-    }
-
     p
     {
         line-height: 2;
         word-spacing: 0.05rem;
-    }
-
-    ol
-    {
-        border-radius: 0.5rem;
-        background-color: var(--block-bg-color);
-        padding: 1.5rem 2rem;
-        margin-bottom: 1rem;
-        max-width: 100%;
-        line-height: 2;
-
-        li
-        {
-            list-style-type: decimal;
-            line-height: 2.5rem;
-            margin-left: 1.5rem;
-        }   
     }
 
     ul
@@ -219,7 +163,8 @@ json.forEach((post) => {
     }
 }
 
-#concepts {
+#concepts 
+{
     border: 3px solid var(--emerald-color);
     border-radius: 0.5rem;
     background-color: var(--block-bg-color);
@@ -228,7 +173,8 @@ json.forEach((post) => {
     margin: 1rem 0;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 600px) 
+{
     #concepts
     {
         width: 300px;
@@ -237,65 +183,71 @@ json.forEach((post) => {
 }
 </style>
 
-<script type="text/javascript" define:vars={{ nodes, edges }}>
-	// Graph Information
-	let container = document.getElementById('concepts')
+<script define:vars={{ nodes, edges }}>
 
-	let data = {
-		nodes: nodes,
-		edges: edges
-	}
+var container = document.getElementById('concepts')
+if (!container) {
+  throw new Error('Graph container not found')
+}
 
-	let options = {
-		nodes: {
-			shape: 'square',
-			size: 8,
-			font: {
-				size: 10,
-				color: 'white'
-			}
-		},
-		edges: {
-			width: 1
-		},
-		groups: {
-			principle: {
-				shape: 'triangleDown',
-				color: '#6eb8ff',
-				size: 15,
-				font: {
-					color: '#00d492',
-					size: 12
-				}
-			}
-		}
-	}
-	network = new vis.Network(container, data, options)
+var data = {
+  nodes: nodes,
+  edges: edges
+}
 
-	// Graph SQUARE nodes -> post URL
-	// Graph TRIANGULAR nodes -> zoom in
-	network.on('doubleClick', function (params) {
-		let node = params.nodes[0]
+var options = {
+  nodes: {
+    shape: 'square',
+    size: 8,
+    font: {
+      size: 10,
+      color: 'white'
+    }
+  },
+  edges: {
+    width: 1
+  },
+  groups: {
+    principle: {
+      shape: 'triangleDown',
+      size: 15,
+      color: '#6eb8ff',
+      font: {
+        color: '#00d492',
+        size: 12
+      }
+    }
+  }
+}
 
-		if (node.indexOf('/') > -1) {
-			window.location.href = `/posts/${node}`
-		} else {
-			network.focus(node, {
-				scale: 2.5,
-				animation: {
-					easingFunction: 'easeInQuad'
-				}
-			})
-		}
-	})
+var network = new vis.Network(container, data, options)
 
-	// Reset Zoom
-	let resetBtn = document.getElementById('reset-zoom')
-	resetBtn.addEventListener('click', () => {
-		network.fit({
-			animation: {
-				easingFunction: 'easeOutQuad'
-			}
-		})
-	})
+// Double-click behavior
+network.on('doubleClick', function (params) {
+  var nodeId = params.nodes[0]
+  if (!nodeId) return
+
+  if (nodeId.indexOf('/') !== -1) {
+    window.location.href = '/posts/' + nodeId
+  } else {
+    network.focus(nodeId, {
+      scale: 2.5,
+      animation: {
+        easingFunction: 'easeInQuad'
+      }
+    })
+  }
+})
+
+// Reset zoom
+var resetBtn = document.getElementById('reset-zoom')
+if (resetBtn) {
+  resetBtn.addEventListener('click', function () {
+    network.fit({
+      animation: {
+        easingFunction: 'easeOutQuad'
+      }
+    })
+  })
+}
 </script>

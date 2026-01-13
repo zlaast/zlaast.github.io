@@ -5,16 +5,30 @@ import SearchBox from '@components/website/search.svelte'
 ---
 
 <Base>
-    <section class="flex flex-col bg-neutral-800 py-20 px-8">
-        <div class="max-md:max-w-[500px] min-md:w-[800px] mx-auto">
+    <section class="bg-neutral-800 px-8 py-20">
+        <div class="mx-auto flex max-w-[800px] flex-col max-md:max-w-[500px]">
+
             <!-- Breadcrumbs -->
-            <div class="flex breadcrumbs text-[1rem] mb-10">            
-                <a href="/">Home</a>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: grey;transform: ;msFilter:;"><path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path></svg>
-                Search       
+            <div class="breadcrumbs mb-10 flex items-center text-base text-gray-400">
+                <a href="/" class="hover:text-white">Home</a>
+
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    class="mx-2 fill-gray-400"
+                    >
+                    <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
+                </svg>
+
+                <span>Search</span>
             </div>
-            <h2 class="text-5xl text-emerald-400 mb-10 font-kode">Search</span></h2>
-            <SearchBox client:load></SearchBox>
+
+            <h2 class="mb-10 text-5xl font-kode text-emerald-400">Search</h2>
+
+            <SearchBox client:load />
         </div>
     </section>
 </Base>
+
