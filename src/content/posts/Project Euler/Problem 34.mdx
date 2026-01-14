@@ -1,0 +1,75 @@
+---
+category: Coding
+project: Project Euler
+title: Project Euler
+subtitle: Problem 34 - Digit Factorials
+part: 34
+date: 2026-01-15
+tags: ['Coding', 'Math', 'Python']
+image: "/images/posts/project-euler/level_1.png"
+excerpt: "This problem is interesting because we aren't given an upper limit as to where we should end our search. So how about we find it?"
+read_time: 3
+---
+
+import Tab from '@components/content/tab.astro'
+import Tabs from '@components/content/tabs.astro'
+import Spoiler from '@components/content/spoiler.astro'
+
+## Problem
+
+This problem comes from [Project Euler 34](https://projecteuler.net/problem=34)
+
+> **Problem**
+>
+> 145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.
+>
+> Find the sum of all numbers which are equal to the sum of the factorial of their digits.
+>
+> Note: As 1! = 1 and 2! = 2 are not sums they are not included.
+
+## Solution
+
+This problem is interesting because we aren't given an upper limit as to where we should end our search. So how about we find it?
+
+Let's look at the problem's example. It should be (obviously) noted that the factorial of any single digit from a given number must be less than the given number.
+That is, 5! = 120, and 120 < 145. 
+
+Another way of saying this, is that the number of digits resulting from the factorial of a digit must be less than or equal to the given number. 
+For example, 5! = 120 and has three digits, and so does 145. But 7! = 5040 and has more digits than 145
+(Yeah I know, it's the same thing as saying 5040 > 145, but it's a slight change in perspective for me)
+
+So let's look at single digit factorials
+
+- 5! = 120. Requires a 3-digit number.
+- 6! = 720. Requires a 3-digit number.
+- 7! = 5040. Requires a 4-digit number.
+- 8! = 40 320. Requires a 5-digit number.
+- 9! = 362 880. Requires a 6-digit number.
+
+So what's the upper limit? Since our largest single digit, 9!, can only give a flat increase of 362 880, then a 7-digit number is our upper limit.
+In fact, 2 999 999 is the hard limit, which is 2! + 6×9! = 2 177 282. Beyond that number, the sum of the factorials of the given number's digits will always
+be less than the given number itself. <span class="text-xs">(At least I hope so. This is just something I reasoned out, not proved, don't hurt me 😬)</span>
+
+## Code
+<Tabs>
+<Tab name="problem34.py" checked="checked">
+```python
+# Project Euler: Problem 34
+# Digit Factorials
+
+from math import factorial
+
+sfd = 0
+for i in range(3, 2999999):
+    number = sum([factorial(int(x)) for x in str(i)])
+
+    if (i == number):
+        sfd += i
+
+print(sfd)
+```
+</Tab>
+</Tabs>
+
+
+<Spoiler>40730</Spoiler>

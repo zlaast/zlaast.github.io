@@ -1,0 +1,76 @@
+---
+category: Coding
+project: Project Euler
+title: Project Euler
+subtitle: Problem 33 - Digit Cancelling Fractions
+part: 33
+date: 2026-01-14
+tags: ['Coding', 'Math', 'Python']
+image: "/images/posts/project-euler/level_1.png"
+excerpt: "I took the most straightforward solution I could think of (cause I'm a straightforward kind of guy)"
+read_time: 3
+---
+
+import Tab from '@components/content/tab.astro'
+import Tabs from '@components/content/tabs.astro'
+import Spoiler from '@components/content/spoiler.astro'
+
+## Problem
+
+This problem comes from [Project Euler 33](https://projecteuler.net/problem=33)
+
+> **Problem**
+>
+> The fraction 49/98 is a curious fraction, as an inexperienced mathematician in attempting to simplify it may incorrectly believe 
+> that 49/98 = 4/8, which is correct, is obtained by cancelling the 9s.
+>
+> We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
+>
+> There are exactly four non-trivial examples of this type of fraction, less than one in value, and containing two digits in the numerator and denominator.
+>
+> If the product of these four fractions is given in its lowest common terms, find the value of the denominator.
+
+## Solution
+
+I took the most straightforward solution I could think of (cause I'm a straightforward kind of guy)
+
+1. Iterate through a list of two-digit numerators (`n`) and denominators (`d`), where the `d` > `n` (so that `n`/`d` < 1).
+2. Ensure that we skip trivial examples. That is, where `n` and `d` are divisible by 10.
+3. Take any digits that matches in both the numerator and denominator and remove them. If the fraction is still the same then we found a number.
+4. Take the product of all such numbers and use the denominator as the answer.
+
+## Code
+<Tabs>
+<Tab name="problem33.py" checked="checked">
+```python
+# Project Euler: Problem 33
+# Digit Cancelling Fractions
+
+from fractions import Fraction
+
+prod = 1
+for n in range(11, 100):
+    for d in range(n+1, 100):
+        if n % 10 != 0 and d % 10 != 0:
+            n_str = [int(i) for i in str(n)]
+            d_str = [int(i) for i in str(d)]
+
+            for i in n_str:
+                if i in d_str:
+                    _n = n_str.copy()
+                    _d = d_str.copy()
+                    _n.remove(i)
+                    _d.remove(i)
+                    n_int = int(_n[0])
+                    d_int = int(_d[0])
+
+                    if (n/d == n_int/d_int):
+                        prod *= n/d
+
+print(Fraction('%.3f'%(prod)))
+```
+</Tab>
+</Tabs>
+
+
+<Spoiler>100</Spoiler>

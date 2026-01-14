@@ -1,18 +1,11 @@
 ---
 export const partial = true;
 
+import { project_progress } from '@utils/consts'
+
 // Variables
 let menu : Object[] = [];
-let project_progress = [
-    {
-        project: "Project Euler",
-        progress: 3.3
-    },
-    {
-        project: "nand2tetris",
-        progress: 40
-    }
-]
+
 // 1. Get all posts
 // const all_posts = await Astro.glob("@content/posts/**/*.mdx");
 const all_posts = Object.values(import.meta.glob("@content/posts/**/*.mdx", { eager: true }));
