@@ -40,7 +40,12 @@ else if (pageType == "tags")
     showTags = true;
 }
 
-const date = parseDate(post.data.date)
+let date = parseDate(post.data.date)
+const updated = parseDate(post.data.updated)
+let updated_flag = false
+
+if (post.data.updated != undefined)
+    updated_flag = true
 ---
 
 <a href=`/posts/${ post.slug }`>
@@ -60,7 +65,7 @@ const date = parseDate(post.data.date)
         </div>
         <div class="text-neutral-200 font-normal text-xl p-5 py-6 inline">
             <div class="text-xl">
-                { post.data.project }
+                { post.data.title }
                 <span class="text-neutral-400"> # </span>
                 { post.data.subtitle }
             </div>
@@ -74,7 +79,11 @@ const date = parseDate(post.data.date)
                 </div>
                 <div class="flex items-center gap-1 my-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0); transform: ;msFilter:;"><path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm.002 16H5V8h14l.002 12z"></path><path d="m11 17.414 5.707-5.707-1.414-1.414L11 14.586l-2.293-2.293-1.414 1.414z"></path></svg>
-                    <span>{ date }</span>
+                    <div class="flex flex-col">
+                        {
+                            updated_flag? <span>Updated: { updated }</span>:<span>Posted: { date }</span>
+                        }
+                    </div>
                 </div>
                 <div class="flex items-center text-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="20" height="20" viewBox="0 0 24 24" style="fill: oklch(70.8% 0 0); transform: ;msFilter:;"><path d="M11.707 2.293A.997.997 0 0 0 11 2H6a.997.997 0 0 0-.707.293l-3 3A.996.996 0 0 0 2 6v5c0 .266.105.52.293.707l10 10a.997.997 0 0 0 1.414 0l8-8a.999.999 0 0 0 0-1.414l-10-10zM13 19.586l-9-9V6.414L6.414 4h4.172l9 9L13 19.586z"></path><circle cx="8.353" cy="8.353" r="1.647"></circle></svg>

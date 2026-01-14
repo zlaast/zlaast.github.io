@@ -9,6 +9,7 @@ const postsCollection = defineCollection({
     subtitle: z.string().optional(),
     part: z.number(),
     date: z.date(),
+    updated: z.date().optional(),
     tags: z.array(z.string()),
     graph_tags: z.array(z.string()).optional(),
     image: z.string().optional(),
