@@ -20,7 +20,7 @@ const { Content, headings } = await post.render();
 
 /* Format Date */
 const date = parseDate(post.data.date);
-const updated = parseDate(post.data.updated)
+const updated = parseDate(post.data.updated);
 let flag_updated = false
 if (post.data.updated != undefined)
     flag_updated = true
@@ -129,10 +129,9 @@ posts.some(getLinks);
 }
 
 /* CSS for text content */
-
 strong
 {
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .content 
@@ -307,52 +306,74 @@ strong
 }
 
 /* Tables */
-table {
+table 
+{
 	min-width: 100%;
 	margin: auto;
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 	background-color: var(--block-bg-color);
 }
 
-thead tr {
+thead tr 
+{
 	background-color: var(--emerald-color);
 	color: white;
 	text-align: center;
 }
 
-th, td {
+th, td 
+{
 	text-align: center;
 	padding: 10px;
 }
 
-tbody tr {
+tbody tr 
+{
 	border-bottom: 1px solid #dddddd;
 }
 
-tbody tr:nth-child(even) {
+tbody tr:nth-child(even) 
+{
 	background-color: var(--block-bg-color);
 }
 
-tbody tr:last-of-type {
+tbody tr:last-of-type 
+{
 	border-bottom: 2px solid var(--emerald-color);
 }
 
-@media only screen and (max-width: 600px) {
-	pre {
+/* Phone Specific */
+@media only screen and (max-width: 600px) 
+{
+    h2, h3, h4 
+    {
+        text-align: center;
+    }
+
+	pre 
+    {
 		width: 80vw;
 		font-size: 12px !important;
 	}
-	.tabs .astro-code {
+
+	.tabs .astro-code 
+    {
 		width: 60vw !important;
 		font-size: 12px !important;
 	}
-	code:not(pre code) {
+
+	code:not(pre code) 
+    {
 		font-size: 14px;
 	}
-	.katex {
+
+	.katex 
+    {
 		font-size: 16px;
 	}
-	table {
+
+	table 
+    {
 		margin: 0;
 		padding: 0;
 		font-size: 1rem;

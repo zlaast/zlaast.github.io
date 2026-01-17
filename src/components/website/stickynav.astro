@@ -5,13 +5,13 @@ let toc = ''
 headings.forEach((heading: any) => {
     switch(heading['depth']) {
         case 2: // H2
-            toc += `<a class='text-[0.95rem] leading-6 hover:scale-107 transition-all duration-150 ease-in-out toc-link toc-link-depth__0' href="#${heading['slug']}">${ heading['text'] }</a>`;
+            toc += `<a class='text-[0.95rem] leading-6 origin-left hover:scale-107 transition-all duration-150 ease-in-out toc-link toc-link-depth__0' href="#${heading['slug']}">${ heading['text'] }</a>`;
             break;
         case 3: // H3
-            toc += `<a class='text-[0.95rem] ml-3 leading-6 hover:scale-107 transition-all duration-150 ease-in-out toc-link toc-link-depth__1' href="#${heading['slug']}">${ heading['text'] }</a>`;
+            toc += `<a class='text-[0.95rem] ml-3 leading-6 origin-left hover:scale-107 transition-all duration-150 ease-in-out toc-link toc-link-depth__1' href="#${heading['slug']}">${ heading['text'] }</a>`;
             break;
         case 4: // H4
-            toc += `<a class='text-[0.95rem] ml-6 leading-6 hover:scale-107 transition-all duration-150 ease-in-out toc-link toc-link-depth__2' href="#${heading['slug']}">${ heading['text'] }</a>`;
+            toc += `<a class='text-[0.95rem] ml-6 leading-6 origin-left hover:scale-107 transition-all duration-150 ease-in-out toc-link toc-link-depth__2' href="#${heading['slug']}">${ heading['text'] }</a>`;
             break;
     }
 })
