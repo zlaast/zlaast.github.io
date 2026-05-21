@@ -1,0 +1,317 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Building a Web Server"
+title: Building a Web Server
+subtitle: Dynamic Response
+part: 7
+date: 2026-02-04
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+excerpt: "Now that your server can establish connections, it's time to learn how to send data."
+read_time: 8
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+import Spacey from '@components/text_effects/spaceytext.astro'
+
+## Problem
+
+This problem comes from [pwn.college - Building a Web Server ⤴](https://pwn.college/computing-101/building-a-web-server/).
+
+> In this challenge, your server evolves to handle dynamic content based on HTTP GET requests. You will first use the [read ⤴](https://man7.org/linux/man-pages/man2/read.2.html) syscall to receive the incoming HTTP request from the client socket. By examining the request line--particularly, in this case, the URL path--you can determine what the client is asking for. Next, use the [open ⤴](https://man7.org/linux/man-pages/man2/open.2.html) syscall to open the requested file and [read ⤴](https://man7.org/linux/man-pages/man2/read.2.html) to read its contents. Send the file contents back to the client using the [write ⤴](https://man7.org/linux/man-pages/man2/write.2.html) syscall. This marks a significant step toward interactivity, as your server begins tailoring its output rather than simply echoing a static message.
+
+## Solution
+
+### Goal
+
+Again, running `/challenge/run server` (using the program compiled in [Static Response](/posts/hacking/pwncollege/building-a-web-server/static-response)) prints to the console.
+This time I'll only be showing the relevant output.
+
+```
+===== Expected: Parent Process =====
+...
+[ ] read(4, <read_request>, <read_request_count>) = <read_request_result>
+[ ] open("<open_path>", O_RDONLY) = 5
+[ ] read(5, <read_file>, <read_file_count>) = <read_file_result>
+[ ] close(5) = 0
+...
+[ ] write(4, <write_file>, <write_file_count>) = <write_file_result>
+```
+
+So we've got a new function, `open`, which returns a file descriptor (`5`). In this challenge we get the path from the `read` (fd `4`) request,
+open the file from the given path, read its contents, and then write its contents back to the client over fd `4`.
+
+But first, let's look at the `open` function and then implement everything.
+
+### Open Function
+
+The `open` function has the following function definition:
+
+```cpp
+int open(const char *path, int flags);
+```
+
+Where
+- `path` is the file location. For this challenge our path is in the first `read` (fd `4`) request, with the form "`/tmp/tmpxxxxxxxx`". See [Arguments](#arguments) for more details.
+- `flags` informs the function what to do with the file. We *must* include either the "read only" flag (`O_RDONLY`), "write only" flag (`O_WRONLY`), 
+or the "read/write" flag (`O_RDWR`). If we wish to used additional flags, we must bitwise OR them with the above flags. For this challenge, we'll be using `O_RDONLY`.
+
+The `open` function returns an `int` which is a file descriptor. See the [open man page ⤴](https://man7.org/linux/man-pages/man2/open.2.html) for more details.
+
+---
+**Note 1**
+
+There *is* an additional optional argument for the `open` function, but we'll be ignoring that. You can see the man page for details on the `mode_t mode` parameter.
+
+---
+
+### Arguments
+
+Let's look at how we'll handle the two arguments for the `open` function.
+
+**Path Extraction**
+
+If we run `/challenge/run server`, part of the output is
+
+```
+[✓] read(4, "GET /tmp/tmp7nc6fh2m HTTP/1.1\r\nHost: localhost\r\nUser-Agent: python-requests/2.32.4\r\nAccept-Encoding: gzip, deflate, zstd\r\nAccept: */*\r\nConnection: keep-alive\r\n\r\n", 161) = 161
+```
+
+The path in this example is "`/tmp/tmp7nc6fh2m`". Every run, the path is partially randomized, but it always has the form "`/tmp/tmpxxxxxxxx`", which means it's always 16 characters (16 bytes) long.
+
+To extract the path we'll do a few things. First we'll add a new section `.bss` (which is meant for uninitialized data), and allocate 17 bytes of space for our path.
+The path is 16 bytes long, but we'll append a null byte to denote the end of the string, hence 17 bytes.
+
+Next we'll have to extract the path from the stack. We'll skip over "`GET `", which is 4 bytes, and then extract 16 bytes and place them in the space we allocated in the `.bss` section.
+This will be done by using the `rep movsb` instruction. This instruction moves `rcx` bytes from `rsi` into `rdi`.
+
+**Flags**
+
+So, we need to add the flag `O_RDONLY`, but we can't use the string directly *(For now. I'll fix that soon)* so we need to find the numeric representation of `O_RDONLY`.
+Like we did in the [socket post](/posts/hacking/pwncollege/building-a-web-server/socket), we can `grep` for it.
+The values are 
+
+- `O_RDONLY` = `0`
+- `O_WRONLY` = `1`
+- `O_RDWR` = `2`.
+
+But now that we know that, we *can* use a "string" *(Told you it'd be fixed soon)*. In this case, we'll create a **constant** using the `.equ` directive.
+For example 
+
+```asm
+.equ O_RDONLY, 0
+```
+
+---
+**Note 2**
+
+The `.equ` directive is GAS (Gnu Assembler) specific. In NASM you would write 
+```asm
+O_RDONLY equ 0  # NASM
+```
+
+---
+
+### Second Write
+
+When running the program, I found that the file we read returns content of different lengths on each run. Here's some examples
+
+```
+[✓] read(5, "n6zGvzLkCOOrEL6SOaBMFjOi8snw5sPX3lyJJV1gJEMoINGhEVY0XqGjleLrCYOnhWk5GXsSuSnIKVqREgYTQcTMtbAIBm2abtnurLHjAF9QVsikc", 4096) = 113
+[✓] read(5, "sz0Tevy5jLCvz6JTYjwuKs6r9oxycb2okD2uqF4k6vcspYeFsp7b6fQwENE6ttSKj3q7EtPcqtzxxTGGEvTFXKeBXPhv5QX8uOvQ01phdUm3ytrPNKfbaYrt", 4096) = 120
+[✓] read(5, "tgsCXRPqSBQVtD9SNmmFq1kcT7fI0b2p2mTZDy488shecVqmh8o", 4096) = 51
+```
+
+Unlike the path, we can't depend on it being the same length every time. The `write` function needs to know how many bites it's writing
+to a file descriptor, so we need to figure it out. 
+See the [previous post](/posts/hacking/pwncollege/building-a-web-server/static-response#write-function) for details on the `write` function.
+
+To accomplish this task, I wrote a function to check the string length.
+
+```asm
+# Function that finds string length
+# Arguments (1): rdi accepts pointer to string location
+# Return: Returns string length in bytes, stored in rax
+# Example: 
+#     lea rdi, [rsp]
+#     call str_len
+str_len:
+  xor rax, rax
+
+  loop:
+    cmp byte ptr [rdi+rax], 0x0
+    je end
+    add rax, 1
+    jmp loop
+  end:
+    ret
+```
+
+Following System V ABI standard, the function takes one argument in `rdi`, which takes a pointer to the string location, and `rax` will return the string length.
+Here we just simply check to see if the current byte (character) is a `NULL` byte (which denotes the end of a string), and if it is, we're done and return.
+If not, we increase the count by one and go to the next character.
+
+### Code
+
+Since remembering in which registers I saved file descriptors is difficult and this program is getting long, I have opted
+to save file descriptors in the `.bss` section.
+
+I have also removed the `ptr` keyword whenever possible (and kept it in when the compiler complained :D)
+
+```asm
+.intel_syntax noprefix
+.global _start
+
+# CONST: IP
+.equ AF_INET,     2           # IPv4
+.equ AF_INET6,   10           # IPv6
+.equ SOCK_STREAM, 1           # TCP
+.equ SOCK_DGRAM,  2           # UDP
+
+# CONST: open() flags
+.equ O_RDONLY, 0
+.equ O_WRONLY, 1
+.equ O_RDWR,   2
+
+# CONST: syscall numbers
+.equ READ,    0
+.equ WRITE,   1
+.equ OPEN,    2
+.equ CLOSE,   3
+.equ SOCKET, 41
+.equ ACCEPT, 43
+.equ BIND,   49
+.equ LISTEN, 50
+.equ EXIT,   60
+
+
+.section .data
+  sock_in:                    # struct sockaddr_in
+    .word AF_INET
+    .word 0x5000              # Port 80 in hex
+    .long 0                   # IP address of 0.0.0.0
+    .byte 0                   # Padding
+
+  buf_w:
+    .string "HTTP/1.0 200 OK\r\n\r\n"
+
+
+.section .bss
+  fd3: .quad 0
+  fd4: .quad 0
+  fd5: .quad 0
+  path: .space 17
+
+
+.section .text
+_start:
+  Socket:
+    mov rdi, AF_INET
+    mov rsi, SOCK_STREAM
+    xor rdx, rdx               # 0 for protocol
+    mov rax, SOCKET
+    syscall
+    mov qword [fd3], rax       # Save fd 3
+  
+  Bind:
+    mov rdi, qword [fd3]
+    lea rsi, [sock_in]         # Pointer to struct sockaddr_in
+    mov rdx, 16                # 16 bytes expected
+    mov rax, BIND
+    syscall
+
+  Listen:
+    mov rdi, qword [fd3]
+    mov rsi, 0                 # Expected backlog length
+    mov rax, LISTEN
+    syscall
+
+  Accept:
+    mov rdi, qword [fd3]
+    mov rsi, 0x0               # Null
+    mov rdx, 0x0               # Null
+    mov rax, ACCEPT
+    syscall
+    mov qword [fd4], rax       # Save fd 4
+
+  Read_1:
+    sub rsp, 161               # Allocate 161 buf on stack
+    mov rdi, qword [fd4]
+    mov rsi, rsp               # buf location on the stack
+    mov rdx, 161               # count
+    mov rax, READ
+    syscall
+
+    # Extract Path
+    lea rsi, [rsp+4]           # Start of path
+    lea rdi, [path]            # Save path into "path" variable
+    mov rcx, 16                # Amount of bytes to read
+    rep movsb                  # Read rcx bytes starting from rsi to rdi
+    mov byte ptr [path+16], 0  # Null terminate path
+    add rsp, 161               # Remove buffer from stack
+
+  Open:
+    lea rdi, [path]            # Path: "/tmp/tmpxxxxxxxx"
+    mov rsi, O_RDONLY
+    mov rax, OPEN
+    syscall
+    mov qword [fd5], rax       # Save fd 5
+
+  Read_2:
+    sub rsp, 0x1000            # Allocate 4kB buf on stack
+    mov rdi, qword [fd5]
+    mov rsi, rsp               # buf location on stack
+    mov rdx, 0x1000            # count (max 4kB)
+    mov rax, READ
+    syscall
+
+  Close_1:
+    mov rdi, qword [fd5]
+    mov rax, CLOSE
+    syscall
+
+  Write_1:
+    mov rdi, qword [fd4]
+    lea rsi, [buf_w]           # Write data from buf
+    mov rdx, 19                # Write 19 bytes from buf
+    mov rax, WRITE
+    syscall
+
+  Write_2:
+    lea rdi, [rsp]             # Argument of str_len (buf)
+    call str_len
+    mov rdi, qword [fd4]
+    lea rsi, [rsp]             # Write data from buf
+    mov rdx, rax               # Length of string
+    mov rax, WRITE
+    syscall
+    add rsp, 0x1000            # Remove 4kB buf from stack
+
+  Close_Socket:
+    mov rdi, qword [fd4]
+    mov rax, CLOSE
+    syscall
+
+  Exit:
+    mov rdi, 0
+    mov rax, EXIT
+    syscall
+
+# Function that finds string length
+# Arguments (1): rdi accepts pointer to string location
+# Return: Returns string length in bytes, stored in rax
+# Example: 
+#     lea rdi, [rsp]
+#     call str_len
+str_len:
+  xor rax, rax
+
+  loop:
+    cmp byte ptr [rdi+rax], 0x0
+    je end
+    add rax, 1
+    jmp loop
+  end:
+    ret
+```

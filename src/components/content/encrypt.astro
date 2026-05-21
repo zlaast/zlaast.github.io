@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import lock from '@images/emojis/lock.webp';
+
+import Spacey from '@components/text_effects/spaceytext.astro';
+
+const { placeholder } = Astro.props;
+---
+<div id="encryption-form">
+    <Image src={ lock } alt="lock emoji" class="max-h-[80px] w-auto" />
+    <h2 class="text-center">An <Spacey text="encrypted" /> page!</h2>
+    <p>
+        You've encountered an encrypted page! <strong class="text-[#58b8ff]">{ placeholder }</strong> to decrypt it.
+        Nothing happened? You entered the wrong password! In that case, <em>refresh the page</em>
+        (I mean it) and try again.
+    </p>
+    <label for="key">
+    <input
+        id="key"
+        type="text"
+        placeholder={ placeholder }
+        class="w-full text-center border-1 rounded-lg border-emerald-400 text-lg text-neutral-200 focus:outline-none focus:ring-0 py-3"
+    >
+    </label>
+    <button name="decrypt" id="decrypt" class="spoiler w-full bg-[#15161a] font-bold text-emerald-400 py-3 my-5 rounded-lg" onclick="encrypt(this)">
+        <div class="font-kode">Decrypt</div>
+    </button>
+</div>
+
+<style>
+    .spoiler {
+        background: repeating-linear-gradient(45deg, #15161a, #15161a 10px, #24292e 10px, #24292e 20px);
+        box-shadow: 0 0 0 0 #00d492;
+		transition: all 0.2s ease-in-out;
+
+        &:hover
+        {
+            box-shadow: 0 0 0px 1px #00d492;
+		    transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+    }
+</style>
+
+<script type="text/javascript">
+    function encrypt()
+    {
+        // Enter key
+        let encryption_key = "pwn.college{0zEgsYUu_s7Rlc7TH2dF8f4MVkc.QXwQzMzwyNzUTO0EzW}"
+
+        // 0. Get content
+        let raw = document.getElementById("encrypted").innerHTML;
+
+        // 1. Convert to utf8
+        const utf8encoder = new TextEncoder();
+        raw = utf8encoder.encode(raw)
+
+        // 2. Convert to base64 for encrypting
+        raw = window.btoa(raw)
+
+        // 3. xor with key and create encrypted string
+        let key = utf8encoder.encode(encryption_key)
+        key = window.btoa(key)
+        let encryptedString = ""
+
+        for (let i=0; i < raw.length; i++)
+        {
+            encryptedString += String.fromCharCode(raw[i].charCodeAt(0) ^ key[i % key.length].charCodeAt(0))
+        }
+
+        // 4. Convert to base64 for rendering
+        encryptedString = window.btoa(encryptedString)
+
+        // 5. Output encrypted contents
+        console.log(encryptedString)
+    }
+
+    function decrypt()
+    {
+        // 0. Get encrypted content
+        let content = document.getElementById("encrypted");
+        let encrypted = content.innerText;
+
+        // 1. Remove base64 encoding
+        encrypted = window.atob(encrypted)
+        
+        // 2. xor with key to decrypt string
+        const utf8encoder = new TextEncoder();
+        let key = document.getElementById("key").value;
+        key = utf8encoder.encode(key)
+        key = window.btoa(key)
+        
+        let decryptedString = ""
+
+        for (let i=0; i < encrypted.length; i++)
+        {
+            decryptedString += String.fromCharCode(encrypted[i].charCodeAt(0) ^ key[i % key.length].charCodeAt(0))
+        }
+
+        // 3. Remove base64 encoding
+        decryptedString = window.atob(decryptedString)
+
+        // 4. Combine back together
+        decryptedString = decryptedString.split(",")
+        let decrypted = ""
+        for (let i = 0; i < decryptedString.length; i++)
+        {
+            decrypted += String.fromCharCode(decryptedString[i])
+        }
+
+        content.innerHTML = decrypted;
+
+        // 5. Unhide content and hide encryption form
+        content.classList.remove("hidden");
+        document.getElementById("encryption-form").classList.add("hidden");
+    }
+</script>

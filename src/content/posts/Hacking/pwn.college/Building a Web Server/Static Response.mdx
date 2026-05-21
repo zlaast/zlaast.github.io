@@ -1,0 +1,204 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Building a Web Server"
+title: Building a Web Server
+subtitle: Static Response
+part: 6
+date: 2026-02-03
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+excerpt: "Now that your server can establish connections, it's time to learn how to send data."
+read_time: 8
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+import Spacey from '@components/text_effects/spaceytext.astro'
+
+## Problem
+
+This problem comes from [pwn.college - Building a Web Server ⤴](https://pwn.college/computing-101/building-a-web-server/).
+
+> Now that your server can establish connections, it's time to learn how to send data. In this challenge, your goal is to send a fixed HTTP response (`HTTP/1.0 200 OK\r\n\r\n`) to any client that connects. You will use the [write ⤴](https://man7.org/linux/man-pages/man2/write.2.html) syscall, which requires a file descriptor, a pointer to a data buffer, and the number of bytes to write. This exercise is important because it teaches you how to format and deliver data over the network.
+
+## Solution
+
+### Goal
+
+As usual, running `/challenge/run server` (using the program compiled in [Accept](/posts/hacking/pwncollege/building-a-web-server/accept)) prints to the console
+
+```
+===== Expected: Parent Process =====
+[ ] execve(<execve_args>) = 0
+[ ] socket(AF_INET, SOCK_STREAM, IPPROTO_IP) = 3
+[ ] bind(3, {sa_family=AF_INET, sin_port=htons(<bind_port>), sin_addr=inet_addr("<bind_address>")}, 16) = 0
+    - Bind to port 80
+    - Bind to address 0.0.0.0
+[ ] listen(3, 0) = 0
+[ ] accept(3, NULL, NULL) = 4
+[ ] read(4, <read_request>, <read_request_count>) = <read_request_result>
+[ ] write(4, "HTTP/1.0 200 OK\r\n\r\n", 19) = 19
+[ ] close(4) = 0
+[ ] exit(0) = ?
+```
+
+Hey! We have **three** new functions instead of the usual one! We're going to have to write some assembly for `read`, `write`, and `close`
+in order to solve this challenge. From just this output, we can see that the `read` and `write` requests both accept the file descriptor
+that was returned from the `accept` function. Regardless, let's look at the functions.
+
+### Read Function
+
+The `read` function has the following function definition:
+
+```cpp
+ssize_t read(size_t count; int fd, void buf[count], size_t count);
+```
+
+It looks a bit strange for a function, but what it does is said best from the [read man page ⤴](https://man7.org/linux/man-pages/man2/read.2.html):
+
+>  **read()** attempts to read up to *`count`* bytes from file descriptor *`fd`* into the buffer starting at *`buf`*.
+
+That's pretty clear to me! But here's my own explanation along with what I passed as the arguments.
+
+- `fd` takes a file descriptor, which is where we are reading our data from. In our case, it's the descriptor returned from the `accept` function.
+- `buf` holds the data we have read from the file descriptor. We weren't given any information on how large our buffer should be, so I looked around
+for some recommendations and found 4kB to be decent.
+- `count` is the amount of bytes we are reading into `buf`. In our case, I've chosen 4kB as the count.
+
+The `read` function returns the number of bytes read on success.
+
+### Write Function
+
+The `write` function has the following function definition:
+
+```cpp
+ssize_t write(size_t count; int fd, const void buf[count], size_t count);
+```
+
+Here's a quote from the [write man page ⤴](https://man7.org/linux/man-pages/man2/write.2.html):
+
+>  **write()** writes up to *`count`* bytes from the buffer starting at *`buf`* to the file referred to by the file descriptor *`fd`*.
+
+Practically everything said about the `read` function applies to the `write` function. Let's look at what we're passing for this challenge.
+
+- `fd` takes a file descriptor, which is where we are writing our data to. In our case, it's the descriptor returned from the `accept` function. It's the same one used in `read` function as well.
+- `buf` holds the data we are writing to the file descriptor. We know it's the string "`HTTP/1.0 200 OK\r\n\r\n`". Each character is a byte, and we have 19 characters, thus 19 bytes.
+For this challenge, we'll be putting this string in the `.data` section and then passing its pointer to `rsi`.
+- `count` is the amount of bytes we are reading *from* `buf` *into* `fd`.
+
+Much like `read`, the function returns the number of bytes written on success.
+
+---
+
+**Note 1**
+
+When we were counting the amount of characters in "`HTTP/1.0 200 OK\r\n\r\n`", note that spaces count and `\r` and `\n` are each a character, as they represent "carriage return" and "line feed" respectively.
+
+---
+
+### Close Function
+
+<Spacey text="Aaaah," /> the final function 😤. The `close` function has the following function definition:
+
+```cpp
+int close(int fd);
+```
+
+Pretty simple. We'll just pass `fd` that we got from `accept` to close the file descriptor. It will return an `int` with either a `0` on success or `-1` on failure.
+See the [close man page ⤴](https://www.man7.org/linux/man-pages/man2/close.2.html) for more details.
+
+### Code
+
+```asm
+.intel_syntax noprefix
+.global _start
+
+.section .data
+sock_in:               # struct sockaddr_in
+  .word 2              # AF_INET (IPv4)
+  .word 0x5000         # Port 80 in hex
+  .long 0              # IP address of 0.0.0.0
+  .byte 0              # Padding
+
+buf_w:
+  .string "HTTP/1.0 200 OK\r\n\r\n"
+
+.section .text
+_start:
+  Socket:
+    mov rdi, 2         # AF_INET = 2, for IPv4
+    mov rsi, 1         # SOCK_STREAM = 1, for TCP
+    xor rdx, rdx       # 0 for protocol
+    mov rax, 41        # socket syscall number: 41
+    syscall
+    mov rbx, rax       # Save sockfd
+  
+  Bind:
+    mov rdi, rax       # Send file descriptor to sockfd
+    lea rsi, [sock_in] # Pointer to struct sockaddr_in
+    mov rdx, 16        # 16 bytes expected
+    mov rax, 49        # bind syscall number: 49
+    syscall
+
+  Listen:
+    mov rdi, rbx       # Send file descriptor to sockfd
+    mov rsi, 0         # Expected backlog/queue length
+    mov rax, 50        # listen syscall number: 50
+    syscall
+
+  Accept:
+    mov rdi, rbx       # Send file descriptor to sockfd
+    mov rsi, 0x0       # Null
+    mov rdx, 0x0       # Null
+    mov rax, 43        # accept syscall number: 43
+    syscall
+    mov r10, rax       # Save fd from accept
+
+  Read:
+    sub rsp, 0x1000    # Allocate 4kB buffer on stack
+    mov rdi, r10       # fd from accept
+    mov rsi, rsp       # buf location on the stack
+    mov rdx, 0x1000    # Read (up to) 4kB into buf
+    xor rax, rax       # read syscall number: 0
+    syscall
+    add rsp, 0x1000    # Deallocate 4kb buffer from stack
+
+  Write:
+    mov rdi, r10       # fd from accept
+    lea rsi, [buf_w]   # Write data from buffer
+    mov rdx, 19        # Write 19 bytes from buf
+    mov rax, 1         # write syscall number: 1
+    syscall
+
+  Close:
+    mov rdi, r10       # fd from accept
+    mov rax, 3         # close syscall number: 3
+    syscall
+
+  Exit:
+    mov rdi, 0
+    mov rax, 60        # exit syscall number: 60
+    syscall
+```
+
+---
+
+**Note 2** 
+
+Allocating data in `.data` section is language dependent. We're using GAS (Gnu Assembler), but NASM or MASM will use different keywords and syntax.
+For example, in GAS you could write
+
+```asm
+.section .data
+  buf_w: .string "HTTP/1.0 200 OK\r\n\r\n"
+```
+
+But in NASM you could write something along the lines of
+```asm
+.section .data
+  buf_w db "HTTP/1.0 200 OK\r\n\r\n", 0
+``` 
+
+So it's something to watch out for, despite the language similarities.
+
+---

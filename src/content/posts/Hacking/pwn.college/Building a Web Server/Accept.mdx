@@ -1,0 +1,115 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Building a Web Server"
+title: Building a Web Server
+subtitle: Accept
+part: 5
+date: 2026-02-03
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+excerpt: Once your socket is listening, it's time to actively accept incoming connections. In this challenge, you will use the accept syscall, which waits for a client to connect.
+read_time: 5
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+import Wavey from '@components/text_effects/wavytext.astro'
+
+## Problem
+
+This problem comes from [pwn.college - Building a Web Server ⤴](https://pwn.college/computing-101/building-a-web-server/).
+
+> Once your socket is listening, it's time to actively accept incoming connections. In this challenge, you will use the [accept ⤴](https://man7.org/linux/man-pages/man2/accept.2.html) syscall, which waits for a client to connect. When a connection is established, it returns a new socket file descriptor dedicated to communication with that client and fills in a provided address structure (such as a `struct sockaddr_in`) with the client's details. This process is a critical step in transforming your server from a passive listener into an active communicator.
+
+## Solution
+
+### Goal
+
+Running `/challenge/run server` (using the program compiled in [listen](/posts/hacking/pwncollege/building-a-web-server/listen)) prints to the console
+
+```plaintext
+===== Expected: Parent Process =====
+[ ] execve(<execve_args>) = 0
+[ ] socket(AF_INET, SOCK_STREAM, IPPROTO_IP) = 3
+[ ] bind(3, {sa_family=AF_INET, sin_port=htons(<bind_port>), sin_addr=inet_addr("<bind_address>")}, 16) = 0
+    - Bind to port 80
+    - Bind to address 0.0.0.0
+[ ] listen(3, 0) = 0
+[ ] accept(3, NULL, NULL) = 4
+[ ] exit(0) = ?
+```
+
+Alright! We can see that we need to pass in `sockfd` and `NULL` to the two other parameters. It looks like we get back another file descriptor, this one being `4`.
+But let's verify and check out the `accept` function.
+
+### Accept Function
+
+The `accept` function has the following function definition
+
+```cpp
+int accept(int sockfd, 
+           struct sockaddr *_Nullable restrict addr, 
+           socklen_t *_Nullable restrict addrlen);
+```
+
+I've written a "decent" amount of C++, but clearly not enough, because this looks like <Wavey text="black magic" /> to me.
+But given the fact there's `_Nullable` in there and we're passing `NULL` to the last two parameters, I'm going to have to risk my neck and
+say...the parameters accept `NULL`.
+
+Either way,
+
+- `sockfd` is the same file descriptor we've gotten from calling the `socket` function. We're accepting on *our* socket.
+- `sockaddr` (`sockaddr_in` for us) is what we've seen in the [bind](/posts/hacking/pwncollege/building-a-web-server/bind) post, ***but***
+this time for the *incoming* connection. In our case, it's set to `NULL` though.
+- `socklen_t` is the size of `sockaddr` (`sockaddr_in` for us) for the *incoming* connection. Because `sockaddr` is `NULL` for this challenge, this is `NULL` too.
+
+The `accept` function returns a file descriptor for the accepted socket. See [accept man page ⤴](https://man7.org/linux/man-pages/man2/accept.2.html) for more details.
+
+### Code
+
+```asm
+.intel_syntax noprefix
+.global _start
+
+.section .data
+sock_in:               # struct sockaddr_in
+  .word 2              # AF_INET (IPv4)
+  .word 0x5000         # Port 80 in hex
+  .long 0              # IP address of 0.0.0.0
+  .byte 0              # Padding
+
+.section .text
+_start:
+  Socket:
+    mov rdi, 2         # AF_INET = 2, for IPv4
+    mov rsi, 1         # SOCK_STREAM = 1, for TCP
+    xor rdx, rdx       # 0 for protocol
+    mov rax, 41        # socket syscall number: 41
+    syscall
+    mov rbx, rax       # Save sockfd
+  
+  Bind:
+    mov rdi, rax       # Send file descriptor to sockfd
+    lea rsi, [sock_in] # Pointer to struct sockaddr
+    mov rdx, 16        # 16 bytes expected
+    mov rax, 49        # bind syscall number: 49
+    syscall
+
+  Listen:
+    mov rdi, rbx       # Send file descriptor to sockfd
+    mov rsi, 0         # Expected backlog/queue length
+    mov rax, 50        # listen syscall number: 50
+    syscall
+
+  Accept:
+    mov rdi, rbx       # Send file descriptor to sockfd
+    mov rsi, 0x0       # Null
+    mov rdx, 0x0       # Null
+    mov rax, 43        # accept syscall number: 43
+    syscall
+
+  Exit:
+    mov rdi, 0
+    mov rax, 60        # exit syscall number: 60
+    syscall
+```

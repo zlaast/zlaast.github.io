@@ -1,0 +1,70 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Assembly Crash Course"
+title: Assembly Crash Course
+subtitle: check-even
+part: 11
+date: 2026-02-01
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+read_time: 2
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+
+## Problem
+
+This problem comes from [pwn.college: Assembly Crash Course ⤴](https://pwn.college/computing-101/assembly-crash-course/).
+
+> In this level, you will be working with registers. You will be asked to modify or read from registers.
+> 
+> We will set some values in memory dynamically before each run. On each run, the values will change. This means you will need to perform some type of formulaic operation with registers. We will tell you which registers are set beforehand and where you should put the result. In most cases, it is `rax`.
+> 
+> In this level, you will be working with bit logic and operations. This will involve heavy use of directly interacting with bits stored in a register or memory location. You will also likely need to make use of the logic instructions in x86: `and`, `or`, `xor`.
+> 
+> Using only the following instructions:
+> 
+> - `and`
+> - `or`
+> - `xor`
+> 
+> Implement the following logic:
+> 
+> ```plaintext
+> if x is even then
+>   y = 1
+> else
+>   y = 0
+> ```
+> 
+> Where:
+> 
+> - `x = rdi`
+> - `y = rax`
+
+## Solution
+
+The least-significant bit of a value indicates whether the value is even or odd.
+
+- If the last bit is `0`, then the value is even.
+- If the last bit is `1`, then the value is odd.
+
+So we need to check the last bit. And if the last bit indicates the number is even, we set `rax = 1`, and if the last bit indicates the number is odd, we set `rax = 0`. We can do this in the following way
+
+1. Make a copy `x` (`rdi`). Let's put it in `rax`.
+2. Change the last bit of `rax` to `1` (regardless of whether it's already `1` or not).
+3. `xor rax, rdi`. Given that `rax` is just a copy of `rdi` with the last bit changed, then if the last bit of `rdi` is `0`, the `xor` makes `rax = 1`. If the last bit of `rdi` is `1`, then the `xor` makes `rax = 0`.
+
+And that solves it!
+
+```asm
+.intel_syntax noprefix
+.global _start
+
+_start:
+  xor rax, rax   # Step 0: Ensure rax is zeroed out
+  or rax, rdi    # Step 1: Copy rdi into rax
+  or rax, 0x1    # Step 2: Ensure last bit of rax is set to one
+  xor rax, rdi   # Step 3: Check if even/odd and set y (which is rax)
+```

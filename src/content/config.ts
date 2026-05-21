@@ -5,6 +5,7 @@ const postsCollection = defineCollection({
   schema: z.object({
     category: z.string(),
     project: z.string(),
+    subproject: z.string().optional(),
     title: z.string(),
     subtitle: z.string().optional(),
     part: z.number(),

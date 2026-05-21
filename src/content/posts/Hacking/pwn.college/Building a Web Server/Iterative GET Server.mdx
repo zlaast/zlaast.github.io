@@ -1,0 +1,188 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Building a Web Server"
+title: Building a Web Server
+subtitle: Iterative GET Server
+part: 8
+date: 2026-02-20
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+excerpt: "Previously, your server served just one GET request before terminating. Now, you will modify it so that it can handle multiple GET requests sequentially."
+read_time: 8
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+import Spacey from '@components/text_effects/spaceytext.astro'
+
+## Problem
+
+This problem comes from [pwn.college - Building a Web Server ⤴](https://pwn.college/computing-101/building-a-web-server/).
+
+> Previously, your server served just one GET request before terminating. Now, you will modify it so that it can handle multiple GET requests sequentially. This involves wrapping the accept-read-write-close sequence in a loop. Each time a client connects, your server will accept the connection, process the GET request, and then cleanly close the client session while remaining active for the next request. This iterative approach is essential for building a persistent server.
+
+## Solution
+
+### Goal
+
+Again, running `/challenge/run server` (using the program compiled in [Dynamic Response](/posts/hacking/pwncollege/building-a-web-server/dynamic-response)) prints to the console.
+I'll only be showing the relevant output.
+
+### Code
+
+```asm
+.intel_syntax noprefix
+.global _start
+
+# CONST: IP
+.equ AF_INET,     2           # IPv4
+.equ AF_INET6,   10           # IPv6
+.equ SOCK_STREAM, 1           # TCP
+.equ SOCK_DGRAM,  2           # UDP
+
+# CONST: open() flags
+.equ O_RDONLY, 0
+.equ O_WRONLY, 1
+.equ O_RDWR,   2
+
+# CONST: syscall numbers
+.equ READ,    0
+.equ WRITE,   1
+.equ OPEN,    2
+.equ CLOSE,   3
+.equ SOCKET, 41
+.equ ACCEPT, 43
+.equ BIND,   49
+.equ LISTEN, 50
+.equ EXIT,   60
+
+
+.section .data
+  sock_in:                    # struct sockaddr_in
+    .word AF_INET
+    .word 0x5000              # Port 80 in hex
+    .long 0                   # IP address of 0.0.0.0
+    .byte 0                   # Padding
+
+  buf_w:
+    .string "HTTP/1.0 200 OK\r\n\r\n"
+
+
+.section .bss
+  fd3: .quad 0
+  fd4: .quad 0
+  fd5: .quad 0
+  path: .space 17
+
+
+.section .text
+_start:
+  Socket:
+    mov rdi, AF_INET
+    mov rsi, SOCK_STREAM
+    xor rdx, rdx               # 0 for protocol
+    mov rax, SOCKET
+    syscall
+    mov qword [fd3], rax       # Save fd 3
+  
+  Bind:
+    mov rdi, qword [fd3]
+    lea rsi, [sock_in]         # Pointer to struct sockaddr_in
+    mov rdx, 16                # 16 bytes expected
+    mov rax, BIND
+    syscall
+
+  Listen:
+    mov rdi, qword [fd3]
+    mov rsi, 0                 # Expected backlog length
+    mov rax, LISTEN
+    syscall
+
+  Accept:
+    mov rdi, qword [fd3]
+    mov rsi, 0x0               # Null
+    mov rdx, 0x0               # Null
+    mov rax, ACCEPT
+    syscall
+    mov qword [fd4], rax       # Save fd 4
+
+  Read_1:
+    sub rsp, 161               # Allocate 161 buf on stack
+    mov rdi, qword [fd4]
+    mov rsi, rsp               # buf location on the stack
+    mov rdx, 161               # count
+    mov rax, READ
+    syscall
+
+    # Extract Path
+    lea rsi, [rsp+4]           # Start of path
+    lea rdi, [path]            # Save path into "path" variable
+    mov rcx, 16                # Amount of bytes to read
+    rep movsb                  # Read rcx bytes starting from rsi to rdi
+    mov byte ptr [path+16], 0  # Null terminate path
+    add rsp, 161               # Remove buffer from stack
+
+  Open:
+    lea rdi, [path]            # Path: "/tmp/tmpxxxxxxxx"
+    mov rsi, O_RDONLY
+    mov rax, OPEN
+    syscall
+    mov qword [fd5], rax       # Save fd 5
+
+  Read_2:
+    sub rsp, 0x1000            # Allocate 4kB buf on stack
+    mov rdi, qword [fd5]
+    mov rsi, rsp               # buf location on stack
+    mov rdx, 0x1000            # count (max 4kB)
+    mov rax, READ
+    syscall
+
+  Close_1:
+    mov rdi, qword [fd5]
+    mov rax, CLOSE
+    syscall
+
+  Write_1:
+    mov rdi, qword [fd4]
+    lea rsi, [buf_w]           # Write data from buf
+    mov rdx, 19                # Write 19 bytes from buf
+    mov rax, WRITE
+    syscall
+
+  Write_2:
+    lea rdi, [rsp]             # Argument of str_len (buf)
+    call str_len
+    mov rdi, qword [fd4]
+    lea rsi, [rsp]             # Write data from buf
+    mov rdx, rax               # Length of string
+    mov rax, WRITE
+    syscall
+    add rsp, 0x1000            # Remove 4kB buf from stack
+
+  Close_Socket:
+    mov rdi, qword [fd4]
+    mov rax, CLOSE
+    syscall
+
+  Exit:
+    mov rdi, 0
+    mov rax, EXIT
+    syscall
+
+# Function that finds string length
+# Arguments (1): rdi accepts pointer to string location
+# Return: Returns string length in bytes, stored in rax
+# Example: 
+#     lea rdi, [rsp]
+#     call str_len
+str_len:
+  xor rax, rax
+
+  loop:
+    cmp byte ptr [rdi+rax], 0x0
+    je end
+    add rax, 1
+    jmp loop
+  end:
+    ret
+```

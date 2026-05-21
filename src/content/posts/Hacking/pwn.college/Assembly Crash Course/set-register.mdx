@@ -1,0 +1,34 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Assembly Crash Course"
+title: Assembly Crash Course
+subtitle: set-register
+part: 1
+date: 2026-02-01
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+read_time: 1
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+
+## Problem
+
+This problem comes from [pwn.college: Assembly Crash Course ⤴](https://pwn.college/computing-101/assembly-crash-course/).
+
+> In this level, you will be working with registers. You will be asked to modify or read from registers. 
+> 
+> In this level, you will work with registers! Please set the following: 
+> 
+> `rdi = 0x1337`
+
+## Solution
+
+```asm
+.intel_syntax noprefix
+.global _start
+
+_start:
+  mov rdi, 0x1337
+```

@@ -1,11 +1,11 @@
 ---
-category: Pentesting
+category: Hacking
 project: TryHackMe
 title: TryHackMe
 subtitle: Hammer
 part: 1
 date: 2025-11-09
-tags: ['Pentesting', 'TryHackMe']
+tags: [hacking, tryhackme]
 image: "/images/posts/tryhackme/hammer/hammer.png"
 excerpt: "I attempted to visit the given IP address in a browser, but nothing showed up, so I ran an nmap scan on the address."
 read_time: 10
@@ -20,7 +20,7 @@ import Important from '@components/content/important.astro'
 
 ## Problem
 
-This challenge comes from [TryHackMe: Hammer](https://tryhackme.com/room/hammer).
+This challenge comes from [TryHackMe: Hammer ⤴](https://tryhackme.com/room/hammer).
 
 > **Challenge**
 >
@@ -294,14 +294,14 @@ And the above script sends the commands (which currently only acknowledges `ls`)
 
 #### Tokens
 
-Copying that token into [jwt.io](https://www.jwt.io), it contained some interesting information.
+Copying that token into [jwt.io ⤴](https://www.jwt.io), it contained some interesting information.
 
 <Gallery src="/images/posts/tryhackme/hammer/16.png" alt="Token" />
 
 Hmmmm 🤔. There's a `kid` field in the header, and it references a key! When the token looks to verify the signature, it will look for the key listed here. But we *have* a key, so we can modify
 the token so that `kid` points to `188ade1.key`, and then use the information inside the key to sign a new token!
 
-I used [JWTAuditor](https://jwtauditor.com) to perform the following modifications:
+I used [JWTAuditor ⤴](https://jwtauditor.com) to perform the following modifications:
 
 - Changed `kid` to `./188ade1.key` in the header
 - Removed the `exp` field in the payload, so that the key never expires

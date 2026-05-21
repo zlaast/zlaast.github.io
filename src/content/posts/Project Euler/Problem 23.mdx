@@ -5,7 +5,7 @@ title: Project Euler
 subtitle: Problem 23 - Non-Abundant Sums
 part: 23
 date: 2024-03-09
-tags: ['Coding', 'Math', 'Python']
+tags: [coding, math, python]
 image: "/images/posts/project-euler/level_1.png"
 excerpt: "Phew, this problem is more involved than others, but manageable. Here are the steps I took to solve it."
 read_time: 5
@@ -17,7 +17,7 @@ import Spoiler from '@components/content/spoiler.astro'
 
 ## Problem
 
-This problem comes from [Project Euler 23](https://projecteuler.net/problem=23)
+This problem comes from [Project Euler 23 ⤴](https://projecteuler.net/problem=23)
 
 
 > **Problem**
@@ -110,7 +110,7 @@ Before we can find all numbers that cannot be expressed as the sum of two abunda
 we must first find all numbers that *can* be expressed as two abundant numbers.
 And in order to find *that*, we must first obtain a list of abundant numbers.
 
-This code uses the same technique as the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes).
+This code uses the same technique as the [Sieve of Eratosthenes ⤴](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes).
 We create a boolean array to keep track of which numbers are abundant or not. For example, 12 is an abundant number,
 so `abundant[12] = True`.
 

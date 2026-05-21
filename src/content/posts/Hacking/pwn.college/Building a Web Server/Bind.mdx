@@ -1,0 +1,116 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Building a Web Server"
+title: Building a Web Server
+subtitle: Bind
+part: 3
+date: 2026-02-03
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+excerpt: After creating a socket, the next step is to assign it a network identity. In this challenge, you will use the bind syscall to connect your socket to a specific IP address and port number.
+read_time: 5
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+
+## Problem
+
+This problem comes from [pwn.college - Building a Web Server ⤴](https://pwn.college/computing-101/building-a-web-server/).
+
+> After creating a socket, the next step is to assign it a network identity. In this challenge, you will use the [bind ⤴](https://man7.org/linux/man-pages/man2/bind.2.html) syscall to connect your socket to a specific IP address and port number. The call requires you to provide the socket file descriptor, a pointer to a `struct sockaddr` (specifically a `struct sockaddr_in` for IPv4 that holds fields like the address family, port, and IP address), and the size of that structure. Binding is essential because it ensures your server listens on a known address, making it reachable by clients.
+
+## Solution
+
+### Goal
+
+Running `/challenge/run server` (using the program compiled in [Socket](/posts/hacking/pwncollege/building-a-web-server/socket)) prints to the console
+
+```plaintext
+===== Expected: Parent Process =====
+[ ] execve(<execve_args>) = 0
+[ ] socket(AF_INET, SOCK_STREAM, IPPROTO_IP) = 3
+[ ] bind(3, {sa_family=AF_INET, sin_port=htons(<bind_port>), sin_addr=inet_addr("<bind_address>")}, 16) = 0
+    - Bind to port 80
+    - Bind to address 0.0.0.0
+[ ] exit(0) = ?
+```
+
+In order to solve this challenge, we need to bind our socket to port 80 using IP address 0.0.0.0. Let's see how we can do that.
+
+### Bind Function
+
+The `bind` function has the following function definition:
+
+```cpp
+int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+```
+
+Where
+- `sockfd` is the socket file descriptor. In the [previous post](/posts/hacking/pwncollege/building-a-web-server/socket),
+we created a socket which returns a socket file descriptor, stored in `rax`.
+- `sockaddr` is a pointer to a struct which holds information on the connection. Since we're working with internet connectivity, we'll be specifically
+using `sockaddr_in`, which holds information on the address family, port, and IP address. In our case `AF_INET` (2), `80`, and `0.0.0.0` respectively.
+- `socklen_t` is the size of the `sockaddr` struct.
+
+The `bind` function returns an `int` with either a `0` on success or `-1` on failure. See the [bind man page ⤴](https://man7.org/linux/man-pages/man2/bind.2.html) for more details.
+
+### Arguments
+
+We know that `sockfd` is returned from calling the `socket` function, with the descriptor placed in `rax`. What about the other two parameters though?
+Let's look at `sockaddr_in`.
+
+```cpp
+struct sockaddr_in {
+  uint16_t  sin_family;
+  uint16_t  sin_port;
+  uint32_t  sin_addr;
+  uint8_t   __pad[8];
+}
+```
+
+The struct will be placed in the `.data` section in our assembly code. Note the sizes of the variables: `uint16_t` is a `word`, `uint32_t` is a `long` and `uint8_t` is a `byte`.
+Here, we'll have
+
+- `sin_family` as `2` (`AF_INET`) to implement IPv4.
+- `sin_port` as `0x5000` (hex for 80) as the port number.
+- `sin_addr` as `0` which is the same as `0.0.0.0`, since it's all zeroes for the IP address.
+- `__pad[8]` will also have all zeroes for the padding.
+
+Finally, `socklen_t` is the size of the struct we just looked at. It's 16 + 16 + 32 + 8 = 128 bits, which is 16 bytes.
+
+### Code
+
+```asm
+.intel_syntax noprefix
+.global _start
+
+.section .data
+sock_in:             # struct sockaddr_in
+  .word 2            # AF_INET (IPv4)
+  .word 0x5000       # Port 80 in hex
+  .long 0            # IP address of 0.0.0.0
+  .byte 0            # Padding
+
+.section .text
+
+_start:
+  # Socket
+  mov rdi, 2         # AF_INET = 2, for IPv4
+  mov rsi, 1         # SOCK_STREAM = 1, for TCP
+  xor rdx, rdx       # 0 for protocol
+  mov rax, 41        # socket syscall number: 41
+  syscall
+  
+  # Bind
+  mov rdi, rax       # Send file descriptor to sockfd
+  lea rsi, [sock_in] # Pointer to struct sockaddr
+  mov rdx, 16        # 16 bytes expected
+  mov rax, 49        # bind syscall number: 49
+  syscall
+
+  # Exit
+  mov rdi, 0
+  mov rax, 60        # exit syscall number: 60
+  syscall
+```

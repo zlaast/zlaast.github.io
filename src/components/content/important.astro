@@ -1,5 +1,9 @@
+---
+const { title = "Warning" } = Astro.props;
+---
+
 <div role="alert" class="flex flex-col alert bg-[#2c2e2d] p-5 max-sm:p-2 text-[18px]">
-    <div class="text-2xl font-bold font-kode text-rose-400">Warning</div>
+    <div class="text-2xl font-bold font-kode text-yellow-400">{ title }</div>
     <div class="text-neutral-300 bg-[#2c2e2d]">
         <slot />
     </div>

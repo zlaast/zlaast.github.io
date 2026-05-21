@@ -28,6 +28,7 @@ if (post.data.updated != undefined)
 /* Get adjacent links in a project */
 const posts = await getCollection("posts");
 const thisproject = post.data.project;
+const thisSubproject = post.data.subproject;
 const nextPost = post.data.part + 1;
 const prevPost = post.data.part - 1;
 
@@ -38,12 +39,12 @@ let adjacentLinks = [
 let adjacentSubtitles = [`${thisproject}`, `${thisproject}`];
 
 function getLinks(post: any) {
-	if (post.data.project == thisproject && post.data.part == prevPost) {
+	if (post.data.project == thisproject && post.data.subproject == thisSubproject && post.data.part == prevPost) {
 		adjacentLinks[0] = post.slug;
 		adjacentSubtitles[0] = post.data.subtitle;
 	}
 
-	if (post.data.project == thisproject && post.data.part == nextPost) {
+	if (post.data.project == thisproject && post.data.subproject == thisSubproject && post.data.part == nextPost) {
 		adjacentLinks[1] = post.slug;
 		adjacentSubtitles[1] = post.data.subtitle;
 	}
@@ -94,7 +95,7 @@ posts.some(getLinks);
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="mr-1 fill-current"><path d="M11.707 2.293A.997.997 0 0 0 11 2H6a.997.997 0 0 0-.707.293l-3 3A.996.996 0 0 0 2 6v5c0 .266.105.52.293.707l10 10a.997.997 0 0 0 1.414 0l8-8a.999.999 0 0 0 0-1.414l-10-10zM13 19.586l-9-9V6.414L6.414 4h4.172l9 9L13 19.586z"></path><circle cx="8.353" cy="8.353" r="1.647"></circle></svg>
 						{
 							post.data.tags.sort().map((tag: any) => (
-								<a href={`/tags/${tag.toLowerCase().replaceAll(' ', '-')}`} class="mr-1 whitespace-nowrap rounded-md after:content-[','] last:after:content-none">{tag}</a>
+								<a href={`/tags/${tag.toLowerCase().replaceAll(' ', '-')}`} class="mr-1 capitalize whitespace-nowrap rounded-md after:content-[','] last:after:content-none">{tag}</a>
 							))
 						}
 					</div>
@@ -171,6 +172,23 @@ strong
         margin-bottom: 1rem;
         max-width: 100%;
         line-height: 2;
+
+        ul
+        {
+            border-radius: 0.5rem;
+            background-color: var(--block-bg-color);
+            padding: 0 1rem;
+            margin: 0;
+            max-width: 100%;
+            line-height: 2;
+
+            li
+            {
+                list-style-type: disc;
+                line-height: 2.5rem;
+                margin-left: 1rem;
+            }
+        }
     }
 
     code
@@ -182,6 +200,13 @@ strong
     {
         margin-top: 1rem;
         font-size: 1rem;  
+    }
+
+    hr
+    {
+        border: none;
+        height: 1px;
+        background-color: #414b54;
     }
 
     img

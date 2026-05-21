@@ -5,7 +5,7 @@ title: Project Euler
 subtitle: Problem 26 - Reciprocal Cycles
 part: 26
 date: 2024-03-12
-tags: ['Coding', 'Math', 'Python']
+tags: [coding, math, python]
 graph_tags: ['primes']
 image: "/images/posts/project-euler/level_1.png"
 excerpt: "This solution involved a bit of research, but here are three Wikipedia pages that I found helpful: Full Reptend Primes, Multiplicative Order, and Cyclic Number."
@@ -18,7 +18,7 @@ import Spoiler from '@components/content/spoiler.astro'
 
 ## Problem
 
-This problem comes from [Project Euler 26](https://projecteuler.net/problem=26)
+This problem comes from [Project Euler 26 ⤴](https://projecteuler.net/problem=26)
 
 
 > **Problem**
@@ -44,23 +44,23 @@ This problem comes from [Project Euler 26](https://projecteuler.net/problem=26)
 ## Solution
 
 This solution involved a bit of research, but here are three Wikipedia pages that I found helpful: 
-[Full Reptend Primes](https://en.wikipedia.org/wiki/Full_reptend_prime), [Multiplicative Order](https://en.wikipedia.org/wiki/Multiplicative_order), and [Cyclic Number](https://en.wikipedia.org/wiki/Cyclic_number).
+[Full Reptend Primes ⤴](https://en.wikipedia.org/wiki/Full_reptend_prime), [Multiplicative Order ⤴](https://en.wikipedia.org/wiki/Multiplicative_order), and [Cyclic Number ⤴](https://en.wikipedia.org/wiki/Cyclic_number).
 
 Here are the important bits from those pages:
 
-From [Full Reptend Primes](https://en.wikipedia.org/wiki/Full_reptend_prime):
-> In number theory, a full reptend prime ... in base $$ b$$ is an odd prime number $$ p$$ such that the [Fermat Quotient](https://en.wikipedia.org/wiki/Fermat_quotient)
+From [Full Reptend Primes ⤴](https://en.wikipedia.org/wiki/Full_reptend_prime):
+> In number theory, a full reptend prime ... in base $$ b$$ is an odd prime number $$ p$$ such that the [Fermat Quotient ⤴](https://en.wikipedia.org/wiki/Fermat_quotient)
 >
 > <div class="text-center py-4">$$ q_p(b) = \dfrac{b^{p-1} -1}{p} $$</div>
 >
-> gives a [cyclic number](https://en.wikipedia.org/wiki/Cyclic_number).
+> gives a [cyclic number ⤴](https://en.wikipedia.org/wiki/Cyclic_number).
 >
 > ...
 >
 > The cyclic number corresponding to prime $$ p$$ will possess $$ p -1$$ digits **if and only if** $$ p$$ is a full reptend prime. 
 > That is, the multiplicative order $$ \text{ord}_p(b) = p - 1$$ 
 
-From [Multiplicative Order](https://en.wikipedia.org/wiki/Multiplicative_order):
+From [Multiplicative Order ⤴](https://en.wikipedia.org/wiki/Multiplicative_order):
 > In number theory, given a positive integer $$ n$$ and an integer $$ a$$ coprime to $$ n$$, 
 > the multiplicative order of a modulo $$ n$$ is the smallest positive integer $$ k$$ such that $$ a^k \equiv 1 (\text{mod } n)$$ .
 >

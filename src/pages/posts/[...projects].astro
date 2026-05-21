@@ -21,7 +21,15 @@ const posts = await getCollection(
 	'posts',
 	({ data }) => data.project.toLowerCase().replaceAll(' ', '-') === project
 )
-posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+posts.sort((a, b) => b.data.part - a.data.part)
+
+// Subprojects
+let subprojectsSet = new Set()
+for (const post of posts)
+{
+    subprojectsSet.add(post.data.subproject)
+}
+const subprojects = [...subprojectsSet]
 ---
 
 <Base>
@@ -37,20 +45,92 @@ posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
             <!-- Title -->
 			<h2 class="my-10 text-5xl font-kode text-emerald-400">{post.data.project}</h2>
 
+            <!-- Subprojects -->
+            <div class="flex justify-between">
+            {
+                subprojects.map((subproject, index) => {
+                    if (subprojects.length > 1)
+                    {                        
+                        return (
+                            <button id=`${subproject?.replaceAll(" ", "-").toLowerCase()}` class="hover:cursor-pointer" onclick="showProject(this)">
+                                <div class="flex group items-stretch border-1 border-neutral-600 bg-[#222222] rounded-lg overflow-hidden my-5 shadow-lg/40 hover:bg-[#2b2b2b] duration-300">
+                                    <div class="hidden sm:flex flex-shrink-0 bg-[#2b2b2b] px-8 border-l-1 border-emerald-400">
+                                        <div class="flex items-center h-full">
+                                        {
+                                            <p class="text-neutral-400 text-4xl w-[50px] text-center group-hover:text-emerald-400 duration-300">{ index + 1 }</p>
+                                        }
+                                        </div>
+                                    </div>
+                                    <div class="text-neutral-200 font-normal text-xl p-5 py-6 inline">
+                                        <div class="text-xl text-left">
+                                            <div class="text-neutral-400 text-sm">Project</div>
+                                            <span>{ subproject }</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        )
+                    }
+                })
+            }
+            </div>
+
             <!-- Posts -->
 			{
-				posts.map((allPosts, index) => 
+				posts.map((allPosts) => 
                 {
-					if (allPosts.data.project == post.data.project)
-						return (
-							<Postcard
-								post={allPosts}
-								index={posts.length - index}
-								pageType="projects"
-							/>
-						)
-				})
+                    if (allPosts.data.project == post.data.project)
+                    {
+                        if (subprojects.length == 1)
+                        {
+                            return (
+                                <div class=`posts ${allPosts.data.subproject?.replaceAll(" ", "-").toLowerCase()}`>
+                                    <Postcard
+                                        post={allPosts}
+                                        index={allPosts.data.part}
+                                        pageType="projects"
+                                    />
+                                </div>
+                            )
+                        }
+                        else
+                        {
+                            return (
+                                <div class=`posts ${allPosts.data.subproject?.replaceAll(" ", "-").toLowerCase()} hidden`>
+                                    <Postcard
+                                        post={allPosts}
+                                        index={allPosts.data.part}
+                                        pageType="projects"
+                                    />
+                                </div>
+                            )                           
+                        }
+                    }
+                })
 			}
 		</div>
 	</section>
 </Base>
+
+<script type="text/javascript">
+
+function showProject(btn)
+{
+    let subproject = btn.id;
+    let posts = document.getElementsByClassName("posts");
+    
+    for (const post of posts)
+    {
+        if (post.classList.contains(subproject))
+        {
+            post.classList.remove("hidden");
+        }
+        else
+        {
+            post.classList.add("hidden");
+        }
+    }
+}
+
+</script>
+

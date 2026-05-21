@@ -1,0 +1,43 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Building a Web Server"
+title: Building a Web Server
+subtitle: Exit
+part: 1
+date: 2026-02-03
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+excerpt: Your first task is to create the simplest possible program - one that immediately terminates when run.
+read_time: 1
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+
+## Problem
+
+This problem comes from [pwn.college - Building a Web Server ⤴](https://pwn.college/computing-101/building-a-web-server/).
+
+> Your first task is to create the simplest possible program - one that immediately terminates when run. In this challenge, you will use the [exit ⤴](https://man7.org/linux/man-pages/man2/_exit.2.html) syscall, which is responsible for ending a process and returning an exit status to the operating system. This syscall takes a single argument: the exit status (with `0` typically indicating success). Understanding how to cleanly exit a program is crucial because it ensures your process communicates its completion state properly.
+
+## Solution
+
+Run `/challenge/run` and the code below will be printed to the console. I saved the output to `server.s`, compiled it and then ran `/challenge/run server` to finish.
+Then compile it and run `/challenge/run server` to finish the challenge.
+
+```asm
+# server.s
+
+.intel_syntax noprefix
+.global _start
+
+.section .text
+
+_start:
+  # Exit
+  mov rdi, 0
+  mov rax, 60        # exit syscall number: 60
+  syscall
+
+.section .data
+```

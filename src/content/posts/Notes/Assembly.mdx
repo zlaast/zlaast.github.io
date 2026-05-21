@@ -1,0 +1,1070 @@
+---
+category: Misc
+project: Notes
+title: Reference
+subtitle: Assembly
+part: 1
+date: 2026-02-19
+tags: [coding, assembly]
+image: "/images/posts/notes/notebook.png"
+excerpt: "A plain-language reference for x86-64 assembly (mostly for me 😘)"
+read_time: 30
+---
+
+import Number from '@components/content/number.astro';
+
+## Prerequisites
+
+### Definitions
+
+---
+
+<Number n="1" /> A byte is 8 bits, a word is 16 bits, a double word (DWORD) is 32 bits, and a quad word (QWORD) is 64 bits.
+
+---
+
+<Number n="2" /> Memory is a small card that is installed into the motherboard of a computer.
+It is faster to access the contents of memory than the contents of a hard drive but slower to access than the contents of a register.
+A register is a small piece of memory that is built directly *into* the CPU and is extremely fast. The CPU performs all its operations using registers.
+
+---
+<Number n="3" /> An immediate is a value that is *directly* (or immediately) embedded in the operation, as opposed to being fetched from a register or memory.
+Here are some examples:
+
+```asm
+mov rax, 3       # Immediate is 3
+mov rbx, 0x1234  # Immediate is hex value 0x1234
+add rcx, 24      # Immediate is 24
+add rbx, rdx     # No immediates here, only registers
+```
+---
+
+<Number n="4" /> If you have ever been asked, "What's the sign on the number? Is it a positive or negative sign?" then you have been exposed to *signed* numbers.
+A signed number is a number that has the ability to be either positive or negative. There are also *unsigned* numbers. Unsigned numbers
+are only positive and **do not** have the ability to be negative.
+
+### Intel Syntax
+
+This reference uses the Intel syntax. That means that instructions are *generally* as follows:
+
+```asm
+# instruction destination, source
+mov rax, 2   # Move 2 into rax
+add rdx, 1   # Add 1 to rdx
+mov 1, rdx   # Total nonsense
+```
+
+In the Intel syntax, we have the instruction on the far left (what we want to do), the destination next, and the source last.
+For example, the `mov` instruction moves a value from the source to the destination, meaning `2` is moved into register `rax`.
+Or in the second example, `1` is added *to* `rdx`. But in the third example, we can't move the value in `rdx` into `1`, as that's a constant and can't store anything.
+You *must* store the results of your operation in either a register or in memory.
+
+### Other
+
+<Number n="1" /> You ***cannot*** perform memory-to-memory operations in assembly!
+
+---
+
+<Number n="2" /> Occasionally I will use `rX`, `mX`, and `immX` to denote a register, memory location, or immediate of X-bits in size. For example, `r32` denotes a 32-bit register.
+At other times, I will just plainly write `r`, `m`, or `imm` to denote a register, dereferenced memory location, or immediate of *any* size.
+
+## General Purpose Registers
+
+There are 16 general-purpose registers, which are in big-endian format. In the table below, registers are listed with the Intel names first, with AMD names in brackets.
+For example, `rax` is Intel's name for this register, but `r0` is AMD's name for the same register. Registers `r8` and above
+are named the same in both AMD and Intel.
+
+| 64 bits (QWORD) | Lower 32 bits (DWORD) | Lower 16 bits (WORD) | Upper 8 bits (Byte) of WORD | Lower 8 bits (Byte) of WORD |
+| --------------- | --------------------- | -------------------- | --------------------------- | --------------------------- |
+| rax (r0)        | eax (r0d)             | ax (r0w)             | ah                          | al (r0b)                    |
+| rbx (r3)        | ebx (r3d)             | bx (r3w)             | bh                          | bl (r3b)                    |
+| rcx (r1)        | ecx (r1d)             | cx (r1w)             | ch                          | cl (r1b)                    |
+| rdx (r2)        | edx (r2d)             | dx (r2w)             | dh                          | dl (r2b)                    |
+| rsi (r6)        | esi (r6d)             | si (r6w)             |                             | sil (r6b)                   |
+| rdi (r7)        | edi (r7d)             | di (r7w)             |                             | dil (r7b)                   |
+| rbp (r5)        | ebp (r5d)             | bp (r5w)             |                             | bpl (r5b)                   |
+| rsp (r4)        | esp (r4d)             | sp (r4w)             |                             | spl (r4b)                   |
+| r8              | r8d                   | r8w                  |                             | r8b                         |
+| r9              | r9d                   | r9w                  |                             | r9b                         |
+| r10             | r10d                  | r10w                 |                             | r10b                        |
+| r11             | r11d                  | r11w                 |                             | r11b                        |
+| r12             | r12d                  | r12w                 |                             | r12b                        |
+| r13             | r13d                  | r13w                 |                             | r13b                        |
+| r14             | r14d                  | r14w                 |                             | r14b                        |
+| r15             | r15d                  | r15w                 |                             | r15b                        |
+
+## Basic Instructions
+
+### `nop`
+
+---
+**Expanded Name**
+
+
+No Operation.
+
+**Description**
+
+This operation does nothing and takes no arguments. It's mainly used to pad or align bytes or used as a delay.
+
+**Example**:
+```asm
+nop
+```
+
+### `mov`
+
+---
+**Expanded Name**
+
+
+Move.
+
+**Description**
+
+This instruction moves (it actually copies) a value from one location to another. It may move (it is restricted to moving)
+
+- a value from one register to another register
+- a value from memory to a register
+- a value from a register to memory
+- an immediate to memory
+- an immediate to a register
+
+The `mov` instruction has the form
+
+```asm
+mov dst, src
+```
+
+Where we move/copy the value from the source (`src`) to the destination (`dst`) register or memory location.
+
+**Examples**
+
+```asm
+mov rax, 0x14
+mov rsp, rax
+mov rax, [rsp]
+mov rax, [rbx+8]
+mov [rax], 6
+mov [rax], [rbx]    # Not allowed
+```
+
+1. Moves hex value `0x14` into `rax`
+2. Moves the value in `rax` into `rsp`
+3. Moves value stored in memory address `rsp` into `rax`
+4. Moves value stored in memory address `rbx+8` into `rax`. Here, the value in `rbx` is treated as a memory address, and then that value is offset by 8 bytes. 
+So we get a new memory address, access the value there, and then move that value into `rax`.
+5. Moves the number 6 into memory address `rax`.
+6. This final example attempts to move the value stored in memory address `rbx` into memory address `rax`, but it cannot, as memory-to-memory operations are not allowed in assembly.
+
+### `movsx[d]`, `movzx`
+
+---
+**Expanded Names**: Move with sign extend. Move with sign extend, doubleword. Move with zero extend.
+
+**Descriptions**:
+The purpose of these instructions is to move a value from a ***smaller*** register to a ***larger*** register. The same restrictions from `mov` apply as well.
+
+`movsx`: "Move with sign extend" keeps the sign of the value when being moved to a larger register.
+It may either move an 8-bit value to a 16-bit/32-bit register or move a 16-bit register to a 32-bit register.
+
+`movsxd`: "Move with sign extend, doubleword" is similar to `movsx`, but extends a 32-bit value into a 64-bit register.
+
+`movzx`: "Move with zero extend" will discard any sign and will zero out the rest of the larger register after the move operation. Also, there is no `movzxd` instruction.
+
+**Note**
+
+You may wish to use `movsx` and `movsxd` instead of just `mov` to keep the sign of a value when moving registers. Just using the `mov`
+instruction will cause a negative value to become positive when moved to a larger register (but not when the register is the same size).
+
+Consider the below 8-bit number, its value being -125. The value is negative because the leftmost bit is a one (for signed values).
+```
+10000011 # -125 in 8-bit register
+```
+
+When this value is moved to a larger 16-bit register using `mov`, the leftmost bit is no longer a one, so the value becomes positive!
+Instead, if we use `movsx`, ones are filled (sign extended) in the empty space, keeping the value and its sign intact.
+
+```
+0000000010000011 # mov. Becomes +131 :(
+1111111110000011 # movsx. Stays -125 :)
+```
+
+### `movs[b/w/d/q]`
+
+---
+**Expanded Names**: Moves byte. Moves word. Moves DWORD. Moves QWORD.
+
+**Descriptions**: 
+These move instructions are typically meant for string manipulation. It's used in conjunction with the `rep` (repeat) instruction
+to repeatedly copy `rcx` byte/word/dword/qword from memory address `rsi` to memory address `rdi`.
+
+**Examples**
+
+
+```asm
+mov rcx, 8
+rep movsb
+
+mov rcx, 2
+rep movsw
+
+mov rcx, 3
+rep movsd
+
+mov rcx, 26
+rep movsq
+```
+
+In all the examples, we move `rcx` amount of consecutive bytes, words, DWORDS or QWORDs from the memory address pointed to by `rsi` to the memory address pointed to by `rdi`.
+
+Just for explicitness, in the first example, we move 8 consecutive bytes (`movsb`) from the memory address pointed to by `rsi` to the memory address pointed to by `rdi`.
+
+### `add`, `inc`
+
+---
+**Expanded Names**: Add. Increment.
+
+**Description**
+
+`add` has the form
+
+```asm
+add dst, src
+```
+
+It adds the source to the destination. The same restrictions as the [mov](#mov) instruction apply.
+
+The `inc` instruction will increment a register by one. The `add` instruction is preferred to this one, as the `add` instruction
+will set/reset certain flags (such as the register overflow flag), while this instruction doesn't.
+
+**Examples**
+
+```asm
+add rax, 25
+add rbx, rcx
+add rdx, [rbx*4]
+inc rbx
+```
+
+1. Adds 25 to `rax`
+2. Adds value in `rcx` to `rbx`
+3. Adds value in memory address `rbx*4` to `rdx`
+4. Increments `rbx` by one
+
+### `sub`, `dec`
+
+---
+**Expanded Name**
+
+
+Subtract. Decrement.
+
+The subtract and decrement instructions are similar to the [add and inc](#add-inc) instructions, but they subtract and decrement instead.
+
+### `[i]mul`
+
+---
+**Expanded Name**
+
+
+Multiply. Signed (Integer) Multiply.
+
+**Description**
+
+`mul` is for unsigned multiplication, and `imul` is for signed multiplication. This description will focus on the `imul` instruction,
+but the same rules apply to `mul`.
+
+`imul` (`mul`) has three forms:
+
+1. `imul r/m`
+2. `imul r, r/m`
+3. `imul r, r/m, imm`
+
+<Number n="1" /> The first form takes just one argument: a register or dereferenced memory address.
+It takes this argument and *implicitly* multiplies it with `rax`. More specifically:
+
+| Argument     | Implicit | Product   |
+|--------------|----------|-----------|
+| `r8`/`m8`    | `al`     | `ax`      |
+| `r16`/`m16`  | `ax`     | `dx:ax`   |
+| `r32`/`m32`  | `eax`    | `edx:eax` |
+| `r64`/`m64`  | `rax`    | `rdx:rax` |
+
+You may notice that, with exception of the 8-bit operation, the result of the multiplication is stored across
+`rdx` and `rax`.
+
+For an 8-bit operation, the maximum value of the multiplication of two 8-bit numbers is 255 × 255 = 65 025. Since the `ax` register is 16 bits wide, it can hold up to 65 535 values, so the operation can be stored within `ax`.
+
+For ≥ 16-bit operations, the result of the operation will exceed the size of a single register, so the result must be stored in two registers. 
+For example, the maximum value of the multiplication of two 16-bit numbers would be 
+65 535 × 65 535 = 4 294 836 225, which is less than the maximum range of a 32-bit number, which is 4 294 967 295. Thus the result is stored in `dx:ax`, a 32-bit wide concatenation of `dx` and `ax`.
+
+While the above result could hold in `rax` or even `eax`, registers weren't always 64-bits or 32-bits wide, so the result had to be stored in two 16-bit registers.
+For compatibility reasons, as registers grow larger, we keep the way this instruction works the same way. In a future with 128-bit systems, storing `rax*r64/m64` in  `rdx:rax` may seem silly, but we *currently* work in a 64-bit world, so the result has to be stored in these two registers, since there are no 128-bit registers.
+
+<Number n="2" /> The second form multiplies `r/m` and `r` and stores the result in `r`. You may perform
+
+- `imul r16, r16/m16`
+- `imul r32, r32/m32`
+- `imul r64, r64/m64`
+
+Unlike the first form, the result isn't stored in two registers, just the destination register.
+This means there's a possibility of truncation since the result can exceed the size of the register it is stored in.
+
+<Number n="3" /> The third form multiplies `r/m` and `imm` together and stores the results in `r`. You may perform:
+
+- `imul r16, r16/m16, imm8`
+- `imul r32, r32/m32, imm8`
+- `imul r64, r64/m64, imm8`
+- `imul r16, r16/m16, imm16`
+- `imul r32, r32/m32, imm32`
+- `imul r64, r64/m64, imm32`
+
+The reason as to why `immX` is always less than or equal to the other registers is that the `imm` value is "sign extended" up to the register or memory size. For example, in the first bullet point, an `imm8` would be sign-extended up to a 16-bit width before being multiplied by the 16-bit register/memory.
+Also, much like the second form, there is a possibility of the result being truncated.
+
+**Examples**
+
+
+*Example 1*
+```asm
+mul r8b
+```
+Let `r8b` = `0x95`<br/>
+Let `rax` = `0x890E c6d2 4373 ac62`
+
+This multiplication is *unsigned*. What we're multiplying is `r8b` = `0x95` and `al` = `0x62` (see last byte of `rax`), which is `0x390a`.
+The result will be `ax` = `0x390a`, meaning `rax` = `0x890e c6d2 4373 390a`. Note that only the last byte of `rax` changed.
+
+*Example 2*
+```asm
+imul r8d
+```
+Let `r8d` = `0x95`<br/>
+Let `rax` = `0x890e c6d2 4373 ac62`
+
+This multiplication is *signed*, **and** we're using a 32-bit number! What we're *actually* multiplying is `r8d` = `0x0000 0095` and `eax` = `0x4373 ac62`.
+The result is 
+
+- `rdx` = `0x0000 0000 0000 0027`
+- `rax` = `0x0000 0000 4253 550a`
+
+Note how in the first example, only the last `WORD` changed for `rax` with everything else remaining the same, but in *this* example, both entire registers changed.
+The result is placed across `rdx` and `rax` with everything else being zeroed out. The result is `edx:eax` = `0x0000 0027 4253 550a`.
+
+*Example 3*
+```asm
+imul rax, rdx
+```
+Let `rax` = `0x890e c6d2 4373 ac62`<br/>
+Let `rdx` = `0x000f e7d2 0373 4544`
+
+This example is of the second form, so the result is placed in `rax` alone.
+The result is `rax` = `0xf9ef fa67 ae36 3408`
+
+### `[i]div`
+
+---
+**Expanded Name**
+
+
+Division. Signed (Integer) Division.
+
+**Description**
+
+`div` is for unsigned division, and `idiv` is for signed division. This description will focus on the `idiv` instruction,
+but the same rules apply to `div`. Does *not* perform floating-point division, only whole numbers!
+
+The `idiv` instruction is carried out by performing
+
+```asm
+mov rdx/edx/dx, some_value
+mov rax/eax/ax, some_value
+idiv r/m
+```
+
+As you can see, the division instructions differ from the multiplication instructions in that they *only* take **one** argument.
+View the table below:
+
+| Divisor     | Dividend  | Quotient | Remainder |
+|-------------|-----------|----------|-----------|
+| `r8`/`m8`   | `ax`      | `al`     | `ah`      |
+| `r16`/`m16` | `dx:ax`   | `ax`     | `dx`      |
+| `r32`/`m32` | `edx:eax` | `eax`    | `edx`     |
+| `r64`/`m64` | `rdx:rax` | `rax`    | `rdx`     |
+
+Some definitions
+
+- The divisor is the number doing the dividing.
+- The dividend is the number being divided.
+- The quotient is the whole number result of the division.
+- The remainder is what *couldn't* be cleanly divided.
+
+As you can see, with the exception of the 8-bit operation, the dividend is stored across `rdx` and `rax`, 
+and the results are stored back into `rdx` and `rax`, though `rdx` generally holds the remainder and `rax` generally holds the quotient.
+
+**Note**
+
+If you only wish to divide by `rax` or `rdx`, you should zero out the other register. Otherwise you will have an unexpected result.
+
+
+**Examples**
+
+*Example 1*
+```asm
+xor rdx, rdx  # Set rdx to zero
+mov rax, 0x8
+mov rcx, 0x2
+div rcx       # Divide rdx:rax by rcx
+```
+We first set `rdx` to zero to simplify this problem, so we're essentially just dividing `rax` by `rcx`.
+In this case the result is `rax` = `0x4`.
+
+*Example 2*
+```asm
+mov ax, 0xce
+mov cl, 0x5
+idiv cl
+```
+Here we're performing an 8-bit division on `ax`.
+Here, `0xce` (206) is divided by `0x5` (5), which results in the quotient `al` = `0x29` (41) and remainder `ah` = `0x1` (1).
+The result is `rax` = `0x129`. In this case, we don't need to zero out `rdx`.
+
+*Example 3* ⚠️
+```asm
+mov rdx, 0xffffffffffffffff
+mov rax, 0xffffffffffffffff
+mov rbx, 0x3
+idiv rbx
+```
+This will cause a problem. Since the division occurring is by the concatenation of `rdx:rax`, that means this "register" is 128 bits wide.
+After dividing by 3, the quotient is far too large to fit into `rax` and will crash the program. Be aware of this possible issue, as this 
+can occur with values being stored in `edx:eax`, `dx:ax`, and `ax` as well. It is best to ensure that your dividend can fit in a single
+register if possible (while zeroing out the other).
+
+### `cmp`
+
+---
+**Expanded Name**
+
+
+Compare.
+
+**Description**
+
+This instruction compares two values. It is almost always paired with a jump instruction.
+When a comparison is made, a flag will be set depending on the result. See the [jump](#jmp-instructions) section
+for more details on flags.
+
+Compares, combined with jump instructions, are used like an `if` statement (or any conditional).
+
+```cpp
+// example.cpp
+int i = 0
+if (i == 14) {
+    // do something
+}
+```
+
+The comparison checks if `i == 14`, and the jump instruction will go to another piece of assembly that executes the `do something` part.
+
+**Examples**
+
+
+```asm
+cmp rax, 0x14
+cmp ebx, ecx
+cmp qword [rsp+4], rax
+cmp qword [rax], rbx
+```
+
+All of the above examples will have the two arguments compared, and flags set based on the outcome. For example,
+if `rax` is equal to `0x14`, then the `ZF` flag (zero flag) is set. 
+
+### `jmp` instructions
+
+---
+**Expanded Name**
+
+
+Jump Instructions
+
+**Description**
+
+There are *many* jump instructions that are used to satisfy various conditions.
+Which jump instruction is used depends on what you want, whether the data is signed, unsigned, or if you're just checking a flag.
+
+When reading the tables, the **Flags** column denotes what flag(s) the instruction checks to make its decision on whether to jump or not.
+
+🚨 You ***must*** pay attention to what flags a jump instruction sets. It's the ***only*** thing that matters when it comes to how the instruction behaves. 🚨
+
+**List of Flags**
+| Flag | Full Name            | Description                                                                                                                |
+| ---- | -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| AF   | Auxiliary Carry Flag | Used in Binary-Coded Decimal (BCD) math                                                                                    |
+| CF   | Carry Flag           | If an operation generates a carry or borrow, this flag is set                                                              |
+| OF   | Overflow Flag        | If the result overflows the register, this flag is set                                                                     |
+| PF   | Parity Flag          | If the result has an even number of bits set, flag is set (1). If the result has an odd number of bits, flag is unset (0). |
+| SF   | Sign Flag            | If the result is signed (negative number), this flag is set                                                                |
+| ZF   | Zero Flag            | If the result is zero, this flag is set                                                                                    |
+
+
+**The Jump Instruction**
+| Flag  | Description                                                                     |
+| ----- | ------------------------------------------------------------------------------- |
+| `jmp` | Unconditionally jump to a label, address, or forward/backward a number of bytes |
+
+**Signed Jump Instructions**
+| Instruction | Description                            | Flags      |
+| ----------- | -------------------------------------- | ---------- |
+| `je`        | Jump if equal to zero                  | ZF         |
+| `jg`        | Jump if greater than zero              | OF, SF, ZF |
+| `jge`       | Jump if greater than or equal          | OF, SF     |
+| `jle`       | Jump if not less than or equal to zero | OF, SF, ZF |
+| `jne`       | Jump if not equal to zero              | ZF         |
+| `jng`       | Jump if not greater than zero          | OF, SF, ZF |
+| `jnge`      | Jump if not greater than or equal      | OF, SF     |
+| `jnle`      | Jump if not less than or equal to zero | OF, SF, ZF |
+| `jnz`       | Jump if not zero                       | ZF         |
+| `jz`        | Jump if zero                           | ZF         |
+
+**Unsigned Jump Instructions**
+| Instruction | Description                | Flags  |
+| ----------- | -------------------------- | ------ |
+| `ja`        | Jump if above zero         | CF, ZF |
+| `jae`       | Jump if above or equal     | CF     |
+| `jb`        | Jump if below              | CF     |
+| `jbe`       | Jump if below or equal     | AF, CF |
+| `je`        | Jump if equal to zero      | ZF     |
+| `jna`       | Jump if not above          | AF, CF |
+| `jnae`      | Jump if not above or equal | CF     |
+| `jnb`       | Jump if not below          | CF     |
+| `jnbe`      | Jump if not below zero     | CF, ZF |
+| `jne`       | Jump if not equal to zero  | ZF     |
+| `jnz`       | Jump if not zero           | ZF     |
+| `jz`        | Jump if zero               | ZF     |
+
+**Flag Check Jump Instructions**
+| Instruction | Description                                      | Flags |
+| ----------- | ------------------------------------------------ | ----- |
+| `jc`        | Jump if carry occurs                             | CF    |
+| `jnc`       | Jump if no carry occurs                          | CF    |
+| `jno`       | Jump if no overflow occurs                       | OF    |
+| `jnp`       | Jump if no parity (same as `jpo`)                | PF    |
+| `jns`       | Jump if no sign (positive number)                | SF    |
+| `jo`        | Jump if overflow occurs                          | OF    |
+| `jp`        | Jump if parity (same as `jpe`)                   | PF    |
+| `jpe`       | Jump if parity is even (even number of bits set) | PF    |
+| `jpo`       | Jump if parity is odd (odd number of bits set)   | PF    |
+| `js`        | Jump if sign (negative number)                   | SF    |
+| `jxcz`      | Jump if ECX/CX register is zero                  |       |
+
+**Examples**
+
+
+*Example 1*
+```asm
+mov r9, 14
+cmp r9, 14
+jne some_label
+```
+Simply, r9 and 14 are equivalent, so `jne` doesn't jump (because they're equal).
+
+More complicatedly, we are checking if `r9` equals 14, which it does. This is done by subtracting 14 from `r9` and checking if the `ZF` flag is set.
+If that flag is set, then two values must be the same! Since `jne` jumps if the two values are *not* equal, no jump occurs.
+
+*Example 2*
+```asm
+mov r9, 14
+cmp r9, 14
+jz some_label
+```
+This example isn't much different from Example 1, except we have swapped `jne` for the `jz` (jump if zero) instruction. 
+
+Now, one could be forgiven for thinking that since `r9` equals 14, and 14 isn't zero, then no jump occurs. **This is wrong**.
+
+The `cmp` instruction performs its comparison by subtracting 14 from `r9`, and given that they're the same value, *it equals zero*.
+The `cmp` instruction then sets the `ZF` flag. Our jump instruction, `jz`, then comes along and checks for the `ZF` flag (the only flag it checks),
+and seeing that it *is* set, jumps.
+
+Now, you would probably be better off using the `je` instruction as it reads better than `jz`, but both do the same thing. What you choose
+should be based on what you need to do and readability.
+
+*Example 3*
+```asm
+mov rbx, 11
+cmp rbx, 54
+jge some_label
+```
+Simply put, 11 isn't greater than 54, so `jge` doesn't jump.
+
+But more complicatedly, the `cmp` instruction subtracts the two operands, this time subtracting 54 from `r9` and getting a negative result (the actual value doesn't matter).
+The result being negative means that `r9` *isn't* greater than or equal to 11. Due to the result being negative, the `SF` flag is set. Based on that
+set flag, the `jge` instruction chooses *not* to jump.
+
+*Example 4*
+```asm
+cmp rax, rcx
+jmp some_label
+```
+Ok, so this one was a bit of a trick example. The `cmp` instruction is completely irrelevant here, since `jmp` is *unconditional* and will jump to `some_label`
+no matter what.
+
+### `shr`, `sar`
+
+---
+**Expanded Name**
+
+
+Shift Right. Shift Arithmetic Right.
+
+**Description**
+
+
+`shr` and `sar` have the form
+
+```asm
+shr r/m, imm8/cl
+sar r/m, imm8/cl
+```
+
+`shr` and `sar` will move the *bits* in a register or memory location right by `imm8` amount of bits or by the value in register `cl`.
+
+The difference between `shr` and `sar` is that `sar` will sign extend the shift, while `shr` will only shift in zeroes from the left.
+
+An important application of `shr` and `sar` is that they can quickly divide a register or memory location by 2 or a multiple of 2. And doing so is much
+faster than using `div` or `idiv`, with the downside being that no remainder will be calculated.
+
+**Examples**
+
+
+*Example 1*
+```asm
+shr al, 3 # al = 0b11110001
+```
+Let `al` = `0b11110001`
+
+I've chosen to have `al` hold a binary value. But hex, decimal, or any other number system will work.
+
+In this case, the value in `al` will be shifted 3 bits to the right. Note how zeroes are shifted in from the left and that the `1` that
+was on the far right of our original number has been dropped (shifted out).
+
+```
+0b11110001 # original
+0b00011110 # shifted right 3 bits
+```
+
+You can see that our number has changed. If we were to treat the original number as unsigned, then it would equal decimal 241, and after shifting
+it would equal decimal 30. That is, 241 divided by 2^3 = 30, without remainders. If this number is signed, then the original number would be -15,
+but the new number would still be 30, which doesn't make a lot of sense for a division operation.
+
+*Example 2*
+```asm
+sar al, 3 # al = 0b11110001.
+```
+The above example is the same as in Example 1, but we're using `sar` instead of `shr`. This time our value is sign-extended.
+
+```
+0b11110001 # original. Decimal -15
+0b11111110 # shifted right 3 bits with sign extension. Decimal -2.
+```
+
+Since we are definitely treating the number as signed, then we have -15/8 = -2. A bit odd, given that -15/8 is *actually* -1.875, but
+this operation isn't capable of calculating floating points, so it's been effectively rounded up.
+
+*Example 3*
+```asm
+shr rbx, 7 # rbx = 0xae54
+```
+I just wanted to show an example that isn't binary. To explain the example, I will convert our value in `rbx` to binary.
+
+```
+rbx = 0xae54 = 0b1010111001010100
+
+0b1010111001010100 # original
+0b0000000101011100 # Shifted 7 bits to the right
+
+0b0000000101011100 = 0x15c
+```
+
+So our value in `rbx` has been changed to `0x15c`. This is effectively dividing `0xae54` by `0x80` (`0x80` = 2^7 = decimal 128).
+
+### `shl`, `sal`
+
+---
+**Expanded Name**
+
+
+Shift Left. Shift Arithmetic Left.
+
+**Description**
+
+
+`shl` and `sal` have the form:
+
+```asm
+shl r/m, imm8/cl
+sal r/m, imm8/cl
+```
+
+`shl` and `sal` will move the *bits* in a register or memory location left by `imm8` amount of bits or by the value in register `cl`.
+
+Unlike `shr` and `sar`, there is **no** difference between `shl` and `sal`. This is because the leftmost bit(s) will be dropped, so whatever
+the sign bit is doing doesn't matter.
+
+An important application of `shr`/`sal` is that it will quickly multiply a register or memory location by 2 or a multiple of 2. This multiplication is much
+faster than using `mul` or `imul`.
+
+**Example**:
+
+```asm
+shl rax, 3 # rax = 0b11110001.
+```
+
+Let's shift these bits left.
+
+```
+0b11110001 # original
+0b011110001000 # shifted left 3 bits
+```
+
+Note that we are using `rax`, a 64-bit register. 
+
+By shifting 3 bits, we are effectively multiplying the value by 8. The original value is decimal 241, and we are effectively multiplying by 8, so
+the new value is 241×8 = 1928.
+
+### `lea`
+
+---
+**Expanded Name**
+
+
+Load Effective Address.
+
+**Description**
+
+The purpose of this instruction is to calculate an address and store it in either a register or memory location. It has the form
+
+```asm
+lea r/m, [argument]
+```
+
+The `argument` needs a bit more explaining. You can use the *general* formula:
+
+```
+argument = [Base register + (Index Register * Scale) + Offset]
+```
+
+The `Scale` is either `2`, `4`, or `8` (it can be `1`, but there's no point to multiplying by `1`). These values, of course,
+correspond to bytes, as in 1 byte, 2 bytes (WORD), 4 bytes (DWORD), and 8 bytes (QWORD). Since we work in these ranges, we shouldn't
+use a `Scale` of `3`, for example.
+
+And it should be noted that you don't have to use all of the parameters of the argument. See the example.
+
+You might have noticed that you can perform math operations here and *not* use `mul`/`imul`, `add`, and `sub`. This is actually
+a useful trick, and for simple math operations, `lea` can *sometimes* be faster than the standard math instructions. At the very least,
+it uses fewer instructions. Note that no flags will be set by `lea` unlike the standard math instructions, so something like overflow
+can't be detected.
+
+**Example**:
+
+```asm
+lea rax, [rcx]
+lea rsi, [rbx+5]
+lea rdi, [rbx + rsi * 4 + 3]
+```
+This example showcases what you could possibly do with `lea`. Typically `[]` means "get the value in that memory address," but with `lea`
+that doesn't happen. Instead, a memory address is calculated, with that address being stored in the destination register.
+
+Again, you don't necessarily have to use the result as a memory address; you may also use it as just a math result.
+
+### `push`
+
+---
+
+**Description**
+
+This instruction moves ("pushes") a value onto the top of [the stack](#the-stack). It also automatically decrements the stack pointer, `rsp`.
+It *decrements* because the stack grows **downwards**, from higher memory addresses to lower memory addresses.
+
+We may push registers of size `r16/32/64`, immediates of size `imm8/16/32` or values from memory of size `m16/32/64`.
+The amount `rsp` is decremented by depends on the size of the value being pushed onto the stack: 2 bytes from 16-bit values, 4 bytes from 32-bit values, and 8 bytes for 64-bit values.
+
+Despite `imm8` as an option, technically byte values cannot be pushed onto the stack, hence `rsp` only being able to decrement by 2, 4, or 8 bytes. 
+Instead, the `imm8` value is sign-extended to 64 bits, *then* pushed onto the stack.
+
+**Examples**
+
+```asm
+push rax
+push 0x05
+push [rbx+4]
+```
+
+These are examples of simple values being pushed onto the stack: the value inside `rax`, the immediate `0x05` and the value inside memory address `rbx+4`.
+
+### `pop`
+
+---
+
+**Description**
+
+The `pop` instruction is the opposite of the `push` instruction. It *removes* the value off the top of [the stack](#the-stack) and places that value into a register.
+It *increments* the stack pointer, `rsp`, by the size of the value being popped: 2 bytes for 16-bit values, 4 bytes for 32-bit values, and 8 bytes for 64-bit values.
+
+**Example**:
+
+```asm
+pop rax
+```
+
+This will remove the top value off the top of the stack and place it into `rax`.
+
+### `call`
+
+---
+
+**Description**
+
+A `call` instruction allows us to jump to another area in memory, execute a function, and then return to where it last left off.
+This is sort of like bookmarking a page, going to another chapter and reading something, then `ret`urning to your bookmark.
+
+More specifically, the `call` instruction pushes the *next* instruction onto the stack (bookmark), sets the `rip` (instruction pointer) to the memory
+address where the function is located, and then the CPU will automatically go to where `rip` points and execute the function there. When the function
+finishes executing, the "bookmark" will be popped off the stack into `rip` and the CPU will continue executing from where it left off.
+
+There are different types of calls, but to understand them we need some definitions. This is mostly for knowledge purposes and not particularly important.
+
+<Number n="1" /> **Far Call** 
+
+This section is mostly for historical purposes. Far calls are rarely used in modern 64-bit systems (except for certain circumstances), but in older 8-, 16-, and even 32-bit systems, they can be seen more often.
+The reason for this is that 8-bit systems can "see" up to 256 bytes, 16-bit systems up to ~64 kB, and 32-bit systems up to ~4 GB.
+But quite often, these systems were allowed to have more memory than that. For example, an 8-bit system could have 64 kB of memory, or
+a 32-bit system 8 GB of memory. How can these systems use memory that exceeds what they can naturally "see"? Well, just use memory in chunks they can handle.
+
+For example, a 32-bit system can only see ~4 GB at a time, so to use 8GB of memory, just split the 8 GB into two 4 GB chunks.
+This is essentially the concept of the *far call*. If some function needed to be called in a *different* chunk than the current one,
+a far call would be used to access the "remote" chunk.
+
+Now why does this no longer matter to modern systems? Well, 64-bit systems can see 16 **exabytes** (quintillions of bytes), while a gaming PC might
+see 64GB of memory, so there's no need for a far call.
+
+<Number n="2" /> **Near Call** 
+
+Unlike a far call, a near call stays within the same memory chunk and is how modern systems operate. This is referred to as the [flat memory model ⤴](https://en.wikipedia.org/wiki/Flat_memory_model)
+and simplifies how memory access works.
+
+<Number n="3" /> **Relative Address**
+
+When one needs to access memory, there are multiple ways to do so, with one being *relative addressing*. This essentially states, "Go to this address relative to where I am."
+Using a book analogy, if we're at page 240, then relative addressing could state, "Go 30 pages forward" to put us at page 270. For example, `jmp +20`, `jmp my_label` or `call my_func`.
+
+<Number n="4" /> **Indirect Address**
+
+Indirect addressing is like saying, "The address is stored somewhere else," that somewhere else typically being a pointer. For example,
+the address may be stored in the `rax` register. Usage could be `jmp rax`, `jmp [0x123456]`, or `call rbx`.
+
+<Number n="5" /> **Absolute Address**
+
+This final address is easy to understand. We refer to the address *directly*. For example, we could do `jmp 0xdeadbeef` or `call 0xc0ffee`.
+
+**Example**:
+
+```asm
+call _my_func_2
+call rdx
+```
+
+This is how calls are typically made. In this case, these are examples of a near relative call and a near indirect call.
+
+### `ret`
+
+---
+**Expanded Name**
+
+Return.
+
+**Description**
+
+Returns are always paired with a `call`. This is how a function returns from executing and goes back to what it was doing before.
+Look at an example in C++:
+
+```cpp
+int foo() {
+    return 5;
+}
+```
+
+In the function, the `ret` instruction in assembly doesn't care about what's being returned by the function; that's the purview
+of the operating system's ABI (see [Function Conventions](#function-conventions) for more details). The `return` in the example,
+though, is the same as `ret` in assembly, telling the function to exit and return to what it was executing before.
+
+
+**Example**:
+
+```asm
+# Written in Gnu Assembler
+
+.intel_syntax noprefix
+.global main
+
+.section .text
+main:
+  mov rdi, 2
+  mov rsi, 3
+  call add_nums
+  
+add_nums:
+   add rdi, rsi
+   mov rax, rdi
+   ret
+```
+
+In this example, I decided to write a simple function in GNU Assembly and call it. Below is the *rough* translation of what it's doing in C++.
+
+```cpp
+int add_nums(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    add_nums(2, 3);
+
+    // do other stuff
+}
+```
+
+The function arguments are stored in `rdi` and `rsi`, with the function return stored in `rax` (see [Function Conventions](#function-conventions)).
+The function then `ret`urns and then goes on to "do other stuff."
+
+## The Stack
+
+The stack is a memory structure meant to hold temporary values, and values on the stack are accessed using a "Last-In-First-Out" (LIFO) method.
+Think of it as a stack of plates: you put plates on the top of the stack (called `push`ing) and *also* remove plates from the top of the stack (called `pop`ping).
+What you *don't* do is remove plates from anywhere in the middle of the stack (I mean, you can do that in real life, just not here).
+
+Now, the stack grows down, that is, from higher memory addresses to lower memory addresses. So the top of the stack is at a lower memory address than the bottom of the stack.
+
+## Function Conventions
+
+In this section we'll look at how functions are called. And we'll be looking at this C++ example:
+
+```cpp
+int foo(int a, int b, int c, int d, int e, int f, int g, int h) {
+    int sum = a+b+c+d;
+    int product = e*f*g*h;
+
+    return sum + product;
+}
+
+int main() {
+    int first = 1;
+    int answer = foo(first, 2, 3, 4, 5, 6, 7, 8);
+
+    return 0;
+}
+```
+
+This example is pretty simple, though `foo` has *a lot* of parameters, but there's a reason for that.
+We'll look at how assembly passes the arguments to a function and how data is stored on the stack.
+
+ABI stands for "Application Binary Interface."
+It defines how functions are called, how parameters are passed to functions, where the return value is placed,
+how the stack is cleaned up, and more. We won't be covering everything to do with ABIs, but enough
+to write some assembly.
+
+### How Functions Work
+
+When we want to call a function, multiple things occur in assembly:
+
+1. The function arguments are placed into registers in accordance with the ABI.
+2. The function is called.
+3. If there are variables in the function (that are not placed in registers), a stack frame is created.
+4. The function runs, and if there is a return value, it's placed in the appropriate register.
+5. The function returns, the stack frame is removed, and the execution continues from where it left off.
+
+### Microsoft ABI
+
+The first four function arguments are placed into the following registers, respectively: `rcx`, `rdx`, `r8`, and `r9`.
+Further arguments are pushed (moved in fact) onto the stack from right to left.
+
+In the example, `rcx` = `a`, `rdx` = `b`, `r8` = `c`, `r9` = `d`. Then `h` is moved onto the stack, followed
+by `g`, `f`, then `e`. This way the arguments are in order, from top down, since that's the way we read the stack (LIFO).
+
+The return value, if any, is placed in `rax`.
+
+### System V ABI
+
+The first six arguments are placed into the following registers respectively: `rdi`, `rsi`, `rdx`, `rcx`, `r8`, and `r9`.
+Further arguments are pushed (moved in fact) onto the stack from right to left.
+
+In the example, `rdi` = `a`, `rsi` = `b`, `rdx` = `c`, `rcx` = `d`, `r8` = `e`, and `r9` = `f`. Then `h` is moved on to the
+stack, followed by `g`.
+
+The return value, if any, is placed in `rax`.
+
+### Assembly
+
+```asm
+.intel_syntax noprefix
+.global foo
+.global main
+
+.section .text
+
+foo:
+    # Create foo stack frame
+    push rbp
+    mov rbp, rsp
+
+    # sum
+    mov eax, edi            # a
+    add eax, esi            # a+b
+    add eax, edx            # a+b+c
+    add eax, ecx            # a+b+c+d
+    
+    # product
+    mov ebx, r8d            # e
+    imul ebx, r9d           # e*f
+    mov ecx, dword [rbp+16] # g (stack)
+    imul ebx, ecx           # e*f*g
+    mov ecx, dword [rbp+20] # h (stack)
+    imul ebx, ecx           # e*f*g*h
+
+    # return
+    add eax, ebx
+    pop rbp
+    ret
+
+main:
+    # Create main stack frame
+    push rbp
+    mov rbp, rsp
+
+    # int first = 1
+    mov dword [rbp-4], 1
+
+    # foo's arguments
+    mov edi, dword [rbp-4]  # a
+    mov esi, 2              # b
+    mov edx, 3              # c
+    mov ecx, 4              # d
+    mov r8d, 5              # e
+    mov r9d, 6              # f
+    sub rsp, 16             # Allocate space on stack
+    mov dword [rsp], 7      # g (stack)
+    mov dword [rsp+4], 8    # h (stack)
+
+    # foo
+    call foo
+
+    # Other
+    add rsp, 16             # Clean stack
+    mov dword [rbp-8], eax  # int answer = foo()
+
+    # Return
+    mov eax, 0              # return 0
+    pop rbp
+    ret
+```

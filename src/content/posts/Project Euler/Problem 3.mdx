@@ -5,7 +5,7 @@ title: Project Euler
 subtitle: Problem 3 - Largest prime factor
 part: 3
 date: 2023-04-22
-tags: ['Coding', 'Math', 'Python']
+tags: [coding, math, python]
 graph_tags: ['primes', 'factorization']
 image: "/images/posts/project-euler/level_1.png"
 excerpt: "Every natural number, ℕ, is either prime or can be created using prime numbers. For example, the number 2595 can be created using the prime numbers (factors) 3, 5, and 173."
@@ -18,7 +18,7 @@ import Spoiler from '@components/content/spoiler.astro'
 
 ## Problem
 
-This problem comes from [Project Euler 3](https://projecteuler.net/problem=3)
+This problem comes from [Project Euler 3 ⤴](https://projecteuler.net/problem=3)
 
 > **Problem**
 >
@@ -38,7 +38,7 @@ To obtain a list of prime factors for a number $$ x $$, we must
 2. Repeatedly and **evenly** divide $$ x $$ by those primes until it is no longer possible
 
 ### Prime Number Generator
-To create a list of prime numbers, I chose to create the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes). 
+To create a list of prime numbers, I chose to create the [Sieve of Eratosthenes ⤴](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes). 
 We first create a range of numbers starting from 2 and ending at a number we choose, e.g., 2 to 10 000. 
 We start by eliminating all multiples of 2 in our range, then move on to the next number that hasn't been eliminated. 
 We then eliminate all multiples of *that* number, and so on and so forth, until we only have primes left.

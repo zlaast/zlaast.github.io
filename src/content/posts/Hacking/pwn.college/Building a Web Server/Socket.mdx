@@ -1,0 +1,110 @@
+---
+category: Hacking
+project: "pwn.college"
+subproject: "Building a Web Server"
+title: Building a Web Server
+subtitle: Socket
+part: 2
+date: 2026-02-03
+tags: ['pwn.college', coding, assembly]
+image: "/images/posts/pwn.college/laptop.png"
+excerpt: In this challenge, you'll begin your journey into networking by creating a socket using the socket syscall.
+read_time: 5
+---
+
+import Encrypted from '@components/content/encrypt.astro'
+
+## Problem
+
+This problem comes from [pwn.college - Building a Web Server ⤴](https://pwn.college/computing-101/building-a-web-server/).
+
+> In this challenge, you'll begin your journey into networking by creating a socket using the [socket ⤴](https://man7.org/linux/man-pages/man2/socket.2.html) syscall. A socket is the basic building block for network communication; it serves as an endpoint for sending and receiving data. When you invoke [socket ⤴](https://man7.org/linux/man-pages/man2/socket.2.html), you provide three key arguments: the domain (for example, `AF_INET` for IPv4), the type (such as `SOCK_STREAM` for TCP), and the protocol (usually set to `0` to choose the default). Mastering this syscall is important because it lays the foundation for all subsequent network interactions.
+> 
+> ---
+> 
+> **NOTE:** Looking through documentation, the arguments of the system calls are listed as names in all capitals. For instance, we may wish to call `socket(AF_INET, SOCK_STREAM, 0)` but we cannot simply perform `mov rdi, AF_INET`: `AF_INET` is simply not a concept at the assembly level. We need to find the integer which corresponds to `AF_INET`. These numbers are not even found in the man pages, but these numbers do exist on your machine. Check out the `/usr/include` directory. All the system's general-use include files for C programming are placed here. (For those who have written C, think of any header files you've included in your code "`#include <stdio.h>`". All those Functions and constants are defined somewhere here). Since C is compiled to assembly, these numbers are present somewhere in this directory. Rather than manually searching, you can [grep](https://pwn.college/linux-luminarium/commands/) for them.
+
+## Solution
+
+### Goal
+
+Running `/challenge/run server` (using the program compiled in [Exit](/posts/hacking/pwncollege/building-a-web-server/exit)) prints to the console
+
+```plaintext
+===== Expected: Parent Process =====
+[ ] execve(<execve_args>) = 0
+[ ] socket(AF_INET, SOCK_STREAM, IPPROTO_IP) = 3
+[ ] exit(0) = ?
+```
+
+This tells us that our socket expects IPv4 (`AF_INET`), TCP (`SOCK_STREAM`), and the default protocol 0 (`IPPROTO_IP`).
+This will return a socket file descriptor of `3`. Let's see how we can fulfill these requirements.
+
+### Socket Function
+
+The `socket` function has the following function definition:
+
+```cpp
+int socket(int domain, int type, int protocol)
+```
+
+Since we're making and IPv4 TCP socket, the following arguments are used
+
+- `domain` is `AF_INET`, which is IPv4. If we wanted IPv6, we would use `AF_INET6`.
+- `type` is `SOCK_STREAM`, which is TCP. If we wanted UDP, we would use `SOCK_DGRAM`.
+- `protocol` is set to `0`, which is for TCP. UDP also uses `0`.
+
+The `socket` function returns an `int` which is a socket file descriptor. See the [socket man page ⤴](https://man7.org/linux/man-pages/man2/socket.2.html) and [IP man page ⤴](https://man7.org/linux/man-pages/man7/ip.7.html) for more details.
+
+### Arguments
+
+The `socket` function uses integer arguments, so we need to know what integers correspond to `AF_INET` and `SOCK_STREAM`.
+To find these numbers, I performed 
+
+```
+grep -r AF_INET /usr/include
+```
+
+and found the most relevant files at
+
+- `/usr/include/x86_64-linux-gnu/bits/socket.h`
+- `/usr/include/x86_64-linux-gnu/bits/socket_type.h`
+
+In those files, I found that 
+
+- `AF_INET` = `2`. For IPv6, `AF_INET6` = `10`.
+- `SOCK_STREAM` = `1`. For UDP, `SOCK_DGRAM` = `2`.
+
+Finally, we pass these arguments into registers in accordance with the System V ABI
+
+- `rdi` = `2`
+- `rsi` = `1`
+- `rdx` = `0`
+
+and call `socket` by passing `41` into `rax` and invoking `syscall`. See the [Linux x64 System Call Table ⤴](https://x64.syscall.sh).
+
+### Code
+
+```asm
+# server.s
+
+.intel_syntax noprefix
+.global _start
+
+.section .text
+
+_start:
+  # Socket
+  mov rdi, 2         # AF_INET = 2 for IPv4
+  mov rsi, 1         # SOCK_STREAM = 1 for TCP
+  xor rdx, rdx       # 0 for protocol
+  mov rax, 41        # socket syscall number: 41
+  syscall
+
+  # Exit
+  mov rdi, 0
+  mov rax, 60        # exit syscall number: 60
+  syscall
+
+.section .data
+```

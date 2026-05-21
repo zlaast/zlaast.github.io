@@ -21,7 +21,7 @@
         MenuData = await menuResponse.json();
         Database = await databaseResponse.json();
 
-        Tags = [...new Set(Database.map((entry) => entry.tags).flat(Infinity))];
+        Tags = [...new Set(Database.map((entry) => entry.tags).flat(Infinity).sort())];
         TagsLength = Tags.length;
     });
 
