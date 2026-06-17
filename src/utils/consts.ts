@@ -2,8 +2,8 @@
 
 
 // URL ENDPOINT
-export const url = "http://localhost:4321"          // Uncomment me when developing locally. Comment me out when deploying
-// export const url = "https://zlaast.github.io"    // Uncomment me when ready to deploy. Comment me out when developing locally.
+// export const url = "http://localhost:4321"          // Uncomment me when developing locally. Comment me out when deploying
+export const url = "https://zlaast.github.io"    // Uncomment me when ready to deploy. Comment me out when developing locally.
 
 
 // MENU PROGRESS BARS
