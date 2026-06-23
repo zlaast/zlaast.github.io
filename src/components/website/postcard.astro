@@ -4,9 +4,9 @@ const { post, index, pageType } = Astro.props
 import { parseDate } from '@utils/utils'
 import { Image } from 'astro:assets'
 import robot from '@images/emojis/robot.gif'
-import bolt from '@images/emojis/bolt.gif'
-import invader from '@images/emojis/invader.gif'
-import unknown from '@images/emojis/rocket.gif'
+import battery from '@images/emojis/battery.gif'
+import laptop from '@images/emojis/laptop.gif'
+import unknown from '@images/emojis/lightbulb.gif'
 
 let image
 let color = ""
@@ -15,11 +15,11 @@ if (post.data.category == "Coding") {
     color = "bg-coffee"
 }
 else if (post.data.category == "Electronics") { 
-    image = bolt 
+    image = battery 
     color = "bg-red-500"
 }
 else if (post.data.category == "Hacking") { 
-    image = invader 
+    image = laptop 
     color = "bg-slate-700"
 }
 else { 

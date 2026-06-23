@@ -43,7 +43,10 @@ const subprojects = [...subprojectsSet]
 			</div>
 
             <!-- Title -->
-			<h2 class="my-10 text-5xl font-kode text-emerald-400">{post.data.project}</h2>
+            <div class="my-10">
+                <h3 class="ml-0.5 my-2 text-neutral-400 ">{post.data.category} Project</h3>
+                <h2 class="text-5xl font-kode text-emerald-400">{post.data.project}</h2>
+            </div>
 
             <!-- Subprojects -->
             <div class="flex justify-between">
